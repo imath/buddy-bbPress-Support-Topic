@@ -1,0 +1,43 @@
+# Translation of the WordPress plugin Buddy-bbPress Support Topic by imath (twitter.com/imath).
+# Copyright (C) 2010 imath (twitter.com/imath)
+# This file is distributed under the same license as Buddy-bbPress Support Topic package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Buddy-bbPress Support Topic 0.1\n"
+"Report-Msgid-Bugs-To: http://imath.owni.fr\n"
+"POT-Creation-Date: 2010-07-05 15:10+0000\n"
+"PO-Revision-Date: 2010-09-26 12:53+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.1\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. #-#-#-#-#  buddy-bbpress-support-topic.pot (Buddy-bbPress Support Topic 0.1)  #-#-#-#-#
+
+#: buddy-bbpress-support-topic.php:30
+msgid "This is a support topic"
+msgstr ""
+
+#: buddy-bbpress-support-topic.php:61
+msgid "[Resolved] "
+msgstr ""
+
+#: buddy-bbpress-support-topic.php:64
+msgid "[Support request] "
+msgstr ""
+
+#: buddy-bbpress-support-topic.php:91
+msgid "Unsolved"
+msgstr ""
+
+#: buddy-bbpress-support-topic.php:92
+msgid "Resolved"
+msgstr ""
+
+#: buddy-bbpress-support-topic.php:93
+msgid "Not a support topic"
+msgstr ""
