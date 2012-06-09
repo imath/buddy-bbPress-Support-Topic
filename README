@@ -1,1 +1,14 @@
-Buddy bbPress Support topic is a BuddyPress plugin that adds a mini support functionality to topics...
+Buddy bbPress Support topic is a BuddyPress plugin that adds a mini support functionality to topics in group forums.
+
+Requires :
+- WordPress 3.3.2
+- BuddyPress 1.5.5
+
+Simply drop the folder in your plugins directory and then activate from WordPress Admin or Network Admin.
+
+Once activated, when a member of your BuddyPress powered website will write a post, he will be able to check the checkbox "This is a support topic".
+Once the topic is posted, the plugin will add a bb_topic meta 'support_topic' to the created topic. Then before the title of the topic in the list of topics, you'll see a mention [Support request].
+When on the single view of the topic, after the admin links, the author of the topic, the Group Admin and the Group Moderator will be able to change the status of this support topic to 'Unsolved', 'Resolved' or 'Not a support topic'.
+
+If the status is set to 'Resolved', then in the list of topics, the mention [Resolved] will be added to title of the topic.
+If the status is set to 'Not a support topic', then it will erase the bb_topic meta and the topic will be a regular topic.
