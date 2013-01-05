@@ -1,14 +1,14 @@
 <?php
 /*
 Plugin Name: Buddy-bbPress Support Topic
-Plugin URI: http://imath.owni.fr/
+Plugin URI: http://imathi.eu/
 Description: Adds a support type to a forum topic and manage the status of it 
 Version: 0.1
 Requires at least: 3.3.2
 Tested up to: 3.4
 License: GNU/GPL 2
 Author: imath
-Author URI: http://imath.owni.fr/
+Author URI: http://imathi.eu/
 Network: true
 */
 
