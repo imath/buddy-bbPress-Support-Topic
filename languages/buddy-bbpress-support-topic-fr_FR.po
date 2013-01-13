@@ -6,37 +6,71 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Buddy-bbPress Support Topic 0.1\n"
-"Report-Msgid-Bugs-To: http://imath.owni.fr\n"
-"POT-Creation-Date: 2010-07-05 15:10+0000\n"
-"PO-Revision-Date: 2012-06-10 00:38+0100\n"
-"Last-Translator: imath <i-math@club.fr>\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/buddy-bbPress-Support-Topic\n"
+"POT-Creation-Date: 2013-01-13 17:45:33+00:00\n"
+"PO-Revision-Date: 2013-01-13 18:46+0100\n"
+"Last-Translator: imath <mathchristo@yahoo.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
 
-#. #-#-#-#-#  buddy-bbpress-support-topic.pot (Buddy-bbPress Support Topic 0.1)  #-#-#-#-#
-#: buddy-bbpress-support-topic.php:30
+#: buddy-bbpress-support-topic.php:47
 msgid "This is a support topic"
 msgstr "Sujet nécessitant un support"
 
-#: buddy-bbpress-support-topic.php:61
+#: includes/bp-bbp-st-bbpress.php:65
+msgid "loading"
+msgstr "patience"
+
+#: includes/bp-bbp-st-bbpress.php:140 includes/bp-bbp-st-buddypress.php:33
 msgid "[Resolved] "
 msgstr "[Résolu] "
 
-#: buddy-bbpress-support-topic.php:64
+#: includes/bp-bbp-st-bbpress.php:145 includes/bp-bbp-st-buddypress.php:36
 msgid "[Support request] "
 msgstr "[Support requis] "
 
-#: buddy-bbpress-support-topic.php:91
-msgid "Unsolved"
+#: includes/bp-bbp-st-bbpress.php:197 includes/bp-bbp-st-buddypress.php:61
+msgid "Not resolved"
 msgstr "Non résolu"
 
-#: buddy-bbpress-support-topic.php:92
+#: includes/bp-bbp-st-bbpress.php:203 includes/bp-bbp-st-buddypress.php:62
 msgid "Resolved"
 msgstr "Résolu"
 
-#: buddy-bbpress-support-topic.php:93
+#: includes/bp-bbp-st-bbpress.php:209 includes/bp-bbp-st-buddypress.php:63
 msgid "Not a support topic"
 msgstr "Pas un sujet support"
 
+#: includes/bp-bbp-st-bbpress.php:259 includes/bp-bbp-st-bbpress.php:279
+msgid "Support"
+msgstr "Support"
+
+#: includes/bp-bbp-st-bbpress.php:278
+msgid "Support:"
+msgstr "Support:"
+
+#. Plugin Name of the plugin/theme
+msgid "Buddy-bbPress Support Topic"
+msgstr "Buddy-bbPress Support Topic"
+
+#. Plugin URI of the plugin/theme
+msgid "http://imathi.eu/category/buddypress/"
+msgstr "http://imathi.eu/category/buddypress/"
+
+#. Description of the plugin/theme
+msgid "Adds a support type to a forum topic and manage the status of it"
+msgstr "Permet de d&#39;indiquer qu&#39un sujet de forum nécessite un support"
+
+#. Author of the plugin/theme
+msgid "imath"
+msgstr "imath"
+
+#. Author URI of the plugin/theme
+msgid "http://imathi.eu/"
+msgstr "http://imathi.eu/"
+
+#~ msgid "Unsolved"
+#~ msgstr "Non résolu"
