@@ -3,8 +3,46 @@
 if ( !defined( 'ABSPATH' ) ) exit;
 
 //adds the checkbox to let the topic author say he needs support
-add_action( 'groups_forum_new_topic_after', 'bp_bbp_st_add_support_type' );
-add_action( 'bp_after_group_forum_post_new', 'bp_bbp_st_add_support_type' );
+add_action( 'groups_forum_new_topic_after', 'bp_bbp_st_add_or_update_support_type' );
+add_action( 'bp_after_group_forum_post_new', 'bp_bbp_st_add_or_update_support_type' );
+add_action( 'bp_group_after_edit_forum_topic', 'bp_bbp_st_add_or_update_support_type' );
+
+function bp_bbp_st_add_or_update_support_type() {
+	
+	if( bp_is_action_variable( 'edit' ) )
+		$topic_id = bp_get_the_topic_id();
+		
+	$checked = false;
+	
+	if( !empty( $topic_id ) ) {
+		$support_status = bb_get_topicmeta( $topic_id, 'support_topic');
+		
+		if( !empty( $support_status ) )
+			$checked = true;
+			
+	}
+	
+	bp_bbp_st_add_support_type( $checked );
+}
+
+
+add_action( 'groups_update_group_forum_topic', 'bp_bbp_st_bbpold_edit_support_type_for_topic', 11, 1);
+
+function bp_bbp_st_bbpold_edit_support_type_for_topic( $topic_datas ) {
+	
+	$support_status = bb_get_topicmeta( $topic_datas->topic_id, 'support_topic');
+	
+	if( !empty( $_POST['_bp_bbp_st_is_support'] ) ) {
+
+		if( empty( $support_status ) )
+			bp_bbp_st_bbpold_save_support_type_for_topic( false, $topic_datas );
+			
+	} else {
+		if( !empty( $support_status ) )
+			bb_delete_topicmeta( $topic_datas->topic_id, 'support_topic' );
+	}
+		
+}
 
 
 add_action( 'groups_new_forum_topic', 'bp_bbp_st_bbpold_save_support_type_for_topic', 11, 2 );
@@ -70,11 +108,14 @@ function bp_bbp_st_selectbox_support() {
 /**
 * is bbPress the new one ?
 */
-add_action( !class_exists( 'bbPress' ) ? 'bp_actions' : 'bp_bbp_st_dummy', 'bp_bbp_st_enqueue_support_cssjs');
+function bp_bbp_st_check_for_config() {
+	
+	if( function_exists('bp_forums_is_installed_correctly') && bp_forums_is_installed_correctly() )
+		bp_bbp_st_enqueue_support_cssjs();
 
-function bp_bbp_st_dummy() {
-	do_action('bp_bbp_st_dummy');
 }
+add_action('bp_actions', 'bp_bbp_st_check_for_config');
+
 
 function bp_bbp_st_enqueue_support_cssjs() {
 	if( bp_is_group_forum_topic_edit() || bp_is_group_forum_topic() ) {

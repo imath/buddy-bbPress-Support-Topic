@@ -3,7 +3,7 @@
 if ( !defined( 'ABSPATH' ) ) exit;
 
 //adds the checkbox to let the topic author say he needs support
-add_action( 'bbp_theme_after_topic_form_type', 'bp_bbp_st_bbp_two_add_support_type' );
+add_action( 'bbp_theme_before_topic_form_submit_wrapper', 'bp_bbp_st_bbp_two_add_support_type' );
 
 function bp_bbp_st_bbp_two_add_support_type() {
 	$checked = false;

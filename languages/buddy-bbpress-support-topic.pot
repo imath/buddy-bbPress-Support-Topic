@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Buddy-bbPress Support Topic 1.0-beta1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/buddy-bbPress-Support-Topic\n"
-"POT-Creation-Date: 2013-01-13 17:45:33+00:00\n"
+"POT-Creation-Date: 2013-01-14 19:15:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,23 +20,23 @@ msgstr ""
 msgid "loading"
 msgstr ""
 
-#: includes/bp-bbp-st-bbpress.php:140 includes/bp-bbp-st-buddypress.php:33
+#: includes/bp-bbp-st-bbpress.php:140 includes/bp-bbp-st-buddypress.php:71
 msgid "[Resolved] "
 msgstr ""
 
-#: includes/bp-bbp-st-bbpress.php:145 includes/bp-bbp-st-buddypress.php:36
+#: includes/bp-bbp-st-bbpress.php:145 includes/bp-bbp-st-buddypress.php:74
 msgid "[Support request] "
 msgstr ""
 
-#: includes/bp-bbp-st-bbpress.php:197 includes/bp-bbp-st-buddypress.php:61
+#: includes/bp-bbp-st-bbpress.php:197 includes/bp-bbp-st-buddypress.php:99
 msgid "Not resolved"
 msgstr ""
 
-#: includes/bp-bbp-st-bbpress.php:203 includes/bp-bbp-st-buddypress.php:62
+#: includes/bp-bbp-st-bbpress.php:203 includes/bp-bbp-st-buddypress.php:100
 msgid "Resolved"
 msgstr ""
 
-#: includes/bp-bbp-st-bbpress.php:209 includes/bp-bbp-st-buddypress.php:63
+#: includes/bp-bbp-st-bbpress.php:209 includes/bp-bbp-st-buddypress.php:101
 msgid "Not a support topic"
 msgstr ""
 

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Buddy-bbPress Support Topic 0.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/buddy-bbPress-Support-Topic\n"
-"POT-Creation-Date: 2013-01-13 17:45:33+00:00\n"
-"PO-Revision-Date: 2013-01-13 18:46+0100\n"
+"POT-Creation-Date: 2013-01-14 19:15:09+00:00\n"
+"PO-Revision-Date: 2013-01-14 20:16+0100\n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,23 +24,23 @@ msgstr "Sujet nécessitant un support"
 msgid "loading"
 msgstr "patience"
 
-#: includes/bp-bbp-st-bbpress.php:140 includes/bp-bbp-st-buddypress.php:33
+#: includes/bp-bbp-st-bbpress.php:140 includes/bp-bbp-st-buddypress.php:71
 msgid "[Resolved] "
 msgstr "[Résolu] "
 
-#: includes/bp-bbp-st-bbpress.php:145 includes/bp-bbp-st-buddypress.php:36
+#: includes/bp-bbp-st-bbpress.php:145 includes/bp-bbp-st-buddypress.php:74
 msgid "[Support request] "
 msgstr "[Support requis] "
 
-#: includes/bp-bbp-st-bbpress.php:197 includes/bp-bbp-st-buddypress.php:61
+#: includes/bp-bbp-st-bbpress.php:197 includes/bp-bbp-st-buddypress.php:99
 msgid "Not resolved"
 msgstr "Non résolu"
 
-#: includes/bp-bbp-st-bbpress.php:203 includes/bp-bbp-st-buddypress.php:62
+#: includes/bp-bbp-st-bbpress.php:203 includes/bp-bbp-st-buddypress.php:100
 msgid "Resolved"
 msgstr "Résolu"
 
-#: includes/bp-bbp-st-bbpress.php:209 includes/bp-bbp-st-buddypress.php:63
+#: includes/bp-bbp-st-bbpress.php:209 includes/bp-bbp-st-buddypress.php:101
 msgid "Not a support topic"
 msgstr "Pas un sujet support"
 
