@@ -137,12 +137,12 @@ function bp_bbp_st_bbp_two_support_sticker( $topic_id = false, $echo = true ) {
 		return;
 	
 	if ( $support_status == 2 ){
-		$status = __('[Resolved] ', 'buddy-bbpress-support-topic') . $topic_title;
+		$status = __('[Resolved] ', 'buddy-bbpress-support-topic');
 		$class = ' topic-resolved';
 	}
 		
 	if ( $support_status == 1 ) {
-		$status = __('[Support request] ', 'buddy-bbpress-support-topic') . $topic_title;
+		$status = __('[Support request] ', 'buddy-bbpress-support-topic');
 		$class = ' topic-not-resolved';
 	}
 		
