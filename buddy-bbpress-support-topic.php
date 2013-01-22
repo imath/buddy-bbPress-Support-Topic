@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: Buddy-bbPress Support Topic
-Plugin URI: http://imathi.eu/category/buddypress/
+Plugin URI: http://imathi.eu/tag/buddy-bbpress-support-topic/
 Description: Adds a support type to a forum topic and manage the status of it 
-Version: 1.0-beta3
+Version: 1.0.1-beta1
 Requires at least: 3.5
 Tested up to: 3.5
 License: GNU/GPL 2
@@ -20,7 +20,7 @@ define ( 'BP_BBP_ST_PLUGIN_URL',      WP_PLUGIN_URL . '/' . basename( dirname( _
 define ( 'BP_BBP_ST_PLUGIN_DIR',      WP_PLUGIN_DIR . '/' . basename( dirname( __FILE__ ) ) );
 define ( 'BP_BBP_ST_PLUGIN_URL_CSS',  plugins_url('css' , __FILE__) );
 define ( 'BP_BBP_ST_PLUGIN_URL_JS',   plugins_url('js' , __FILE__) );
-define ( 'BP_BBP_ST_PLUGIN_VERSION',  '1.0-beta3' );
+define ( 'BP_BBP_ST_PLUGIN_VERSION',  '1.0.1-beta1' );
 define ( 'BP_BBP_ST_TOPIC_CPT_ID',    apply_filters( 'bbp_topic_post_type',  'topic'     ) );
 
 add_action( 'bp_include', 'bp_bbp_st_buddypress_init' );
@@ -75,11 +75,21 @@ function bp_bbp_st_load_textdomain() {
 add_action ( 'plugins_loaded', 'bp_bbp_st_load_textdomain', 2 );
 
 function bp_bbp_st_install(){
-	if( !get_option('bp-bbp-st-version') || "" == get_option('bp-bbp-st-version')){
+	if( !get_option('bp-bbp-st-version') || "" == get_option('bp-bbp-st-version') ){
 		update_option('bp-bbp-st-version', BP_BBP_ST_PLUGIN_VERSION );
 	}
 }
 
 register_activation_hook( __FILE__, 'bp_bbp_st_install' );
+
+/* updating option in case of upgrade */
+add_action( is_multisite() ? 'network_admin_menu' : 'admin_menu', 'bp_bbp_st_upgrade' );
+
+function bp_bbp_st_upgrade() {
+	if( get_option('bp-bbp-st-version') != BP_BBP_ST_PLUGIN_VERSION )
+		update_option('bp-bbp-st-version', BP_BBP_ST_PLUGIN_VERSION );
+}
+
+
 
 ?>

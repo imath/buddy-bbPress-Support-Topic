@@ -60,6 +60,8 @@ function bp_bbp_st_print_support_type_on_topic_title( $topic_title ) {
 	
 	if( !bp_is_group_forum_topic_edit() && !bp_is_group_forum_topic() ) {
 		
+		$topic_status = "";
+		
 		$topic_id = bp_get_the_topic_id();
 
 		$support_status = bb_get_topicmeta( $topic_id, 'support_topic');
@@ -68,13 +70,16 @@ function bp_bbp_st_print_support_type_on_topic_title( $topic_title ) {
 			return $topic_title;
 		
 		if ( $support_status == 2 )
-			return __('[Resolved] ', 'buddy-bbpress-support-topic') . $topic_title;
+			$topic_status = __('[Resolved] ', 'buddy-bbpress-support-topic') ;
 		
 		if ( $support_status == 1 )
-			return __('[Support request] ', 'buddy-bbpress-support-topic') . $topic_title;
-		
+			$topic_status = __('[Support request] ', 'buddy-bbpress-support-topic') ;
+			
+		if( !empty( $topic_status ) )
+			return apply_filters( 'bp_bbp_st_print_support_type', $topic_status, $support_status ) . $topic_title ;
+		else
+			return $topic_title;
 	}
-		
 		
 	else
 		return $topic_title;

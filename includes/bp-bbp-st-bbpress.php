@@ -49,14 +49,15 @@ function bp_bbp_st_enqueue_jquery() {
 }
 
 
-add_action( 'get_template_part_content', 'bp_bbp_st_check_topic_single', 10, 2 );
-add_action( 'get_template_part_form', 'bp_bbp_st_check_topic_single', 10, 2 );
+add_filter( 'bbp_get_template_part', 'bp_bbp_st_check_topic_single', 99, 3 );
 
-function bp_bbp_st_check_topic_single( $slug, $name ){
+function bp_bbp_st_check_topic_single( $templates, $slug, $name ){
 	if( in_array( $name, array( 'single-topic', 'topic' ) ) ) {
 		add_action( 'wp_footer', 'bp_bbp_st_js_topic_single');
 		remove_filter( 'the_title', 'bp_bbp_st_change_topic_title', 99 );
 	}
+	
+	return $templates;
 }
 
 

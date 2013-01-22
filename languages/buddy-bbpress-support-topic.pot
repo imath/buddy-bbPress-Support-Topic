@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Buddy-bbPress Support Topic package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Buddy-bbPress Support Topic 1.0-beta1\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/tag/buddy-bbPress-Support-Topic\n"
-"POT-Creation-Date: 2013-01-14 19:15:09+00:00\n"
+"Project-Id-Version: Buddy-bbPress Support Topic 1.0.1-beta1\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/buddy-bbpress-support-topic\n"
+"POT-Creation-Date: 2013-01-22 17:37:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,35 +16,35 @@ msgstr ""
 msgid "This is a support topic"
 msgstr ""
 
-#: includes/bp-bbp-st-bbpress.php:65
+#: includes/bp-bbp-st-bbpress.php:66
 msgid "loading"
 msgstr ""
 
-#: includes/bp-bbp-st-bbpress.php:140 includes/bp-bbp-st-buddypress.php:71
+#: includes/bp-bbp-st-bbpress.php:141 includes/bp-bbp-st-buddypress.php:73
 msgid "[Resolved] "
 msgstr ""
 
-#: includes/bp-bbp-st-bbpress.php:145 includes/bp-bbp-st-buddypress.php:74
+#: includes/bp-bbp-st-bbpress.php:146 includes/bp-bbp-st-buddypress.php:76
 msgid "[Support request] "
 msgstr ""
 
-#: includes/bp-bbp-st-bbpress.php:197 includes/bp-bbp-st-buddypress.php:99
+#: includes/bp-bbp-st-bbpress.php:198 includes/bp-bbp-st-buddypress.php:104
 msgid "Not resolved"
 msgstr ""
 
-#: includes/bp-bbp-st-bbpress.php:203 includes/bp-bbp-st-buddypress.php:100
+#: includes/bp-bbp-st-bbpress.php:204 includes/bp-bbp-st-buddypress.php:105
 msgid "Resolved"
 msgstr ""
 
-#: includes/bp-bbp-st-bbpress.php:209 includes/bp-bbp-st-buddypress.php:101
+#: includes/bp-bbp-st-bbpress.php:210 includes/bp-bbp-st-buddypress.php:106
 msgid "Not a support topic"
 msgstr ""
 
-#: includes/bp-bbp-st-bbpress.php:259 includes/bp-bbp-st-bbpress.php:279
+#: includes/bp-bbp-st-bbpress.php:260 includes/bp-bbp-st-bbpress.php:280
 msgid "Support"
 msgstr ""
 
-#: includes/bp-bbp-st-bbpress.php:278
+#: includes/bp-bbp-st-bbpress.php:279
 msgid "Support:"
 msgstr ""
 #. Plugin Name of the plugin/theme
@@ -52,7 +52,7 @@ msgid "Buddy-bbPress Support Topic"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
-msgid "http://imathi.eu/category/buddypress/"
+msgid "http://imathi.eu/tag/buddy-bbpress-support-topic/"
 msgstr ""
 
 #. Description of the plugin/theme
