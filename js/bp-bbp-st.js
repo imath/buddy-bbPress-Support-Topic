@@ -16,17 +16,25 @@ jQuery(document).ready(function($){
 		$(this).prop( 'disabled', true );
 		$(this).parent().append('<a class="loading" id="support-loader">loading</a>');
 		
-		topic_id = $(this).attr('rel');
-		support_status = $(this).val();
+		var topic_id = $(this).attr('rel');
+		var support_status = $(this).val();
+		var bpbbpst_nonce = $(this).parent().find('#_wpnonce_bpbbpst_support_status').val();
 		
 		$.post( ajaxurl, {
 			action: 'change_support_status',
 			'topic_id': topic_id,
-			'support_status': support_status
+			'support_status': support_status,
+			'_wpnonce_bpbbpst_support_status': bpbbpst_nonce
 		},
 		function(response) {
-			$('#support-loader').remove();
-			$('#support-select-status').prop( 'disabled', false );
+			
+			if( response != "-1" ) {
+				$('#support-loader').remove();
+				$('#support-select-status').prop( 'disabled', false );
+			} else {
+				alert( bpbbpst_vars.securitycheck );
+			}
+			
 		});
 	});
 });

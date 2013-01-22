@@ -3,7 +3,7 @@
 Plugin Name: Buddy-bbPress Support Topic
 Plugin URI: http://imathi.eu/tag/buddy-bbpress-support-topic/
 Description: Adds a support type to a forum topic and manage the status of it 
-Version: 1.0.1-beta1
+Version: 1.0.2-beta1
 Requires at least: 3.5
 Tested up to: 3.5
 License: GNU/GPL 2
@@ -20,7 +20,7 @@ define ( 'BP_BBP_ST_PLUGIN_URL',      WP_PLUGIN_URL . '/' . basename( dirname( _
 define ( 'BP_BBP_ST_PLUGIN_DIR',      WP_PLUGIN_DIR . '/' . basename( dirname( __FILE__ ) ) );
 define ( 'BP_BBP_ST_PLUGIN_URL_CSS',  plugins_url('css' , __FILE__) );
 define ( 'BP_BBP_ST_PLUGIN_URL_JS',   plugins_url('js' , __FILE__) );
-define ( 'BP_BBP_ST_PLUGIN_VERSION',  '1.0.1-beta1' );
+define ( 'BP_BBP_ST_PLUGIN_VERSION',  '1.0.2-beta1' );
 define ( 'BP_BBP_ST_TOPIC_CPT_ID',    apply_filters( 'bbp_topic_post_type',  'topic'     ) );
 
 add_action( 'bp_include', 'bp_bbp_st_buddypress_init' );
@@ -44,7 +44,10 @@ function bp_bbp_st_add_support_type( $checked = false ) {
 	if( !empty( $checked ) )
 		$checked = 'checked';
 	?>
-	<p><input type="checkbox" value="support" name="_bp_bbp_st_is_support" id="bp_bbp_st_is_support" <?php echo $checked;?>> <?php _e('This is a support topic','buddy-bbpress-support-topic') ;?></p>
+	<p>
+		<input type="checkbox" value="support" name="_bp_bbp_st_is_support" id="bp_bbp_st_is_support" <?php echo $checked;?>> <?php _e('This is a support topic','buddy-bbpress-support-topic') ;?>
+		<?php wp_nonce_field( 'bpbbpst_support_define', '_wpnonce_bpbbpst_support_define' ); ?>
+	</p>
 	<?php
 }
 

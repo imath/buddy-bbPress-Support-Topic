@@ -32,7 +32,7 @@ function bp_bbp_st_bbpold_edit_support_type_for_topic( $topic_datas ) {
 	
 	$support_status = bb_get_topicmeta( $topic_datas->topic_id, 'support_topic');
 	
-	if( !empty( $_POST['_bp_bbp_st_is_support'] ) ) {
+	if( !empty( $_POST['_bp_bbp_st_is_support'] ) && wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_define'],'bpbbpst_support_define') ) {
 
 		if( empty( $support_status ) )
 			bp_bbp_st_bbpold_save_support_type_for_topic( false, $topic_datas );
@@ -49,7 +49,8 @@ add_action( 'groups_new_forum_topic', 'bp_bbp_st_bbpold_save_support_type_for_to
 
 function bp_bbp_st_bbpold_save_support_type_for_topic( $group_id, $topic_datas ) {
 
-	if ( !empty( $_POST['_bp_bbp_st_is_support'] ) ) {
+	if ( !empty( $_POST['_bp_bbp_st_is_support'] ) && wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_define'],'bpbbpst_support_define') ) {
+		// no need to sanitize value as i arbitrary set the support topic option to 1
 		bb_update_topicmeta( $topic_datas->topic_id, 'support_topic', 1 );
 	}
 }
@@ -105,6 +106,7 @@ function bp_bbp_st_selectbox_support() {
 			<option value="2" <?php if($support_status==2) echo 'selected';?>><?php _e('Resolved', 'buddy-bbpress-support-topic');?></option>
 			<option value="0" <?php if( empty( $support_status ) ) echo 'selected';?>><?php _e('Not a support topic', 'buddy-bbpress-support-topic');?></option>
 		</select>
+		<?php wp_nonce_field( 'bpbbpst_support_status', '_wpnonce_bpbbpst_support_status' );?>
 	</div>
 	<?php
 	}
@@ -126,6 +128,10 @@ function bp_bbp_st_enqueue_support_cssjs() {
 	if( bp_is_group_forum_topic_edit() || bp_is_group_forum_topic() ) {
 		wp_enqueue_style( 'bp-bbp-st-css', BP_BBP_ST_PLUGIN_URL_CSS . '/bp-bbp-st.css');
 		wp_enqueue_script( 'bp-bbp-st-js', BP_BBP_ST_PLUGIN_URL_JS . '/bp-bbp-st.js', array('jquery') );
+		wp_localize_script('bp-bbp-st-js', 'bpbbpst_vars', array(
+					'securitycheck'           => __( 'Security check failed', 'buddy-bbpress-support-topic' )
+				)
+			);
 	}
 		
 }
@@ -134,17 +140,27 @@ add_action('wp_ajax_change_support_status', 'bp_bbp_st_change_support_status');
 
 function bp_bbp_st_change_support_status(){
 	
+	if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) )
+		return;
+
+	if( !wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_status'],'bpbbpst_support_status') ) {
+		echo -1;
+		die();
+	}
+	
 	if( !empty( $_POST['topic_id'] ) ){
 		
 		do_action( 'bbpress_init' );
+
+		$support_status = intval( $_POST['support_status'] );
 		
-		if( empty($_POST['support_status']) ) {
+		if( empty( $support_status ) ) {
 			bb_delete_topicmeta( $_POST['topic_id'], 'support_topic' );
 		} else {
-			bb_update_topicmeta( $_POST['topic_id'], 'support_topic', $_POST['support_status'] );
+			bb_update_topicmeta( $_POST['topic_id'], 'support_topic', $support_status );
 		}
 		echo 1;
-	} else {
+	} else { 
 		echo 0;
 	}	
 	die();

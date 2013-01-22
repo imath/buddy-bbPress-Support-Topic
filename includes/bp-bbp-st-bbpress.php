@@ -71,6 +71,7 @@ function bp_bbp_st_js_topic_single() {
 		$('.support-select-status').change(function(){
 			
 			var indiceChose = $(this)[0].selectedIndex;
+			var bpbbpst_nonce = $(this).parent().find('#_wpnonce_bpbbpst_support_status').val();
 			
 			$('.support-select-status').each(function(){
 				$(this).prop( 'disabled', true );
@@ -86,19 +87,27 @@ function bp_bbp_st_js_topic_single() {
 			$.post( ajaxurl, {
 				action: 'bb_two_change_support_status',
 				'topic_id': topic_id,
-				'support_status': support_status
+				'support_status': support_status,
+				'_wpnonce_bpbbpst_support_status': bpbbpst_nonce
 			},
 			function(response) {
 				
-				$('.support-loader').each(function(){
-					$(this).remove();
-				});
-				$('.support-select-status').each(function(){
-					$(this).prop( 'disabled', false );
+				if( response != "-1" ) {
+
+					$('.support-loader').each(function(){
+						$(this).remove();
+					});
+					$('.support-select-status').each(function(){
+						$(this).prop( 'disabled', false );
 					
-					if( indiceChose != $(this)[0].selectedIndex )
-						$(this)[0].selectedIndex = indiceChose;
-				});
+						if( indiceChose != $(this)[0].selectedIndex )
+							$(this)[0].selectedIndex = indiceChose;
+					});
+
+				} else {
+					alert("<?php _e('Security check failed', 'buddy-bbpress-support-topic');?>");
+				}
+				
 			});
 		});
 		
@@ -110,12 +119,21 @@ function bp_bbp_st_js_topic_single() {
 add_action('wp_ajax_bb_two_change_support_status', 'bp_bbp_st_bb_two_change_support_status');
 
 function bp_bbp_st_bb_two_change_support_status() {
+	
+	if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) )
+		return;
+
+	if( !wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_status'],'bpbbpst_support_status') ) {
+		echo -1;
+		die();
+	}
+
 	if( !empty( $_POST['topic_id'] ) ){
 		
 		if( empty( $_POST['support_status'] ) ) {
 			delete_post_meta( $_POST['topic_id'], 'support_topic' );
 		} else {
-			update_post_meta( $_POST['topic_id'], 'support_topic', $_POST['support_status'] );
+			update_post_meta( $_POST['topic_id'], 'support_topic', intval( $_POST['support_status'] ) );
 		}
 		echo 1;
 	} else {
@@ -163,7 +181,9 @@ function bp_bbp_st_bbp_two_support_sticker( $topic_id = false, $echo = true ) {
 add_action( 'bbp_new_topic_post_extras', 'bp_bbp_st_save_support_type_for_topic', 10, 1 );
 
 function bp_bbp_st_save_support_type_for_topic( $topic_id = false ) {
-	if ( !empty( $_POST['_bp_bbp_st_is_support'] ) ) {
+	// if safe then store
+	if ( !empty( $_POST['_bp_bbp_st_is_support'] ) && wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_define'], 'bpbbpst_support_define' ) ) {
+		// no need to sanitize value as i arbitrary set the support topic option to 1
 		update_post_meta( $topic_id, 'support_topic', 1 );
 	}
 }
@@ -171,6 +191,10 @@ function bp_bbp_st_save_support_type_for_topic( $topic_id = false ) {
 add_action( 'bbp_edit_topic_post_extras', 'bp_bbp_st_edit_support_type_for_topic', 10, 1 );
 
 function bp_bbp_st_edit_support_type_for_topic( $topic_id = false ) {
+
+	if( !wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_define'], 'bpbbpst_support_define' ) )
+		return;
+
 	if ( !empty( $_POST['_bp_bbp_st_is_support'] ) ) {
 		$support = get_post_meta( $topic_id, 'support_topic', true );
 		
@@ -208,7 +232,11 @@ function bp_bbp_st_get_output_selectbox( $disabled = 'disabled', $support_status
 		$output .= 'selected';
 		
 	$output .= '>'. __('Not a support topic', 'buddy-bbpress-support-topic'). '</option>';
-	$output .= '</select></span>';
+	$output .= '</select>';
+
+	// nonce field
+	$output .= wp_nonce_field( 'bpbbpst_support_status', '_wpnonce_bpbbpst_support_status', true, false );
+	$output .= '</span>';
 	
 	return apply_filters( 'buddy_bbp_st_get_output_selectbox', $output, $disabled, $support_status, $topic_id );
 
@@ -308,7 +336,9 @@ function bp_bbp_st_topic_meta_box_save( $topic_id, $post ) {
 		
 	$new_status = $_POST['_support_status'];
 	
-	if( $new_status !== false ) {
+	$new_status = intval( $_POST['_support_status'] );
+	
+	if( $new_status !== false && wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_status'], 'bpbbpst_support_status') ) {
 		
 		if( empty( $new_status ) ) {
 			delete_post_meta( $topic_id, 'support_topic' );
