@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Buddy-bbPress Support Topic 0.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/buddy-bbpress-support-topic\n"
-"POT-Creation-Date: 2013-01-24 02:28:44+00:00\n"
-"PO-Revision-Date: 2013-01-24 03:30+0100\n"
+"POT-Creation-Date: 2013-01-24 19:56:50+00:00\n"
+"PO-Revision-Date: 2013-01-24 20:58+0100\n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: buddy-bbpress-support-topic.php:72
+#: buddy-bbpress-support-topic.php:71
 msgid "This is a support topic"
 msgstr "Sujet nécessitant un support"
 
@@ -44,7 +44,8 @@ msgstr "Tout type de support"
 msgid "Not resolved"
 msgstr "Non résolu"
 
-#: includes/bbpress-functions.php:303 includes/buddypress-functions.php:179
+#: includes/bbpress-functions.php:303 includes/bbpress-functions.php:652
+#: includes/buddypress-functions.php:179
 msgid "Resolved"
 msgstr "Résolu"
 
@@ -59,6 +60,18 @@ msgstr "Support"
 #: includes/bbpress-functions.php:424
 msgid "Support:"
 msgstr "Support:"
+
+#: includes/bbpress-functions.php:641
+msgid "Support topics"
+msgstr "Sujets de support"
+
+#: includes/bbpress-functions.php:646
+msgid "Resolved so far"
+msgstr "Résolu jusqu&#39;à présent"
+
+#: includes/bbpress-functions.php:658
+msgid "To resolve"
+msgstr "A résoudre"
 
 #. Plugin Name of the plugin/theme
 msgid "Buddy-bbPress Support Topic"

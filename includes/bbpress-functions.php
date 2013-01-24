@@ -491,11 +491,12 @@ add_action( 'save_post', 'bpbbpst_topic_meta_box_save', 10, 2 );
 /**
  * Hooks restrict_manage_posts if wp admin topics list is displayed
  *
+ * @uses   bbp_get_topic_post_type() to get the topic post type identifier
  * @uses   bpbbpst_bbpress_get_selectbox to display the selectbox
  * @author imath
  */
 function bpbbpst_bbpress_add_support_filter() {
-	if( get_current_screen()->post_type == BPBBPST_TOPIC_CPT_ID ){
+	if( get_current_screen()->post_type == bbp_get_topic_post_type() ){
 		
 		$selected = empty( $_GET['_support_status'] ) ? 3 : intval( $_GET['_support_status'] );
 		//displays the selectbox to filter by support status
@@ -556,3 +557,112 @@ function bpbbpst_bbpress_filter_support( $query_vars ){
 }
 
 add_filter( 'bbp_request',  'bpbbpst_bbpress_filter_support', 11, 1 );
+
+
+/**
+ * Returns an array of statistics element about support topics
+ * 
+ * @param  array|string $args  user can customize the query
+ * @return array $support_stats the different statistics element
+ * @uses   bbp_get_topic_post_type() to get the topic post type identifier
+ * @uses   bbp_parse_args() to merge args with defaults
+ * @uses   WP_Query to make the request and get the support topics
+ * @uses   get_post_meta() to help count the type of support topics
+ * @uses   wp_reset_postdata() to restore the $post global to the current post in the main query
+ * @author imath
+ */
+function bpbbpst_bbpress_support_statistics( $args = '' ) {
+	
+	$defaults = array( 
+			'post_type'      => bbp_get_topic_post_type(),
+			'posts_per_page' => -1,
+			'meta_query'     => array( array( 
+											'key' => '_bpbbpst_support_topic',
+											'value' => 1,
+											'type' => 'numeric',
+											'compare' => '>=' 
+								) )
+				);
+	$r = bbp_parse_args( $args, $defaults, 'support_statistics' );
+
+	$support_query    = new WP_Query( $r );
+	$total_support    = $support_query->found_posts;
+	$unsolved_support = 0;
+
+	if ( $support_query->have_posts() ) :
+
+		while (  $support_query->have_posts() ) :  $support_query->the_post();
+
+			$unsolved_support += ( 1 == get_post_meta( $support_query->post->ID, '_bpbbpst_support_topic', true ) ) ? 1 : 0 ;
+
+		endwhile;
+
+			
+		wp_reset_postdata();
+
+	endif;
+
+	if( !empty( $unsolved_support ) ) {
+		
+		$resolved_support = $total_support - $unsolved_support ;
+		$percent_support  = number_format( ( $resolved_support / $total_support ) * 100, 2 ) . '%';
+
+		$support_stats = array( 
+							'total_support' => $total_support, 
+							'resolved'      => $resolved_support, 
+							'unsolved'      => $unsolved_support, 
+							'percent'       => $percent_support 
+							);
+
+		return apply_filters( 'bpbbpst_bbpress_support_statistics', $support_stats, $args );
+
+	} else {
+
+		return false;
+
+	}
+
+}
+
+
+/**
+ * Displays the stats in the bbPress dashboard widget
+ *
+ * @uses bpbbpst_bbpress_support_statistics() to get the array of statitics about support topic
+ * @author imath
+ */
+function bpbbpst_bbpress_right_now_dashboard_stats() {
+	
+	$support_statistics = bpbbpst_bbpress_support_statistics();
+
+	if( !empty( $support_statistics) ) {
+		?>
+		<div class="table table_content" style="margin-top:40px">
+			<p class="sub"><?php _e( 'Support topics', 'bbpress' ); ?></p>
+			<table>
+				<tr class="first">
+
+					<td class="first b b-topics"><span class="total-count"><?php echo $support_statistics['percent']; ?></span></td>
+					<td class="t topics"><?php _e( 'Resolved so far', 'buddy-bbpress-support-topic' ); ?></td>
+
+				</tr>
+				<tr class="first">
+
+					<td class="first b b-topic_tags approved"><?php echo $support_statistics['resolved']; ?></td>
+					<td class="t topic_tags approved"><?php  _e('Resolved', 'buddy-bbpress-support-topic' );?></td>
+
+				</tr>
+				<tr class="first">
+
+					<td class="first b b-topic_tags waiting"><?php echo $support_statistics['unsolved']; ?></td>
+					<td class="t topic_tags waiting"><?php  _e( 'To resolve', 'buddy-bbpress-support-topic' );?></td>
+
+				</tr>
+			</table>
+
+		</div>
+		<?php
+	}
+}
+
+add_action( 'bbp_dashboard_widget_right_now_table_end', 'bpbbpst_bbpress_right_now_dashboard_stats' );

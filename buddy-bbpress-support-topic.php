@@ -27,7 +27,6 @@ define ( 'BPBBPST_PLUGIN_DIR',     WP_PLUGIN_DIR . '/' . basename( dirname( __FI
 define ( 'BPBBPST_PLUGIN_URL_CSS', plugins_url( 'css' , __FILE__ ) );
 define ( 'BPBBPST_PLUGIN_URL_JS',  plugins_url( 'js' , __FILE__ ) );
 define ( 'BPBBPST_PLUGIN_VERSION', '1.1-beta1' );
-define ( 'BPBBPST_TOPIC_CPT_ID',   apply_filters( 'bbp_topic_post_type', 'topic' ) );
 
 
 /**
