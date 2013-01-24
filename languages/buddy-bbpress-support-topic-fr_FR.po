@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Buddy-bbPress Support Topic 0.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/buddy-bbpress-support-topic\n"
-"POT-Creation-Date: 2013-01-22 20:03:43+00:00\n"
-"PO-Revision-Date: 2013-01-22 21:05+0100\n"
+"POT-Creation-Date: 2013-01-24 00:44:28+00:00\n"
+"PO-Revision-Date: 2013-01-24 01:45+0100\n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,43 +16,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: buddy-bbpress-support-topic.php:48
+#: buddy-bbpress-support-topic.php:72
 msgid "This is a support topic"
 msgstr "Sujet nécessitant un support"
 
-#: includes/bp-bbp-st-bbpress.php:66
-msgid "loading"
-msgstr "patience"
-
-#: includes/bp-bbp-st-bbpress.php:108 includes/bp-bbp-st-buddypress.php:132
+#: includes/bbpress-functions.php:109 includes/buddypress-functions.php:230
 msgid "Security check failed"
 msgstr "La vérification de sécurité a échouée"
 
-#: includes/bp-bbp-st-bbpress.php:159 includes/bp-bbp-st-buddypress.php:74
+#: includes/bbpress-functions.php:110 includes/buddypress-functions.php:231
+msgid "loading"
+msgstr "patience"
+
+#: includes/bbpress-functions.php:201 includes/buddypress-functions.php:121
 msgid "[Resolved] "
 msgstr "[Résolu] "
 
-#: includes/bp-bbp-st-bbpress.php:164 includes/bp-bbp-st-buddypress.php:77
+#: includes/bbpress-functions.php:206 includes/buddypress-functions.php:124
 msgid "[Support request] "
 msgstr "[Support requis] "
 
-#: includes/bp-bbp-st-bbpress.php:222 includes/bp-bbp-st-buddypress.php:105
+#: includes/bbpress-functions.php:297 includes/buddypress-functions.php:178
 msgid "Not resolved"
 msgstr "Non résolu"
 
-#: includes/bp-bbp-st-bbpress.php:228 includes/bp-bbp-st-buddypress.php:106
+#: includes/bbpress-functions.php:302 includes/buddypress-functions.php:179
 msgid "Resolved"
 msgstr "Résolu"
 
-#: includes/bp-bbp-st-bbpress.php:234 includes/bp-bbp-st-buddypress.php:107
+#: includes/bbpress-functions.php:307 includes/buddypress-functions.php:180
 msgid "Not a support topic"
 msgstr "Pas un sujet support"
 
-#: includes/bp-bbp-st-bbpress.php:288 includes/bp-bbp-st-bbpress.php:308
+#: includes/bbpress-functions.php:384 includes/bbpress-functions.php:422
 msgid "Support"
 msgstr "Support"
 
-#: includes/bp-bbp-st-bbpress.php:307
+#: includes/bbpress-functions.php:421
 msgid "Support:"
 msgstr "Support:"
 
