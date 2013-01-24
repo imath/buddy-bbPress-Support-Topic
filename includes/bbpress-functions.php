@@ -290,21 +290,24 @@ function bpbbpst_bbpress_get_selectbox( $support_status = 1, $topic_id = false )
 	
 	$output = '<span class="support-select-box">';
 	$output .= '<select class="support-select-status" name="_support_status" data-topicsupport="'.$topic_id.'">';
+	
+	if( $topic_id == 'adminlist' )
+		$output .= '<option value="3">' . __('All support status') .'</option>';
+	
 	$output .= '<option value="1" ';
-	
 	$output .= selected( $support_status, 1, false );
-	
 	$output .= '>'.__('Not resolved', 'buddy-bbpress-support-topic') .'</option>';
-	$output .= '<option value="2" ';
 	
+	$output .= '<option value="2" ';
 	$output .= selected( $support_status, 2, false );
-		
 	$output .= '>'. __('Resolved', 'buddy-bbpress-support-topic') .'</option>';
-	$output .= '<option value="0" ';
-		
-	$output .= selected( $support_status, false, false );
-		
-	$output .= '>'. __('Not a support topic', 'buddy-bbpress-support-topic'). '</option>';
+	
+	if( $topic_id != 'adminlist' ) {
+		$output .= '<option value="0" ';
+		$output .= selected( $support_status, false, false );
+		$output .= '>'. __('Not a support topic', 'buddy-bbpress-support-topic'). '</option>';
+	}
+	
 	$output .= '</select>';
 
 	// nonce field
@@ -482,3 +485,74 @@ function bpbbpst_topic_meta_box_save( $topic_id, $post ) {
 }
 
 add_action( 'save_post', 'bpbbpst_topic_meta_box_save', 10, 2 );
+
+
+
+/**
+ * Hooks restrict_manage_posts if wp admin topics list is displayed
+ *
+ * @uses   bpbbpst_bbpress_get_selectbox to display the selectbox
+ * @author imath
+ */
+function bpbbpst_bbpress_add_support_filter() {
+	if( get_current_screen()->post_type == BPBBPST_TOPIC_CPT_ID ){
+		
+		$selected = empty( $_GET['_support_status'] ) ? 3 : intval( $_GET['_support_status'] );
+		//displays the selectbox to filter by support status
+		echo bpbbpst_bbpress_get_selectbox( $selected , 'adminlist' );
+	}
+	
+}
+
+add_action( 'restrict_manage_posts', 'bpbbpst_bbpress_add_support_filter', 11 );
+
+
+/**
+ * filters query_vars in order to add a meta_query to filter topics by support status
+ *
+ * @param  array $query_vars 
+ * @return $query_vars eventually modified to integrate a meta query
+ * @uses   intval() to sanitize data
+ * @author imath
+ */
+function bpbbpst_bbpress_filter_support( $query_vars ){
+	
+	if( is_null( $_GET['_support_status']  ) )
+		return $query_vars;
+	
+	$support_status = intval( $_GET['_support_status'] );
+	
+
+	if( !empty( $query_vars['meta_key'] ) ) {
+		
+		if( $support_status == 3 )
+			return $query_vars;
+
+		unset( $query_vars['meta_value'], $query_vars['meta_key'] );
+
+		$query_vars['meta_query'] = array( array(
+													'key' => '_bpbbpst_support_topic',
+													'value' => $support_status,
+													'compare' => '='
+												),
+											array(
+													'key' => '_bbp_forum_id',
+													'value' =>  intval( $_GET['bbp_forum_id'] ),
+													'compare' => '='
+												) 
+										);
+
+	} else {
+		
+		if( $support_status == 3 )
+			return $query_vars;
+		
+		$query_vars['meta_key']   = '_bpbbpst_support_topic';
+		$query_vars['meta_value'] = $support_status;
+		
+	}
+
+	return $query_vars;
+}
+
+add_filter( 'bbp_request',  'bpbbpst_bbpress_filter_support', 11, 1 );

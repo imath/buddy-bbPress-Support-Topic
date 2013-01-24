@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Buddy-bbPress Support Topic 0.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/buddy-bbpress-support-topic\n"
-"POT-Creation-Date: 2013-01-24 00:44:28+00:00\n"
-"PO-Revision-Date: 2013-01-24 01:45+0100\n"
+"POT-Creation-Date: 2013-01-24 02:28:44+00:00\n"
+"PO-Revision-Date: 2013-01-24 03:30+0100\n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,23 +36,27 @@ msgstr "[Résolu] "
 msgid "[Support request] "
 msgstr "[Support requis] "
 
-#: includes/bbpress-functions.php:297 includes/buddypress-functions.php:178
+#: includes/bbpress-functions.php:295
+msgid "All support status"
+msgstr "Tout type de support"
+
+#: includes/bbpress-functions.php:299 includes/buddypress-functions.php:178
 msgid "Not resolved"
 msgstr "Non résolu"
 
-#: includes/bbpress-functions.php:302 includes/buddypress-functions.php:179
+#: includes/bbpress-functions.php:303 includes/buddypress-functions.php:179
 msgid "Resolved"
 msgstr "Résolu"
 
-#: includes/bbpress-functions.php:307 includes/buddypress-functions.php:180
+#: includes/bbpress-functions.php:308 includes/buddypress-functions.php:180
 msgid "Not a support topic"
 msgstr "Pas un sujet support"
 
-#: includes/bbpress-functions.php:384 includes/bbpress-functions.php:422
+#: includes/bbpress-functions.php:387 includes/bbpress-functions.php:425
 msgid "Support"
 msgstr "Support"
 
-#: includes/bbpress-functions.php:421
+#: includes/bbpress-functions.php:424
 msgid "Support:"
 msgstr "Support:"
 
