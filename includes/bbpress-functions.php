@@ -309,9 +309,11 @@ function bpbbpst_bbpress_get_selectbox( $support_status = 1, $topic_id = false )
 	}
 	
 	$output .= '</select>';
-
+	
 	// nonce field
-	$output .= wp_nonce_field( 'bpbbpst_support_status', '_wpnonce_bpbbpst_support_status', true, false );
+	if( $topic_id != 'adminlist' )
+		$output .= wp_nonce_field( 'bpbbpst_support_status', '_wpnonce_bpbbpst_support_status', true, false );
+	
 	$output .= '</span>';
 	
 	return apply_filters( 'bpbbpst_bbpress_get_selectbox', $output, $support_status, $topic_id );
@@ -513,10 +515,14 @@ add_action( 'restrict_manage_posts', 'bpbbpst_bbpress_add_support_filter', 11 );
  *
  * @param  array $query_vars 
  * @return $query_vars eventually modified to integrate a meta query
+ * @uses   is_admin() to check if we're in backend
  * @uses   intval() to sanitize data
  * @author imath
  */
 function bpbbpst_bbpress_filter_support( $query_vars ){
+	
+	if( !is_admin() )
+			return $query_vars;
 	
 	if( is_null( $_GET['_support_status']  ) )
 		return $query_vars;
@@ -588,12 +594,14 @@ function bpbbpst_bbpress_support_statistics( $args = '' ) {
 	$support_query    = new WP_Query( $r );
 	$total_support    = $support_query->found_posts;
 	$unsolved_support = 0;
+	$resolved_support = 0;
 
 	if ( $support_query->have_posts() ) :
 
 		while (  $support_query->have_posts() ) :  $support_query->the_post();
 
 			$unsolved_support += ( 1 == get_post_meta( $support_query->post->ID, '_bpbbpst_support_topic', true ) ) ? 1 : 0 ;
+			$resolved_support += ( 2 == get_post_meta( $support_query->post->ID, '_bpbbpst_support_topic', true ) ) ? 1 : 0 ;
 
 		endwhile;
 
@@ -602,9 +610,8 @@ function bpbbpst_bbpress_support_statistics( $args = '' ) {
 
 	endif;
 
-	if( !empty( $unsolved_support ) ) {
+	if( !empty( $unsolved_support ) || !empty( $resolved_support ) ) {
 		
-		$resolved_support = $total_support - $unsolved_support ;
 		$percent_support  = number_format( ( $resolved_support / $total_support ) * 100, 2 ) . '%';
 
 		$support_stats = array( 
@@ -629,6 +636,9 @@ function bpbbpst_bbpress_support_statistics( $args = '' ) {
  * Displays the stats in the bbPress dashboard widget
  *
  * @uses bpbbpst_bbpress_support_statistics() to get the array of statitics about support topic
+ * @uses add_query_arg() to add custom args to the admin url
+ * @uses bbp_get_topic_post_type() to get the topic identifier
+ * @uses get_admin_url() to create the edit topic admin url
  * @author imath
  */
 function bpbbpst_bbpress_right_now_dashboard_stats() {
@@ -648,14 +658,36 @@ function bpbbpst_bbpress_right_now_dashboard_stats() {
 				</tr>
 				<tr class="first">
 
-					<td class="first b b-topic_tags approved"><?php echo $support_statistics['resolved']; ?></td>
-					<td class="t topic_tags approved"><?php  _e('Resolved', 'buddy-bbpress-support-topic' );?></td>
+					<?php
+					$num  = $support_statistics['resolved'];
+					$text = __('Resolved', 'buddy-bbpress-support-topic' );
+					
+					if ( current_user_can( 'publish_topics' ) ) {
+						$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type(), '_support_status' => 2 ), get_admin_url( null, 'edit.php' ) );
+						$num  = '<a href="' . $link . '" class="approved">' . $num  . '</a>';
+						$text = '<a href="' . $link . '" class="approved">' . $text . '</a>';
+					}
+					?>
+
+					<td class="first b b-topic_tags"><?php echo $num; ?></td>
+					<td class="t topic_tags"><?php  echo $text; ?></td>
 
 				</tr>
 				<tr class="first">
 
-					<td class="first b b-topic_tags waiting"><?php echo $support_statistics['unsolved']; ?></td>
-					<td class="t topic_tags waiting"><?php  _e( 'To resolve', 'buddy-bbpress-support-topic' );?></td>
+					<?php
+					$num  =  $support_statistics['unsolved'];
+					$text = __( 'To resolve', 'buddy-bbpress-support-topic' );
+					
+					if ( current_user_can( 'publish_topics' ) ) {
+						$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type(), '_support_status' => 1 ), get_admin_url( null, 'edit.php' ) );
+						$num  = '<a href="' . $link . '" class="waiting">' . $num  . '</a>';
+						$text = '<a href="' . $link . '" class="waiting">' . $text . '</a>';
+					}
+					?>
+
+					<td class="first b b-topic_tags"><?php echo $num; ?></td>
+					<td class="t topic_tags waiting"><?php  echo $text; ?></td>
 
 				</tr>
 			</table>

@@ -1,0 +1,50 @@
+.bpbbpst-resolved .bpbbpst-num,
+.bpbbpst-unsolved .bpbbpst-num{
+	color: white; 
+	text-shadow: none;
+	display: inline;
+	margin-right:1em;
+	padding: 2px 5px;
+	font-size: 10px;
+	font-weight: bold;
+	-moz-border-radius: 10px;
+	-khtml-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+}
+
+.bpbbpst-num a {
+	text-decoration:none;
+	color:white!important;
+	font-weight:bold;
+}
+
+li.bpbbpst-resolved .bpbbpst-text a,
+li.bpbbpst-resolved .bpbbpst-text {
+	color:green;
+	text-decoration: none;
+}
+
+li.bpbbpst-resolved .bpbbpst-num {
+	background:green;
+}
+
+li.bpbbpst-unsolved .bpbbpst-text a,
+li.bpbbpst-unsolved .bpbbpst-text {
+	color:#E66F00;
+	text-decoration: none;
+}
+
+li.bpbbpst-unsolved .bpbbpst-num {
+	background: #E66F00;
+}
+
+li.bpbbpst-percent{
+	margin-bottom:1em;
+	font-weight:bold;
+	color:#555;
+}
+
+.widget_bpbbpst_support_stats p {
+	margin-top: 1em;
+}

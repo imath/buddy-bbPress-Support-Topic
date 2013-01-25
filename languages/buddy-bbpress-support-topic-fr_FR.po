@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Buddy-bbPress Support Topic 0.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/buddy-bbpress-support-topic\n"
-"POT-Creation-Date: 2013-01-24 19:56:50+00:00\n"
-"PO-Revision-Date: 2013-01-24 20:58+0100\n"
+"POT-Creation-Date: 2013-01-25 19:16:15+00:00\n"
+"PO-Revision-Date: 2013-01-25 20:17+0100\n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: buddy-bbpress-support-topic.php:71
+#: buddy-bbpress-support-topic.php:72
 msgid "This is a support topic"
 msgstr "Sujet nécessitant un support"
 
@@ -40,11 +40,13 @@ msgstr "[Support requis] "
 msgid "All support status"
 msgstr "Tout type de support"
 
-#: includes/bbpress-functions.php:299 includes/buddypress-functions.php:178
+#: includes/bbpress-functions.php:299 includes/bbpress-widget.php:269
+#: includes/buddypress-functions.php:178
 msgid "Not resolved"
 msgstr "Non résolu"
 
-#: includes/bbpress-functions.php:303 includes/bbpress-functions.php:652
+#: includes/bbpress-functions.php:303 includes/bbpress-functions.php:663
+#: includes/bbpress-widget.php:114 includes/bbpress-widget.php:269
 #: includes/buddypress-functions.php:179
 msgid "Resolved"
 msgstr "Résolu"
@@ -53,25 +55,54 @@ msgstr "Résolu"
 msgid "Not a support topic"
 msgstr "Pas un sujet support"
 
-#: includes/bbpress-functions.php:387 includes/bbpress-functions.php:425
+#: includes/bbpress-functions.php:389 includes/bbpress-functions.php:427
 msgid "Support"
 msgstr "Support"
 
-#: includes/bbpress-functions.php:424
+#: includes/bbpress-functions.php:426
 msgid "Support:"
 msgstr "Support:"
 
-#: includes/bbpress-functions.php:641
+#: includes/bbpress-functions.php:651
 msgid "Support topics"
 msgstr "Sujets de support"
 
-#: includes/bbpress-functions.php:646
+#: includes/bbpress-functions.php:656 includes/bbpress-widget.php:111
 msgid "Resolved so far"
 msgstr "Résolu jusqu&#39;à présent"
 
-#: includes/bbpress-functions.php:658
+#: includes/bbpress-functions.php:680 includes/bbpress-widget.php:123
 msgid "To resolve"
 msgstr "A résoudre"
+
+#: includes/bbpress-widget.php:34
+msgid "Displays support topic global statistics or of the active forum"
+msgstr ""
+"Affiche des statistiques globales ou pour le forum actif concernant les "
+"topics de support"
+
+#: includes/bbpress-widget.php:35 includes/bbpress-widget.php:78
+#: includes/bbpress-widget.php:184
+msgid "Support Topics Stats"
+msgstr "Statistiques de support"
+
+#: includes/bbpress-widget.php:147
+msgid "Go to forums"
+msgstr "Afficher les forums"
+
+#: includes/bbpress-widget.php:196
+msgid "Title:"
+msgstr "Titre:"
+
+#: includes/bbpress-widget.php:201
+msgid "Show forum link"
+msgstr "Afficher le lien vers les forums"
+
+#: includes/bbpress-widget.php:203
+msgid "When not on a forum page, display a link to it"
+msgstr ""
+"Si l&#39;utilisateur n&#39;est pas sur une page de forum, alors affiche un "
+"lien vers les forums."
 
 #. Plugin Name of the plugin/theme
 msgid "Buddy-bbPress Support Topic"

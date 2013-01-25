@@ -3,7 +3,7 @@
 Plugin Name: Buddy-bbPress Support Topic
 Plugin URI: http://imathi.eu/tag/buddy-bbpress-support-topic/
 Description: Adds a support type to a forum topic and manage the status of it 
-Version: 1.1-beta1
+Version: 1.1-beta2
 Requires at least: 3.5
 Tested up to: 3.5
 License: GNU/GPL 2
@@ -26,7 +26,7 @@ define ( 'BPBBPST_PLUGIN_URL',     WP_PLUGIN_URL . '/' . basename( dirname( __FI
 define ( 'BPBBPST_PLUGIN_DIR',     WP_PLUGIN_DIR . '/' . basename( dirname( __FILE__ ) ) );
 define ( 'BPBBPST_PLUGIN_URL_CSS', plugins_url( 'css' , __FILE__ ) );
 define ( 'BPBBPST_PLUGIN_URL_JS',  plugins_url( 'js' , __FILE__ ) );
-define ( 'BPBBPST_PLUGIN_VERSION', '1.1-beta1' );
+define ( 'BPBBPST_PLUGIN_VERSION', '1.1-beta2' );
 
 
 /**
@@ -51,6 +51,7 @@ add_action( 'bp_include', 'bpbbpst_buddypress_init' );
 function bpbbpst_bbpress_init() {
 	
 	require( BPBBPST_PLUGIN_DIR . '/includes/bbpress-functions.php' );
+	require( BPBBPST_PLUGIN_DIR . '/includes/bbpress-widget.php' );
 		
 }
 
