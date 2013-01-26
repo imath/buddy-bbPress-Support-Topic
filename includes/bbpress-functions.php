@@ -524,7 +524,7 @@ function bpbbpst_bbpress_filter_support( $query_vars ){
 	if( !is_admin() )
 			return $query_vars;
 	
-	if( is_null( $_GET['_support_status']  ) )
+	if( empty( $_GET['_support_status']  ) )
 		return $query_vars;
 	
 	$support_status = intval( $_GET['_support_status'] );

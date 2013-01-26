@@ -258,7 +258,7 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 
 		$sep = $args['sep'];
 		if ( ! empty( $sep ) )
-			$sep = $args['sep_before'] . $sep . $args['$sep_after'];
+			$sep = $args['sep_before'] . $sep . $args['sep_after'];
 
 
 		$pad_sep = $args['pad_sep'];
