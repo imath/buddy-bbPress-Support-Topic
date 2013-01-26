@@ -221,7 +221,7 @@ function bpbbpst_buddypress_enqueue_scripts() {
 		   if bbPress is activated for sitewide forums, we need stop him from
 		   enqueueing its javascript.
 		*/
-		if( function_exists( bpbbpst_bbpress_enqueue_scripts ) )
+		if( function_exists( 'bpbbpst_bbpress_enqueue_scripts' ) )
 			remove_action( 'wp_enqueue_scripts', 'bpbbpst_bbpress_enqueue_scripts' );
 		
 		wp_enqueue_style( 'bpbbpst-buddy-css', BPBBPST_PLUGIN_URL_CSS . '/bpbbpst-buddy.css');
