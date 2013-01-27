@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Buddy-bbPress Support Topic 1.1-beta2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/buddy-bbpress-support-topic\n"
-"POT-Creation-Date: 2013-01-25 19:16:15+00:00\n"
+"POT-Creation-Date: 2013-01-27 17:17:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -36,13 +36,13 @@ msgstr ""
 msgid "All support status"
 msgstr ""
 
-#: includes/bbpress-functions.php:299 includes/bbpress-widget.php:269
+#: includes/bbpress-functions.php:299 includes/bbpress-widget.php:275
 #: includes/buddypress-functions.php:178
 msgid "Not resolved"
 msgstr ""
 
 #: includes/bbpress-functions.php:303 includes/bbpress-functions.php:663
-#: includes/bbpress-widget.php:114 includes/bbpress-widget.php:269
+#: includes/bbpress-widget.php:114 includes/bbpress-widget.php:275
 #: includes/buddypress-functions.php:179
 msgid "Resolved"
 msgstr ""
@@ -76,7 +76,7 @@ msgid "Displays support topic global statistics or of the active forum"
 msgstr ""
 
 #: includes/bbpress-widget.php:35 includes/bbpress-widget.php:78
-#: includes/bbpress-widget.php:184
+#: includes/bbpress-widget.php:190
 msgid "Support Topics Stats"
 msgstr ""
 
@@ -84,15 +84,15 @@ msgstr ""
 msgid "Go to forums"
 msgstr ""
 
-#: includes/bbpress-widget.php:196
+#: includes/bbpress-widget.php:202
 msgid "Title:"
 msgstr ""
 
-#: includes/bbpress-widget.php:201
+#: includes/bbpress-widget.php:207
 msgid "Show forum link"
 msgstr ""
 
-#: includes/bbpress-widget.php:203
+#: includes/bbpress-widget.php:209
 msgid "When not on a forum page, display a link to it"
 msgstr ""
 #. Plugin Name of the plugin/theme

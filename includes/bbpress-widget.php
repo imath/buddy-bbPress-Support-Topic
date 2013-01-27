@@ -162,8 +162,14 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 */
 	function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
+		
 		$instance['bpbbpst_title'] = strip_tags( $new_instance['bpbbpst_title'] );
-		$instance['show_forum_link'] = intval( $new_instance['show_forum_link'] );
+		
+		if( !empty( $new_instance['show_forum_link'] ) )	
+			$instance['show_forum_link'] = intval( $new_instance['show_forum_link'] );
+			
+		else
+			$instance['show_forum_link'] = 0;
 		
 		return $instance;
 	}
@@ -182,7 +188,7 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	function form( $instance ) {
 		$defaults = array(
 	                     'bpbbpst_title'   => __( 'Support Topics Stats', 'buddy-bbpress-support-topic' ),
-						 'show_forum_link' => false
+						 'show_forum_link' => 0
 	                );
 
 	    $instance = wp_parse_args( (array) $instance, $defaults );

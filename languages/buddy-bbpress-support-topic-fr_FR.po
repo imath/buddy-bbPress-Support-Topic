@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Buddy-bbPress Support Topic 0.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/buddy-bbpress-support-topic\n"
-"POT-Creation-Date: 2013-01-25 19:16:15+00:00\n"
-"PO-Revision-Date: 2013-01-25 20:17+0100\n"
+"POT-Creation-Date: 2013-01-27 17:17:29+00:00\n"
+"PO-Revision-Date: 2013-01-27 18:18+0100\n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -40,13 +40,13 @@ msgstr "[Support requis] "
 msgid "All support status"
 msgstr "Tout type de support"
 
-#: includes/bbpress-functions.php:299 includes/bbpress-widget.php:269
+#: includes/bbpress-functions.php:299 includes/bbpress-widget.php:275
 #: includes/buddypress-functions.php:178
 msgid "Not resolved"
 msgstr "Non résolu"
 
 #: includes/bbpress-functions.php:303 includes/bbpress-functions.php:663
-#: includes/bbpress-widget.php:114 includes/bbpress-widget.php:269
+#: includes/bbpress-widget.php:114 includes/bbpress-widget.php:275
 #: includes/buddypress-functions.php:179
 msgid "Resolved"
 msgstr "Résolu"
@@ -82,7 +82,7 @@ msgstr ""
 "topics de support"
 
 #: includes/bbpress-widget.php:35 includes/bbpress-widget.php:78
-#: includes/bbpress-widget.php:184
+#: includes/bbpress-widget.php:190
 msgid "Support Topics Stats"
 msgstr "Statistiques de support"
 
@@ -90,15 +90,15 @@ msgstr "Statistiques de support"
 msgid "Go to forums"
 msgstr "Afficher les forums"
 
-#: includes/bbpress-widget.php:196
+#: includes/bbpress-widget.php:202
 msgid "Title:"
 msgstr "Titre:"
 
-#: includes/bbpress-widget.php:201
+#: includes/bbpress-widget.php:207
 msgid "Show forum link"
 msgstr "Afficher le lien vers les forums"
 
-#: includes/bbpress-widget.php:203
+#: includes/bbpress-widget.php:209
 msgid "When not on a forum page, display a link to it"
 msgstr ""
 "Si l&#39;utilisateur n&#39;est pas sur une page de forum, alors affiche un "
