@@ -7,102 +7,475 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Buddy-bbPress Support Topic 0.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/buddy-bbpress-support-topic\n"
-"POT-Creation-Date: 2013-01-27 17:17:29+00:00\n"
-"PO-Revision-Date: 2013-01-27 18:18+0100\n"
+"POT-Creation-Date: 2013-08-19 17:23:38+00:00\n"
+"PO-Revision-Date: 2013-08-19 19:24+0100\n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.5.7\n"
 
-#: buddy-bbpress-support-topic.php:72
-msgid "This is a support topic"
-msgstr "Sujet nécessitant un support"
-
-#: includes/bbpress-functions.php:109 includes/buddypress-functions.php:230
-msgid "Security check failed"
-msgstr "La vérification de sécurité a échouée"
-
-#: includes/bbpress-functions.php:110 includes/buddypress-functions.php:231
-msgid "loading"
-msgstr "patience"
-
-#: includes/bbpress-functions.php:201 includes/buddypress-functions.php:121
-msgid "[Resolved] "
-msgstr "[Résolu] "
-
-#: includes/bbpress-functions.php:206 includes/buddypress-functions.php:124
-msgid "[Support request] "
-msgstr "[Support requis] "
-
-#: includes/bbpress-functions.php:295
-msgid "All support status"
-msgstr "Tout type de support"
-
-#: includes/bbpress-functions.php:299 includes/bbpress-widget.php:275
-#: includes/buddypress-functions.php:178
+#: buddy-bbpress-support-topic.php:174
 msgid "Not resolved"
 msgstr "Non résolu"
 
-#: includes/bbpress-functions.php:303 includes/bbpress-functions.php:663
-#: includes/bbpress-widget.php:114 includes/bbpress-widget.php:275
-#: includes/buddypress-functions.php:179
+#: buddy-bbpress-support-topic.php:176
+msgid "[Support request] "
+msgstr "[Support requis] "
+
+#: buddy-bbpress-support-topic.php:180
 msgid "Resolved"
 msgstr "Résolu"
 
-#: includes/bbpress-functions.php:308 includes/buddypress-functions.php:180
+#: buddy-bbpress-support-topic.php:182
+msgid "[Resolved] "
+msgstr "[Résolu] "
+
+#: buddy-bbpress-support-topic.php:186
 msgid "Not a support topic"
 msgstr "Pas un sujet support"
 
-#: includes/bbpress-functions.php:389 includes/bbpress-functions.php:427
-msgid "Support"
-msgstr "Support"
+#: includes/admin.php:95
+msgid "Support settings"
+msgstr "Réglages support"
 
-#: includes/bbpress-functions.php:426
+#: includes/admin.php:126 includes/buddypress.php:200
+msgid ""
+"Who should receive an email notification when a new support topic is posted ?"
+msgstr ""
+"Qui revevra une notification email lorsqu&#39;un nouveau sujet de type "
+"support sera posté ?"
+
+#: includes/admin.php:261
 msgid "Support:"
 msgstr "Support:"
 
-#: includes/bbpress-functions.php:651
+#: includes/admin.php:262 includes/admin.php:361 includes/admin.php:472
+msgid "Support"
+msgstr "Support"
+
+#: includes/admin.php:555
 msgid "Support topics"
 msgstr "Sujets de support"
 
-#: includes/bbpress-functions.php:656 includes/bbpress-widget.php:111
+#: includes/admin.php:560 includes/widgets.php:130
 msgid "Resolved so far"
 msgstr "Résolu jusqu&#39;à présent"
 
-#: includes/bbpress-functions.php:680 includes/bbpress-widget.php:123
-msgid "To resolve"
-msgstr "A résoudre"
+#: includes/admin.php:636 includes/admin.php:637
+msgid "Welcome to Buddy-bbPress Support Topic"
+msgstr "Bienvenue dans Buddy-bbPress Support Topic"
 
-#: includes/bbpress-widget.php:34
+#: includes/admin.php:671
+msgid "Buddy-bbPress Support Topic %s"
+msgstr "Buddy-bbPress Support Topic %s"
+
+#: includes/admin.php:672
+msgid ""
+"Thank you for updating to the latest version! Buddy-bbPress Support Topic %s "
+"is ready to manage your support requests!"
+msgstr ""
+"Merci d&#39;avoir mis à jour le plugin! Buddy-bbPress Support Topic %s est "
+"prêt pour vous aider à manager votre support!"
+
+#: includes/admin.php:673
+msgid "Version %s"
+msgstr "Version %s"
+
+#: includes/admin.php:677
+msgid "What&#8217;s New"
+msgstr "Quoi de neuf ?"
+
+#: includes/admin.php:682
+msgid "New features for the bbPress (2.3.2 and up) powered forums !"
+msgstr ""
+"Nouvelles fonctionnalités pour les forums motorisés par bbPress (2.3.2 et "
+"ultérieur) !"
+
+#: includes/admin.php:685
+msgid "Discover below the new features introduced in version %s."
+msgstr ""
+"Découvrez ci-après les dernières évolutions introduites par la version %s. "
+
+#: includes/admin.php:692
+msgid "More control on Support feature"
+msgstr "Plus de maîtrise sur la fonctionnalité support"
+
+#: includes/admin.php:696
+msgid "Control the support feature by Forum"
+msgstr "Contrôlez la fonctionnalité support forum par forum"
+
+#: includes/admin.php:697
+msgid ""
+"Before, the support feature was set by default and it was not possible to "
+"control it by forum."
+msgstr ""
+"Auparavant, la fonctionnalité support était active par défaut et il n&#39;"
+"était pas possible de la personnaliser par forum."
+
+#: includes/admin.php:698
+msgid ""
+"Now, from the forum administration, you can manage the support feature by "
+"forum, by choosing to leave default behavior, disallow the support feature "
+"or dedicate a forum to support."
+msgstr ""
+"Aujourd&#39;hui, depuis l&#39;administration du forum, vous êtes en mesure "
+"de gérer la fonctionnalité support pour le forum en cours d&#39;édition, en "
+"choisissant de maintenir le comportement par défaut, de désactiver la "
+"fonctionnalité support ou encore de dédier le forum au support."
+
+#: includes/admin.php:699
+msgid "This new feature made possible another one, so jump to next chapter !!"
+msgstr ""
+"Cette nouvelle fonctionnalité rend possible une autre, alors passez au "
+"chapitre suivant !!"
+
+#: includes/admin.php:704
+msgid "Email notices to moderators"
+msgstr "Notifications email pour les modérateurs"
+
+#: includes/admin.php:708
+msgid "Moderators can be notified of new support topics"
+msgstr ""
+"Les modérateurs peuvent être avertis par email d&#39;un nouveau sujet de "
+"type support"
+
+#: includes/admin.php:709
+msgid ""
+"If you choosed to enable the support feature for your forum, the Keymaster "
+"can activate email notices for moderators when a new support topic is posted."
+msgstr ""
+"Si vous avez opté pour la fonctionnalité support pour votre forum, l&#39;"
+"administrateur du forum peut activer les notifications email lors de l&#39;"
+"ajout d&#39;un nouveau sujet de type support."
+
+#: includes/admin.php:710
+msgid ""
+"In Forum administration, you will find a checkbox list of bbPress moderators."
+msgstr ""
+"Depuis l&#39;administration du forum, vous trouverez la liste des "
+"modérateurs bbPress qui peuvent être sélectionnés pour ces notifications."
+
+#: includes/admin.php:711
+msgid ""
+"Simply select the ones to receive notification and you will be able ro reply "
+"faster to your support requests !"
+msgstr ""
+"Cochez simplement les cases correspondants aux modérateurs de votre choix et "
+"ils recevront une alerte accélèrant ainsi la résolution de vos sujets de "
+"type support !"
+
+#: includes/admin.php:716
+msgid "BuddyPress : a new Group admin tab"
+msgstr "BuddyPress : un nouvel onglet pour administrer le support"
+
+#: includes/admin.php:720
+msgid "Group Admins can customize their support settings"
+msgstr ""
+"Les administrateurs de groupe peuvent personnaliser les réglages de la "
+"fonctionnalité support"
+
+#: includes/admin.php:721
+msgid ""
+"If BuddyPress 1.8+ is activated, a new admin tab will show to allow group "
+"Admins to set the support behavior for their forum."
+msgstr ""
+"Si BuddyPress version 1.8+ est activé, un nouvel onglet apparaîtra dans "
+"l&#39;administration (front-end) du groupe. Ainsi, les administrateurs "
+"seront en mesure de personnaliser la fonction support de leur forum"
+
+#: includes/admin.php:722
+msgid ""
+"They can choose to disallow the support feature or use it just as explained "
+"in first feature description"
+msgstr ""
+"Ils peuvent choisir de désactiver cette dernière ou comme expliqué plus haut "
+"l'utiliser ou la systématiser."
+
+#: includes/admin.php:723
+msgid ""
+"If they allowed support for their forum, they can subscribe to an email "
+"notification when a new support topic is posted, they can also add group "
+"mods to the subscribe list to help them"
+msgstr ""
+"Si la fonction support est disponible pour leur forum, ils peuvent souscrire "
+"à la notification email lors de l&#39;ajout d&#39;un nouveau topic de type "
+"support. Ils peuvent aussi activer cette alerte pour les modérateurs du "
+"groupe."
+
+#: includes/admin.php:728
+msgid "Bulk edit support topics !"
+msgstr "Modifier vos sujets de support en masse !"
+
+#: includes/admin.php:732
+msgid "Keymaster can change the support status of several topics at once"
+msgstr ""
+"Les administrateurs de forums sont en mesure de modifier le statut support "
+"de plusieurs topics en une seule manipulation."
+
+#: includes/admin.php:733
+msgid ""
+"From the Topics list in WordPress Administration, Keymaster can use the bulk "
+"actions to edit the support status of several topics."
+msgstr ""
+"Au sein de l&#39;Administration des topics, les administrateurs du forum "
+"peuvent modifier en masse le statut de plusieurs sujets de support."
+
+#: includes/admin.php:734
+msgid ""
+"After activating the topics checkboxes, choose Edit option in the bulk "
+"action, then click on the apply button."
+msgstr ""
+"Après avoir activé les cases à cocher des sujets à modifier depuis la liste "
+"des sujets de l&#39;administration des topics, il s&#39;agit de sélectionner "
+"l&#39;action de masse modifier et de cliquer sur le bouton appliquer."
+
+#: includes/admin.php:735
+msgid "You can use the support selectbox to update these topics support status"
+msgstr ""
+"Vous pouvez utiliser la liste déroulante pour mettre à jour le statut de "
+"support des sujets sélectionnés"
+
+#: includes/admin.php:740
+msgid "A new widget"
+msgstr "Un nouveau widget"
+
+#: includes/admin.php:744
+msgid "A widget to help users ask for support."
+msgstr ""
+"Un widget pour aider les utilisateurs à poser leurs questions de support"
+
+#: includes/admin.php:745
+msgid ""
+"Administrator can use this new widget to create a button that will activate "
+"the new topic form in the support only forum"
+msgstr ""
+"L&#39;administrateur peut utiliser ce nouveau widget pour créer un bouton "
+"qui dirigera l&#39;utilisateur vers le formulaire de dépôt d&#39;un sujet de "
+"type support dans le forum dédié au support sélectionné dans les réglages du "
+"widget."
+
+#: includes/admin.php:746
+msgid ""
+"If your WordPress is an application, it can be interesting to get the "
+"referer url the user went from before hitting the new support topic widget "
+"link"
+msgstr ""
+"Si votre WordPress est utilisé comme une application, il peut être "
+"intéressant de connaître l&#39;url de provenance du demandeur."
+
+#: includes/admin.php:747
+msgid ""
+"Once posted, Keymasters and moderators will be able to see the referer above "
+"the content of the topic."
+msgstr ""
+"Une fois posté, les administrateurs et modérateurs du forum verront cette "
+"url de provenance ce qui leur fera gagner du temps dans la résolution du "
+"sujet de support."
+
+#: includes/admin.php:752
+msgid "Advanced users : need new support status ?"
+msgstr ""
+"Utilisateurs avancés : besoin d&#39;un nouveau statut pour votre support ?"
+
+#: includes/admin.php:756
+msgid "A filter to add custom support statuses"
+msgstr "Un filtre pour ajouter des statuts de support personnalisés"
+
+#: includes/admin.php:757
+msgid ""
+"The new status will be fully integrated in the different features of the "
+"plugin (Dashboard stats, Stats Widget...)"
+msgstr ""
+"Le nouveau statut sera complètement intégré aux différentes fonctionnalités "
+"du plugin (notamment les statisiques)"
+
+#: includes/admin.php:758
+msgid ""
+"An example of use is displayed below, use it in your plugin or in the "
+"functions.php file of your theme."
+msgstr ""
+"Un exemple d&#39;utilisation est démontré plus bas, utilisez ce code dans "
+"votre plugin ou dans le script functions.php de votre thème actif."
+
+#: includes/admin.php:777
+msgid "Many thanks !"
+msgstr "Merci beaucoup !"
+
+#: includes/admin.php:780
+msgid "I thank these &quot;buddies&quot; for their help and support"
+msgstr "Je remercie ces &quot;buddies&quot; pour leur aide."
+
+#: includes/admin.php:886
+msgid "About"
+msgstr "A propos"
+
+#: includes/buddypress.php:250
+msgid "There was an error saving, please try again"
+msgstr "Un erreur est survenue, merci de réessayer"
+
+#: includes/buddypress.php:252
+msgid "Settings saved successfully"
+msgstr "Réglages enregistrés avec succès"
+
+#: includes/buddypress.php:294
+msgid "In Group: %s"
+msgstr "Dans le groupe: %s"
+
+#: includes/buddypress.php:415
+msgid "Group Admin"
+msgstr "Admin de Groupe"
+
+#: includes/buddypress.php:421
+msgid "Group Mod"
+msgstr "Mod de Groupe"
+
+#: includes/buddypress.php:463
+msgid ""
+"Buddy bbPress Support Status version %s requires at least BuddyPress 1.8, "
+"please upgrade BuddyPress :) or downgrade Buddy bbPress Support Status :("
+msgstr ""
+"Buddy-bbPress Support Status version %s nécessite BuddyPress 1.8, merci de "
+"mettre à jour BuddyPress :) ou de revenir à une précédente version de ce "
+"plugin :("
+
+#: includes/functions.php:150
+msgid "This is a support topic"
+msgstr "Sujet nécessitant un support"
+
+#: includes/functions.php:316
+msgid "Security check failed"
+msgstr "La vérification de sécurité a échouée"
+
+#: includes/functions.php:317
+msgid "loading"
+msgstr "patience"
+
+#: includes/functions.php:576
+msgid "All support status"
+msgstr "Tout type de support"
+
+#: includes/functions.php:723
+msgid "Leave users mark topics of this forum as support ones"
+msgstr ""
+"Permettre aux utilisateurs de définir leur sujet comme étant une question "
+"support"
+
+#: includes/functions.php:724
+msgid ""
+"This forum is dedicated to support, all topics will be marked as support "
+"ones."
+msgstr ""
+"Ce forum est dédié au support, tous les sujets seront marqués comme étant "
+"des questions de type support"
+
+#: includes/functions.php:725
+msgid "This forum do not accept support topics"
+msgstr "Ce forum n&#39;accepte pas de sujets de type support"
+
+#: includes/functions.php:948
+msgid ""
+"%1$s wrote a new support topic: %2$s\n"
+"\n"
+"%3$s\n"
+"\n"
+"Topic Link: %4$s\n"
+"\n"
+"-----------\n"
+"\n"
+"You are receiving this email because a forum admin made you subscribe to new "
+"support topic of %5$s forum.\n"
+"\n"
+"Please ask the admin to unsubscribe from these emails."
+msgstr ""
+"%1$s a déposé un nouveau sujet de type support : %2$s\n"
+"\n"
+"%3$s\n"
+"\n"
+"Lien du sujet support: %4$s\n"
+"\n"
+"-----------\n"
+"\n"
+"Vous recevez cet email car un administrateur de forum vous a fait souscrire "
+"aux nouveaux sujets de type support du forum %5$s.\n"
+"\n"
+"Merci de vous adresser à cet administrateur pour ne plus recevoir ces "
+"notifications."
+
+#: includes/functions.php:1038
+msgid "No support only forums were found"
+msgstr "Aucun forum dédié au support n&#39;a été trouvé"
+
+#: includes/functions.php:1078
+msgid "Referer"
+msgstr "Url de provenance"
+
+#: includes/widgets.php:37
 msgid "Displays support topic global statistics or of the active forum"
 msgstr ""
 "Affiche des statistiques globales ou pour le forum actif concernant les "
 "topics de support"
 
-#: includes/bbpress-widget.php:35 includes/bbpress-widget.php:78
-#: includes/bbpress-widget.php:190
+#: includes/widgets.php:38 includes/widgets.php:90 includes/widgets.php:210
 msgid "Support Topics Stats"
 msgstr "Statistiques de support"
 
-#: includes/bbpress-widget.php:147
+#: includes/widgets.php:163
 msgid "Go to forums"
 msgstr "Afficher les forums"
 
-#: includes/bbpress-widget.php:202
+#: includes/widgets.php:222 includes/widgets.php:526
 msgid "Title:"
 msgstr "Titre:"
 
-#: includes/bbpress-widget.php:207
+#: includes/widgets.php:227
 msgid "Show forum link"
 msgstr "Afficher le lien vers les forums"
 
-#: includes/bbpress-widget.php:209
+#: includes/widgets.php:229
 msgid "When not on a forum page, display a link to it"
 msgstr ""
 "Si l&#39;utilisateur n&#39;est pas sur une page de forum, alors affiche un "
 "lien vers les forums."
+
+#: includes/widgets.php:374
+msgid ""
+"Displays a short message to invite users to add a new support topic on "
+"support only forums"
+msgstr ""
+"Affiche un petit message aux utilisateurs pour les inviter à poser leur "
+"question de support dans un des forums dédiés au support"
+
+#: includes/widgets.php:376
+msgid "New Support Topic"
+msgstr "Nouveau Sujet de support"
+
+#: includes/widgets.php:413 includes/widgets.php:511
+msgid "New Support topic"
+msgstr "Nouveau sujet de support"
+
+#: includes/widgets.php:416 includes/widgets.php:512
+msgid "Ask for Support"
+msgstr "Posez votre question"
+
+#: includes/widgets.php:531
+msgid "Button caption:"
+msgstr "Texte du bouton"
+
+#: includes/widgets.php:537
+msgid "Automatically add paragraphs"
+msgstr "Ajouter automatiquement des paragraphes"
+
+#: includes/widgets.php:539
+msgid "Select the support only forum:"
+msgstr "Choisir le forum dédié au support"
+
+#: includes/widgets.php:544
+msgid "Automatically display a link to referer for moderators"
+msgstr ""
+"Ajouter automatiquement un lien vers l&#39;url de provenance pour les "
+"modérateurs"
 
 #. Plugin Name of the plugin/theme
 msgid "Buddy-bbPress Support Topic"
@@ -113,8 +486,9 @@ msgid "http://imathi.eu/tag/buddy-bbpress-support-topic/"
 msgstr "http://imathi.eu/tag/buddy-bbpress-support-topic/"
 
 #. Description of the plugin/theme
-msgid "Adds a support type to a forum topic and manage the status of it"
-msgstr "Permet de d&#39;indiquer qu&#39un sujet de forum nécessite un support"
+msgid "Adds a support feature to your bbPress powered forums"
+msgstr ""
+"Ajoute des fonctionnalités de support pour votre forum motorisé par bbPress"
 
 #. Author of the plugin/theme
 msgid "imath"
@@ -123,6 +497,83 @@ msgstr "imath"
 #. Author URI of the plugin/theme
 msgid "http://imathi.eu/"
 msgstr "http://imathi.eu/"
+
+#~ msgid "To resolve"
+#~ msgstr "A résoudre"
+
+#~ msgid "A new section in bbPress Right Now Dashboard Widget"
+#~ msgstr ""
+#~ "Une nouvelle section dans le widget de tableau de bord Aujourd&#39;hui de "
+#~ "bbPress"
+
+#~ msgid "Support Topic Statistics"
+#~ msgstr "Statistiques des demandes de support"
+
+#~ msgid ""
+#~ "You need to know how many support requests need to be resolved ? How many "
+#~ "are resolved ?"
+#~ msgstr ""
+#~ "Vous avez besoin de connaître le nombre de demandes de support ? Combien "
+#~ "ont été résolues ?"
+
+#~ msgid ""
+#~ "You will find in the bbPress right now Dashboard Widget a new section to "
+#~ "give you at anytime this information."
+#~ msgstr ""
+#~ "Vous trouverez, à tout moment, dans ce widget les réponses à ces "
+#~ "questions au sein de la nouvelle section réservée aux topics de type "
+#~ "support."
+
+#~ msgid ""
+#~ "By clicking on one of the two links, you open the topics list already "
+#~ "filtered on the desired support status"
+#~ msgstr ""
+#~ "En cliquant sur un des deux liens attachés aux statuts de support, vous "
+#~ "affichez la liste des topics filtrée sur le statut désiré."
+
+#~ msgid "Filter the support status in Topics administration"
+#~ msgstr "Filtrer les statuts de support dans l&#39;Administration des Topics"
+
+#~ msgid ""
+#~ "You can mix this filter with the forums filter to only show the desired "
+#~ "support status for the desired forum"
+#~ msgstr ""
+#~ "Vous pouvez croiser ce filtre avec celui des forums afin de n&#39;"
+#~ "afficher que le statut de support souhaité pour le forum désiré."
+
+#~ msgid "You save time in you support requests management."
+#~ msgstr "Vous gagnez du temps dans votre management des demandes de support."
+
+#~ msgid "Show your stats on the front end !"
+#~ msgstr "Montrez vos stats côté front end !"
+
+#~ msgid "Sidebar Widget"
+#~ msgstr "Sidebar Widget"
+
+#~ msgid ""
+#~ "Choose the Support Topic Widget to share your stats with your community"
+#~ msgstr ""
+#~ "Choisissez le Widget Support Topic pour partager vos statistiques avec "
+#~ "votre communauté."
+
+#~ msgid ""
+#~ "When on a &quot;non-forum&quot; page, you can choose to display a link to "
+#~ "drive your users to the forums area of your blog"
+#~ msgstr ""
+#~ "Sur toute page différente des pages de forum, vous pouvez activer le lien "
+#~ "qui dirigera vos utilisateurs directement dans la zone de forums de votre "
+#~ "blog."
+
+#~ msgid ""
+#~ "Inside a forum, the two Support topic status statistics become links to "
+#~ "filter the topics and only display the desired status."
+#~ msgstr ""
+#~ "Au sein d&#39;un forum, les deux statuts de Support sont cliquables et "
+#~ "permettent de filtrer les topics selon le statut désiré."
+
+#~ msgid "Adds a support type to a forum topic and manage the status of it"
+#~ msgstr ""
+#~ "Permet de d&#39;indiquer qu&#39;un sujet de forum nécessite un support"
 
 #~ msgid "Unsolved"
 #~ msgstr "Non résolu"

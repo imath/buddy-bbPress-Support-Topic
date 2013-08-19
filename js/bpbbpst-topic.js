@@ -1,6 +1,6 @@
 jQuery(document).ready(function($){
 		
-		$('.support-select-status').change(function(){
+		$('.support-select-status').on( 'change', function(){
 			
 			var indiceChose = $(this)[0].selectedIndex;
 			var bpbbpst_nonce = $(this).parent().find('#_wpnonce_bpbbpst_support_status').val();

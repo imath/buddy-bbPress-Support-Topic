@@ -1,5 +1,4 @@
-.bpbbpst-resolved .bpbbpst-num,
-.bpbbpst-unsolved .bpbbpst-num{
+ul.bpbbpst-widget li.status .bpbbpst-num{
 	color: white; 
 	text-shadow: none;
 	display: inline;
@@ -11,6 +10,7 @@
 	-khtml-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	border-radius: 10px;
+	background:darkgrey;
 }
 
 .bpbbpst-num a {
@@ -19,27 +19,30 @@
 	font-weight:bold;
 }
 
-li.bpbbpst-resolved .bpbbpst-text a,
-li.bpbbpst-resolved .bpbbpst-text {
-	color:green;
+ul.bpbbpst-widget li.status a{
 	text-decoration: none;
 }
 
-li.bpbbpst-resolved .bpbbpst-num {
+
+ul.bpbbpst-widget li.bpbbpst-topic-resolved .bpbbpst-text a,
+ul.bpbbpst-widget li.bpbbpst-topic-resolved .bpbbpst-text {
+	color:green;
+}
+
+ul.bpbbpst-widget li.bpbbpst-topic-resolved .bpbbpst-num {
 	background:green;
 }
 
-li.bpbbpst-unsolved .bpbbpst-text a,
-li.bpbbpst-unsolved .bpbbpst-text {
+ul.bpbbpst-widget li.bpbbpst-topic-not-resolved .bpbbpst-text a,
+ul.bpbbpst-widget li.bpbbpst-topic-not-resolved .bpbbpst-text {
 	color:#E66F00;
-	text-decoration: none;
 }
 
-li.bpbbpst-unsolved .bpbbpst-num {
+ul.bpbbpst-widget li.bpbbpst-topic-not-resolved .bpbbpst-num {
 	background: #E66F00;
 }
 
-li.bpbbpst-percent{
+ul.bpbbpst-widget li.bpbbpst-percent{
 	margin-bottom:1em;
 	font-weight:bold;
 	color:#555;
