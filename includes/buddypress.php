@@ -3,7 +3,7 @@
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
-if ( !class_exists( 'BuddyPress_Support_Topic' ) ) :
+if ( !class_exists( 'BuddyPress_Support_Topic' ) && class_exists( 'BP_Group_Extension' ) ) :
 /**
  * Loads BuddyPress Specific parts
  *
