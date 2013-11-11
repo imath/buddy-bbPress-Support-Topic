@@ -12,8 +12,8 @@ Available in french and english.
 Advised Configurations
 ----------------------
 
-+ WordPress 3.6 + bbPress 2.3.2 (or newer)
-+ WordPress 3.6 + bbPress 2.3.2 (or newer) + BuddyPress 1.8 (or newer)
++ WordPress 3.7.1 + bbPress 2.4.1 (or newer)
++ WordPress 3.7.1 + bbPress 2.4.1 (or newer) + BuddyPress 1.8.1 (or newer)
 
 
 Installation

@@ -11,6 +11,7 @@ Versions
 + New BuddyPress admin group tab (requires BuddyPress 1.8+) to manage the support feature for the group forum (bbPress 2.3+)
 + Topics support status bulk edit 
 + a WordPress filter to add new support status
++ Now available for each blog of the network
 
 
 1.1

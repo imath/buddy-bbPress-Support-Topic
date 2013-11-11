@@ -3,13 +3,12 @@
 Plugin Name: Buddy-bbPress Support Topic
 Plugin URI: http://imathi.eu/tag/buddy-bbpress-support-topic/
 Description: Adds a support feature to your bbPress powered forums
-Version: 2.0-beta2
+Version: 2.0-beta3
 Requires at least: 3.5
-Tested up to: 3.6
+Tested up to: 3.7.1
 License: GNU/GPL 2
 Author: imath
 Author URI: http://imathi.eu/
-Network: true
 Text Domain: buddy-bbpress-support-topic
 Domain Path: /languages/
 */
@@ -62,7 +61,7 @@ class BP_bbP_Support_Topic {
 	private function setup_globals() {
 		$this->globals = new stdClass();
 
-		$this->globals->version = '2.0-beta2';
+		$this->globals->version = '2.0-beta3';
 
 		$this->globals->file       = __FILE__ ;
 		$this->globals->basename   = apply_filters( 'bbp_plugin_basenname', plugin_basename( $this->globals->file ) );

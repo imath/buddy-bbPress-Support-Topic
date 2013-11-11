@@ -227,6 +227,16 @@ class BP_bbP_ST_Admin {
 		$meta_sql = $role_meta_query->get_sql( 'user', $wpdb->users, 'ID' );
 
  		$query->query_fields = "DISTINCT {$wpdb->users}.ID, ". $query->query_fields;
+
+ 		if( is_multisite() ) {
+ 			/**
+ 			 this is an ugly fix but i need more time to investigate
+ 			 */
+ 			$fixdoubleusermeta = str_replace( "FROM {$wpdb->users} ", '', $query->query_from );
+ 			if( strpos( $meta_sql['join'], $fixdoubleusermeta ) !== false && !empty( $fixdoubleusermeta ) )
+ 				$meta_sql['join'] = str_replace( $fixdoubleusermeta, '', trim( $meta_sql['join'] ) );
+ 		}
+ 		
 		$query->query_from .= $meta_sql['join'];
 		$query->query_where .= $meta_sql['where'];
 	}
