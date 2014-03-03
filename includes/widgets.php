@@ -54,7 +54,7 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 * 
 	 * @uses   register_widget() to register the widget
 	 */
-	function register_widget() {
+	static function register_widget() {
 		register_widget( 'Bpbbpst_Support_Stats' );
 	}
 	
@@ -385,7 +385,7 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 	 *
 	 * @uses   register_widget() to register the widget
 	 */
-	function register_widget() {
+	static function register_widget() {
 		register_widget( 'Bpbbpst_Support_New_Support' );
 	}
 	
