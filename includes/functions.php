@@ -147,7 +147,7 @@ function bpbbpst_maybe_output_support_field() {
 						$checked = true;
 				}
 		
-				$output = '<input type="checkbox" value="support" name="_bp_bbp_st_is_support" id="bp_bbp_st_is_support" '. checked( true, $checked, false ).'> '. __('This is a support topic','buddy-bbpress-support-topic') ;
+				$output = '<input type="checkbox" value="support" name="_bp_bbp_st_is_support" id="bp_bbp_st_is_support" '. checked( true, $checked, false ).'> <label for="bp_bbp_st_is_support">'. __('This is a support topic','buddy-bbpress-support-topic') . '</label>' ;
 			break;
 	}
 

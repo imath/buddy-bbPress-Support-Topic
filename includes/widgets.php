@@ -32,7 +32,7 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 * @uses   add_filter() to filter bbPress topic query, breadcrumb and pagination
 	 * @uses   add_action() to enqueue widget style
 	 */
-	function __construct() {
+	public function __construct() {
 
 		$widget_ops = array( 'description' => __( 'Displays support topic global statistics or of the active forum', 'buddy-bbpress-support-topic' ) );
 		parent::__construct( false, $name = __( 'Support Topics Stats', 'buddy-bbpress-support-topic' ), $widget_ops );
@@ -54,7 +54,7 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 * 
 	 * @uses   register_widget() to register the widget
 	 */
-	function register_widget() {
+	public static function register_widget() {
 		register_widget( 'Bpbbpst_Support_Stats' );
 	}
 	
@@ -81,7 +81,7 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 * @uses   bbp_forums_url() to display the link to forums archive
 	 * @return string html output
 	 */
-	function widget( $args, $instance ) {
+	public function widget( $args, $instance ) {
 
 
 		extract( $args );
@@ -178,7 +178,7 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 * @param  array $old_instance The old instance options
 	 * @return array the instance
 	 */
-	function update( $new_instance, $old_instance ) {
+	public function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 		
 		$instance['bpbbpst_title'] = strip_tags( $new_instance['bpbbpst_title'] );
@@ -205,7 +205,7 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 * @uses   checked() to activate the checkbox if it needs to
 	 * @return string html output
 	 */
-	function form( $instance ) {
+	public function form( $instance ) {
 		$defaults = array(
 	                     'bpbbpst_title'   => __( 'Support Topics Stats', 'buddy-bbpress-support-topic' ),
 						 'show_forum_link' => 0
@@ -240,7 +240,7 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 * @uses   bbp_is_single_forum() to check it's a single forum page
 	 * @return mixed $args the new arguments eventually including the meta_query
 	 */
-	function filter_topics_query_by_status( $args = "" ) {
+	public function filter_topics_query_by_status( $args = "" ) {
 		
 		if( !bbp_is_single_forum() )
 			return $args;
@@ -278,7 +278,7 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 * @uses   esc_html() to sanitize the status
 	 * @return string $trail the new breadcrumb eventually including the support status
 	 */
-	function breadcrumb_for_status( $trail, $crumbs, $args ) {
+	public function breadcrumb_for_status( $trail, $crumbs, $args ) {
 		
 		if( !bbp_is_single_forum() )
 			return $trail;
@@ -316,7 +316,7 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 * @uses   bbp_is_single_forum() to check it's a single forum page
 	 * @return array pagination the new pagination settings including the support status
 	 */
-	function pagination_for_status( $pagination = array() ) {
+	public function pagination_for_status( $pagination = array() ) {
 	
 		if( !bbp_is_single_forum() )
 			return $pagination;
@@ -339,7 +339,7 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 * @uses   bpbbpst_get_plugin_url() to get plugin's url
 	 * @uses   bpbbpst_get_plugin_version() to get plugin's version
 	 */
-	function enqueue_style() {
+	public function enqueue_style() {
 		wp_enqueue_style( 'bpbbpst-bbpress-widget-css', bpbbpst_get_plugin_url( 'css' ). 'bpbbpst-bbpress-widget.css', false, bpbbpst_get_plugin_version() );
 	}
 
@@ -369,7 +369,7 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 	 * @uses   add_filter() to filter bbPress topic query, breadcrumb and pagination
 	 * @uses   add_action() to enqueue widget style
 	 */
-	function __construct() {
+	public function __construct() {
 
 		$widget_ops = array( 'description' => __( 'Displays a short message to invite users to add a new support topic on support only forums', 'buddy-bbpress-support-topic' ) );
 		$control_ops = array('width' => 400, 'height' => 200);
@@ -385,7 +385,7 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 	 *
 	 * @uses   register_widget() to register the widget
 	 */
-	function register_widget() {
+	public static function register_widget() {
 		register_widget( 'Bpbbpst_Support_New_Support' );
 	}
 	
@@ -405,7 +405,7 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 	 * @uses   wpautop() to automatically add paragraphs to text
 	 * @return string html output
 	 */
-	function widget( $args, $instance ) {
+	public function widget( $args, $instance ) {
 
 		extract( $args );
 
@@ -474,7 +474,7 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 	 * @uses   wp_filter_post_kses() to sanitize the text
 	 * @return array the instance
 	 */
-	function update( $new_instance, $old_instance ) {
+	public function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 		
 		$instance['bpbbpst_title'] = strip_tags( $new_instance['bpbbpst_title'] );
@@ -506,7 +506,7 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 	 * @uses   checked() to activate the checkbox if it needs to
 	 * @uses   bpbbpst_get_support_only_forums() to get the selectbox of support only forums
 	 */
-	function form( $instance ) {
+	public function form( $instance ) {
 		$defaults = array(
 	                     'bpbbpst_title'   => __( 'New Support topic', 'buddy-bbpress-support-topic' ),
 						 'bpbbpst_button' => __( 'Ask for Support', 'buddy-bbpress-support-topic' ),
