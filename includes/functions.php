@@ -472,7 +472,7 @@ function bpbbpst_add_support_mention( $topic_id = 0, $echo = true ) {
 	$support_status = get_post_meta( $topic_id, '_bpbbpst_support_topic', true );
 	$status = '';
 	
-	if( empty( $support_status ) )
+	if( empty( $support_status ) && $support_status!=0 )
 		return;
 
 	/* new since 2.0 */
