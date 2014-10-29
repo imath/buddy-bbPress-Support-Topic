@@ -9,7 +9,7 @@ if ( !class_exists( 'BP_bbP_ST_Admin' ) ) :
  *
  * @package    Buddy-bbPress Support Topic
  * @subpackage Administration
- * 
+ *
  * @since      2.0
  */
 class BP_bbP_ST_Admin {
@@ -46,7 +46,7 @@ class BP_bbP_ST_Admin {
 		add_action( 'bbp_forum_attributes_metabox',             array( $this, 'forum_meta_box_register' ),      10    );
 		add_action( 'bbp_forum_attributes_metabox_save',        array( $this, 'forum_meta_box_save' ),          10, 1 );
 		// filters a users query to only get forum moderators ( Keymasters+moderators )
-		add_action( 'pre_user_query',                           array( $this, 'filter_user_query' ),            10, 1 );
+		add_action( 'pre_get_users',                            array( $this, 'filter_user_query' ),            10, 1 );
 		// enqueues a js script to hide show recipients
 		add_action( 'load-post.php',                            array( $this, 'enqueue_forum_js'  )                   );
 		add_action( 'load-post-new.php',                        array( $this, 'enqueue_forum_js'  )                   );
@@ -84,7 +84,7 @@ class BP_bbP_ST_Admin {
 	 * Registers a new metabox in Forum's edit form (admin)
 	 *
 	 * @since 2.0
-	 * 
+	 *
 	 * @uses  add_meta_box() to add the metabox to forum edit screen
 	 * @uses  bbp_get_forum_post_type() to get forum post type
 	 */
@@ -105,7 +105,7 @@ class BP_bbP_ST_Admin {
 	 * Displays the content for the metabox
 	 *
 	 * @since 2.0
-	 * 
+	 *
 	 * @param object $forum the forum object
 	 * @uses  bpbbpst_get_forum_support_setting() to get forum support setting
 	 * @uses  bpbbpst_display_forum_setting_options() to list the available support settings
@@ -136,7 +136,7 @@ class BP_bbP_ST_Admin {
 	 * Saves the forum metabox datas
 	 *
 	 * @since  2.0
-	 * 
+	 *
 	 * @param  integer $forum_id the forum id
 	 * @uses   update_post_meta() to save the forum support setting
 	 * @uses   delete_post_meta() to eventually delete a setting if needed
@@ -144,9 +144,9 @@ class BP_bbP_ST_Admin {
 	 * @return integer           the forum id
 	 */
 	public function forum_meta_box_save( $forum_id = 0 ) {
-		
+
 		$support_feature = intval( $_POST['_bpbbpst_forum_settings'] );
-	
+
 		if( !empty( $support_feature ) ) {
 			update_post_meta( $forum_id, '_bpbbpst_forum_settings', $support_feature );
 
@@ -159,12 +159,12 @@ class BP_bbP_ST_Admin {
 					update_post_meta( $forum_id, '_bpbbpst_support_recipients', $recipients );
 				else
 					delete_post_meta( $forum_id, '_bpbbpst_support_recipients' );
-					
+
 			}
 
 			do_action( 'bpbbpst_forum_settings_updated', $forum_id, $support_feature );
 		}
-		
+
 		return $forum_id;
 	}
 
@@ -172,7 +172,7 @@ class BP_bbP_ST_Admin {
 	 * Adds a js to WordPress scripts queue
 	 *
 	 * @since 2.0
-	 * 
+	 *
 	 * @uses  get_current_screen() to be sure we are in forum post screen
 	 * @uses  bbp_get_forum_post_type() to get the forum post type
 	 * @uses  wp_enqueue_script() to add the js to WordPress queue
@@ -188,12 +188,12 @@ class BP_bbP_ST_Admin {
 	}
 
 	/**
-	 * Hooks pre_user_query to build a cutom meta_query to list forum moderators
-	 * 
+	 * Hooks pre_get_users to build a cutom meta_query to list forum moderators
+	 *
 	 * First checks for who arguments to be sure we're requesting forum moderators
-	 * 
+	 *
 	 * @since  2.0
-	 * 
+	 *
 	 * @global object $wpdb (the database class)
 	 * @global integer the current blog id
 	 * @param  object $query the user query arguments
@@ -204,12 +204,26 @@ class BP_bbP_ST_Admin {
 	public function filter_user_query( $query = false ) {
 		global $wpdb, $blog_id;
 
-		if( empty( $query->query_vars['who'] ) || 'bpbbpst_moderators' != $query->query_vars['who'] )
+		if ( empty( $query->query_vars['who'] ) || 'bpbbpst_moderators' != $query->query_vars['who'] ) {
 			return;
+		}
 
+		$unset = array_fill_keys( array(
+			'who',
+			'blog_id',      // to avoid the extra meta query in multisite
+			'meta_key',     // to make sure no primary meta query is set
+			'meta_value',   // to make sure no primary meta query is set
+			'meta_compare'  // to make sure no primary meta query is set
+		), false );
+
+		// Unset the query vars before adding our meta query one
+		$query->query_vars = array_diff_key( $query->query_vars, $unset );
+
+		// Set meta key
 		$meta_key = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
 
-		$meta_query = array(
+		// Set meta query
+		$query->query_vars['meta_query'] = array(
 			'relation' => 'OR',
 			array(
 				'key' => $meta_key,
@@ -222,30 +236,13 @@ class BP_bbP_ST_Admin {
 				'compare' => 'LIKE'
 			),
 		);
-
-		$role_meta_query = new WP_Meta_Query( $meta_query );
-		$meta_sql = $role_meta_query->get_sql( 'user', $wpdb->users, 'ID' );
-
- 		$query->query_fields = "DISTINCT {$wpdb->users}.ID, ". $query->query_fields;
-
- 		if( is_multisite() ) {
- 			/**
- 			 this is an ugly fix but i need more time to investigate
- 			 */
- 			$fixdoubleusermeta = str_replace( "FROM {$wpdb->users} ", '', $query->query_from );
- 			if( strpos( $meta_sql['join'], $fixdoubleusermeta ) !== false && !empty( $fixdoubleusermeta ) )
- 				$meta_sql['join'] = str_replace( $fixdoubleusermeta, '', trim( $meta_sql['join'] ) );
- 		}
- 		
-		$query->query_from .= $meta_sql['join'];
-		$query->query_where .= $meta_sql['where'];
 	}
 
 	/**
 	 * Adds a selectbox to update the support status to topic attributes metabox
 	 *
 	 * @since 2.0
-	 * 
+	 *
 	 * @param integer $topic_id the topic id
 	 * @uses  bbp_get_topic_forum_id() to get the parent forum id
 	 * @uses  bpbbpst_get_forum_support_setting() to get the support setting of the parent forum
@@ -261,7 +258,7 @@ class BP_bbP_ST_Admin {
 
 		if( 3 == bpbbpst_get_forum_support_setting( $forum_id ) )
 			return false;
-		
+
 		$support_status = get_post_meta( $topic_id, '_bpbbpst_support_topic', true );
 
 		if( empty( $support_status ) )
@@ -279,7 +276,7 @@ class BP_bbP_ST_Admin {
 	 * Saves support status for the topic (admin)
 	 *
 	 * @since  2.0
-	 * 
+	 *
 	 * @param  integer $topic_id the topic id
 	 * @param  integer $forum_id the parent forum id
 	 * @uses   wp_verify_nonce() for security reason
@@ -291,22 +288,22 @@ class BP_bbP_ST_Admin {
 	public function topic_meta_box_save( $topic_id = 0, $forum_id = 0 ) {
 
 		if( !isset( $_POST['_support_status'] ) || $_POST['_support_status'] === false )
-			return $topic_id; 
+			return $topic_id;
 
 		$new_status = intval( $_POST['_support_status'] );
-		
+
 		if( $new_status !== false && !empty( $_POST['_wpnonce_bpbbpst_support_status'] ) && wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_status'], 'bpbbpst_support_status') ) {
-			
+
 			if( empty( $new_status ) ) {
 				delete_post_meta( $topic_id, '_bpbbpst_support_topic' );
 			} else {
 				update_post_meta( $topic_id, '_bpbbpst_support_topic', $new_status );
 			}
-			
+
 			do_action( 'bpbbpst_topic_meta_box_save', $new_status );
-			
+
 		}
-		
+
 		return $topic_id;
 	}
 
@@ -317,7 +314,7 @@ class BP_bbP_ST_Admin {
 	 * support setting to eventually delete the support status or create it.
 	 *
 	 * @since 2.0
-	 * 
+	 *
 	 * @param integer $topic_id the topic id
 	 * @param object $topic     the topic object
 	 * @uses  get_current_screen() to make sure we're editing a topic from admin
@@ -363,13 +360,13 @@ class BP_bbP_ST_Admin {
 	 * Registers a new column to topics admin list to show support status
 	 *
 	 * @since  2.0
-	 * 
+	 *
 	 * @param  array  $columns the registered columns
 	 * @return array           the columns with the support one
 	 */
 	public function topics_admin_column( $columns = array() ) {
 		$columns['buddy_bbp_st_support'] = __( 'Support', 'buddy-bbpress-support-topic' );
-	
+
 		return $columns;
 	}
 
@@ -377,7 +374,7 @@ class BP_bbP_ST_Admin {
 	 * Displays the support status of each topic row
 	 *
 	 * @since 2.0
-	 * 
+	 *
 	 * @param string  $column   the column id
 	 * @param integer $topic_id the topic id
 	 * @uses  bpbbpst_add_support_mention() to output the topic support status
@@ -392,14 +389,14 @@ class BP_bbP_ST_Admin {
 	 * Adds a selectbox to allow filtering topics by status (admin)
 	 *
 	 * @since 2.0
-	 * 
+	 *
 	 * @uses  get_current_screen() to be sure we're on topic admin list
 	 * @uses  bbp_get_topic_post_type() to get topic post type
 	 * @uses  bpbbpst_get_selectbox() to output the support status selectbox
 	 */
 	public function topics_admin_support_filter() {
 		if( get_current_screen()->post_type == bbp_get_topic_post_type() ){
-			
+
 			$selected = empty( $_GET['_support_status'] ) ? -1 : intval( $_GET['_support_status'] );
 			//displays the selectbox to filter by support status
 			echo bpbbpst_get_selectbox( $selected , 'adminlist' );
@@ -410,7 +407,7 @@ class BP_bbP_ST_Admin {
 	 * Filters bbPress query to include a support status meta query
 	 *
 	 * @since  2.0
-	 * 
+	 *
 	 * @param  array  $query_vars the bbPress query vars
 	 * @uses   is_admin() to check we're in WordPress backend
 	 * @return array the query vars with a support meta query
@@ -418,14 +415,14 @@ class BP_bbP_ST_Admin {
 	public function topics_admin_support_request( $query_vars = array() ) {
 		if( !is_admin() )
 			return $query_vars;
-		
+
 		if( empty( $_GET['_support_status']  ) )
 			return $query_vars;
-		
+
 		$support_status = intval( $_GET['_support_status'] );
 
 		if( !empty( $query_vars['meta_key'] ) ) {
-			
+
 			if( $support_status == -1 )
 				return $query_vars;
 
@@ -440,17 +437,17 @@ class BP_bbP_ST_Admin {
 														'key' => '_bbp_forum_id',
 														'value' =>  intval( $_GET['bbp_forum_id'] ),
 														'compare' => '='
-													) 
+													)
 											);
 
 		} else {
-			
+
 			if( $support_status == -1 )
 				return $query_vars;
-			
+
 			$query_vars['meta_key']   = '_bpbbpst_support_topic';
 			$query_vars['meta_value'] = $support_status;
-			
+
 		}
 
 		return $query_vars;
@@ -460,7 +457,7 @@ class BP_bbP_ST_Admin {
 	 * Adds an inline edit part to topics row to allow support bulk edit
 	 *
 	 * @since  2.0
-	 * 
+	 *
 	 * @param  string $column_name the colum name id
 	 * @param  string $post_type   the post type id
 	 * @uses   bpbbpst_get_support_status() to get available support statuses
@@ -513,7 +510,7 @@ class BP_bbP_ST_Admin {
 
 		if( !isset( $_GET['_support_status'] ) )
 			return;
-		
+
 		if( !isset( $_GET['post'] ) )
 			return;
 
@@ -530,7 +527,7 @@ class BP_bbP_ST_Admin {
 
 			if( 2 == bpbbpst_get_forum_support_setting( $forum_id ) && 0 == $support_status )
 				continue;
-			
+
 			update_post_meta( $topic_id, '_bpbbpst_support_topic', $support_status );
 		}
 
@@ -579,7 +576,7 @@ class BP_bbP_ST_Admin {
 					$num  = $stat['stat'];
 					$text = $stat['label'];
 					$class = $stat['admin_class'];
-					
+
 					if ( current_user_can( 'publish_topics' ) ) {
 						$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type(), '_support_status' => $key ), get_admin_url( null, 'edit.php' ) );
 						$num  = '<a href="' . $link . '" class="' . $class . '">' . $num  . '</a>';
@@ -613,7 +610,7 @@ class BP_bbP_ST_Admin {
 	 * @uses  admin_url() to get admin url
 	 */
 	public function maybe_activate() {
-		
+
 		if ( ! get_transient( '_bpbbst_welcome_screen' ) )
 			return;
 
@@ -641,7 +638,7 @@ class BP_bbP_ST_Admin {
 	 */
 	public function welcome_screen_register() {
 		global $bpbbpst_about_page;
-	
+
 		$bpbbpst_about_page = add_dashboard_page(
 			__( 'Welcome to Buddy-bbPress Support Topic',  'buddy-bbpress-support-topic' ),
 			__( 'Welcome to Buddy-bbPress Support Topic',  'buddy-bbpress-support-topic' ),
@@ -658,7 +655,7 @@ class BP_bbP_ST_Admin {
 
 			do_action( 'bpbbpst_upgrade', $plugin_version, $db_version );
 		}
-		
+
 	}
 
 	/**
@@ -768,7 +765,7 @@ class BP_bbP_ST_Admin {
 						<p><?php _e( 'An example of use is displayed below, use it in your plugin or in the functions.php file of your theme.', 'buddy-bbpress-support-topic' ); ?></p>
 						<div class="bpbbpst-code">
 							function functionprefix_custom_status( $allstatus = array() ) {<br/>
-							&nbsp;&nbsp;$allstatus&#91;&#39;topic-working-on-it&#39;&#93; = array(<br/> 
+							&nbsp;&nbsp;$allstatus&#91;&#39;topic-working-on-it&#39;&#93; = array(<br/>
 							&nbsp;&nbsp;&nbsp;&nbsp;&#39;sb-caption&#39;   =&gt; __( &#39;Working on it&#39;, &#39;buddy-bbpress-support-topic&#39; ),<br/>
 							&nbsp;&nbsp;&nbsp;&nbsp;&#39;value&#39;        =&gt; 3,<br/>
 							&nbsp;&nbsp;&nbsp;&nbsp;&#39;prefix-title&#39; =&gt; __( &#39;&#91;Working on it&#93; &#39;, &#39;buddy-bbpress-support-topic&#39; ),<br/>
@@ -825,16 +822,16 @@ class BP_bbP_ST_Admin {
 	 */
 	public function welcome_screen_css() {
 		global $bpbbpst_about_page;
-	
+
 		remove_submenu_page( 'index.php', 'bpbbst-about');
-		
+
 		$badge_url = bpbbpst_get_plugin_url( 'images' ) .'bpbbst-badge.png';
-		
+
 		if( get_current_screen()->id == $bpbbpst_about_page ) {
 			?>
 			<style type="text/css" media="screen">
 				/*<![CDATA[*/
-				
+
 				.bpbbpst-code {
 					font-family:Monaco,"Lucida Console";
 					font-size:80%;
@@ -863,7 +860,7 @@ class BP_bbP_ST_Admin {
 						right: auto;
 						left: 0;
 					}
-					
+
 				.wp-person{
 					list-style:none;
 				}
