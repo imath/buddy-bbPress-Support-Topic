@@ -79,6 +79,28 @@ function bpbbpst_get_support_status() {
 }
 
 /**
+ * Gets the default support status to apply to topics
+ *
+ * @since  2.0.1
+ *
+ * @uses   bbpress() the main bbPress instance
+ * @uses   apply_filters() to let plugins or themes modify the value
+ * @return array the default support status or an empty array
+ */
+function bpbbpst_get_default_support_status( $is_support_forum = false ) {
+	$all_statuses = bpbbpst_get_support_status();
+	$default = array();	
+	
+	if ( $is_support_forum && isset( $all_statuses['topic-not-resolved'] ) ) {
+		$default = $all_statuses['topic-not-resolved'];
+	} else if ( isset( $all_statuses['topic-not-support'] ) ) {
+		$default = array();
+	}
+	
+	return apply_filters( 'bpbbpst_get_default_support_status', $default, $is_support_forum, $all_statuses );
+}
+
+/**
  * Gets the forum setting for support feature
  *
  * @since  2.0
@@ -177,16 +199,24 @@ function bpbbpst_maybe_output_support_field() {
  * @uses   do_action() to let plugins or themes run some actions from this point
  */
 function bpbbpst_save_support_type( $topic_id = 0 ) {
-	// if safe then store
-	if ( !empty( $_POST['_bp_bbp_st_is_support'] ) && wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_define'], 'bpbbpst_support_define' ) ) {
-		// no need to sanitize value as i arbitrary set the support topic option to 1
-		update_post_meta( $topic_id, '_bpbbpst_support_topic', 1 );
+	// If not safe, abort
+	if ( !wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_define'], 'bpbbpst_support_define' ) ) return;
+	
+	// Are we on a support forum?
+	$is_support_forum = !empty( $_POST['_bp_bbp_st_is_support'] ) ? $_POST['_bp_bbp_st_is_support'] : false;
+	
+	// Get the default value for support status
+	$default_status = bpbbpst_get_default_support_status( $is_support_forum );
 
-		if( !empty( $_POST['_bp_bbp_st_referer'] ) )
-			update_post_meta( $topic_id, '_bpbbpst_support_referer', esc_url_raw( $_POST['_bp_bbp_st_referer'] ) );
-
-		do_action( 'bpbbpst_support_type_saved' );
+	if ( !empty( $default_status ) ) {
+		update_post_meta( $topic_id, '_bpbbpst_support_topic', intval( $default_status['value'] ) );
 	}
+
+	if ( $is_support_forum && !empty( $_POST['_bp_bbp_st_referer'] ) ) {
+		update_post_meta( $topic_id, '_bpbbpst_support_referer', esc_url_raw( $_POST['_bp_bbp_st_referer'] ) );
+	}
+
+	do_action( 'bpbbpst_support_type_saved' );
 }
 
 /**
@@ -341,10 +371,15 @@ function bpbbpst_change_support_status() {
 		die();
 	}
 
-	if( !empty( $_POST['topic_id'] ) ){
-		
+	if( !empty( $_POST['topic_id'] ) ) {		
 		if( empty( $_POST['support_status'] ) ) {
-			delete_post_meta( $_POST['topic_id'], '_bpbbpst_support_topic' );
+			$default_status = bpbbpst_get_default_support_status( true );
+			
+			if ( empty( $default_status ) ) {
+				delete_post_meta( $_POST['topic_id'], '_bpbbpst_support_topic' );
+			} else {
+				update_post_meta( $_POST['topic_id'], '_bpbbpst_support_topic', intval( $default_status['value'] ) );
+			}
 		} else {
 			update_post_meta( $_POST['topic_id'], '_bpbbpst_support_topic', intval( $_POST['support_status'] ) );
 		}
@@ -429,13 +464,12 @@ function bpbbpst_get_selected_support_status( $selected = 0 ) {
 	$all_status = bpbbpst_get_support_status();
 
 	foreach( $all_status as $key => $status ) {
-
 		if( $status['value'] == $selected ) {
 			$selected_status = $all_status[$key];
 			$selected_status = array_merge( $selected_status, array( 'class' => $key ) );
 		}
-
 	}
+	
 	return $selected_status;
 }
 
@@ -452,6 +486,7 @@ function bpbbpst_get_selected_support_status( $selected = 0 ) {
  * @uses   get_post_meta() to get the support status
  * @uses   bpbbpst_get_selected_support_status() to get arguments for the selected status
  * @uses   sanitize_html_class() to sanitize html class
+ * @uses   apply_filters('bpbbpst_topic_title_status_prefix') to let other plugins or themes override the prefix
  * @return string the html output containing the support status
  */
 function bpbbpst_add_support_mention( $topic_id = 0, $echo = true ) {
@@ -466,13 +501,14 @@ function bpbbpst_add_support_mention( $topic_id = 0, $echo = true ) {
 	if( empty( $forum_id ) )
 		return;
 
-	if( 3 == bpbbpst_get_forum_support_setting( $forum_id ) )
-		return;
+//	if( 3 == bpbbpst_get_forum_support_setting( $forum_id ) )
+//		return;
 
 	$support_status = get_post_meta( $topic_id, '_bpbbpst_support_topic', true );
 	$status = '';
 	
-	if( empty( $support_status ) && $support_status!=0 )
+	// empty('0') returns true, so we need a better test for empty string
+	if( !isset( $support_status ) || $support_status==='' )
 		return;
 
 	/* new since 2.0 */
@@ -480,11 +516,14 @@ function bpbbpst_add_support_mention( $topic_id = 0, $echo = true ) {
 
 	if( empty( $status ) || !is_array( $status ) )
 		return;
+		
+	// An easy way for altering the prefix with a filter
+	$title_prefix = apply_filters( 'bpbbpst_topic_title_status_prefix', $status['prefix-title'], $support_status );
 
 	if( !empty( $echo ) ) :?>
-		<span class="bbp-st-topic-support <?php echo sanitize_html_class( $status['class'] );?>"><?php echo $status['prefix-title'];?></span>
+		<span class="bbp-st-topic-support <?php echo sanitize_html_class( $status['class'] );?>"><?php echo $title_prefix;?></span>
 	<?php else:
-		return '<span class="bbp-st-topic-support '. sanitize_html_class( $status['class'] ).'">'. $status['prefix-title'] .'</span>';
+		return '<span class="bbp-st-topic-support '. sanitize_html_class( $status['class'] ).'">'. $title_prefix .'</span>';
 	endif;	
 }
 
