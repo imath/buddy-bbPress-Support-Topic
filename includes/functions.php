@@ -142,11 +142,11 @@ function bpbbpst_maybe_output_support_field() {
 				if( bbp_is_topic_edit() ){
 
 					$support_status = get_post_meta( $topic_id, '_bpbbpst_support_topic', true );
-					
+
 					if( !empty( $support_status ) )
 						$checked = true;
 				}
-		
+
 				$output = '<input type="checkbox" value="support" name="_bp_bbp_st_is_support" id="bp_bbp_st_is_support" '. checked( true, $checked, false ).'> <label for="bp_bbp_st_is_support">'. __('This is a support topic','buddy-bbpress-support-topic') . '</label>' ;
 			break;
 	}
@@ -157,9 +157,9 @@ function bpbbpst_maybe_output_support_field() {
 	?>
 	<p>
 		<?php echo $output;?>
-		
+
 		<?php do_action( 'bpbbpst_output_support_extra_field', $parent_forum_support_feature );?>
-		
+
 		<?php wp_nonce_field( 'bpbbpst_support_define', '_wpnonce_bpbbpst_support_define' ); ?>
 	</p>
 	<?php
@@ -208,7 +208,7 @@ function bpbbpst_edit_support_type( $topic_id = 0 ) {
 
 	if ( !empty( $_POST['_bp_bbp_st_is_support'] ) ) {
 		$support = get_post_meta( $topic_id, '_bpbbpst_support_topic', true );
-		
+
 		$support = empty( $support ) ? 1 : $support;
 		update_post_meta( $topic_id, '_bpbbpst_support_topic', $support );
 	} else {
@@ -224,7 +224,7 @@ function bpbbpst_edit_support_type( $topic_id = 0 ) {
  * Handles topic moves from a forum to another
  *
  * @since  2.0
- * 
+ *
  * @param  integer $topic_id the topic id
  * @param  integer $forum_id the new forum id
  * @uses   bbp_get_topic_forum_id() to get old forum id
@@ -256,7 +256,7 @@ function bpbbpst_handle_moving_topic( $topic_id = 0, $forum_id = 0 ) {
 			unset( $_POST['_bp_bbp_st_is_support'] );
 		if( isset( $_POST['_support_status'] ) )
 			unset( $_POST['_support_status'] );
-		
+
 		delete_post_meta( $topic_id, '_bpbbpst_support_topic' );
 
 	} else {
@@ -266,7 +266,7 @@ function bpbbpst_handle_moving_topic( $topic_id = 0, $forum_id = 0 ) {
 			// in this case nonce is not set
 			if( $new_forum_support_feature == 2 )
 				$meta = 1;
-			
+
 			update_post_meta( $topic_id, '_bpbbpst_support_topic', $meta );
 		} else {
 			if( empty( $_POST['_bp_bbp_st_is_support'] ) && $new_forum_support_feature == 2 )
@@ -298,18 +298,18 @@ function bpbbpst_handle_moving_topic( $topic_id = 0, $forum_id = 0 ) {
  * @uses   wp_localize_script() to ensure translation of messages
  */
 function bpbbpst_enqueue_scripts(){
-	
-	/* 
+
+	/*
 	With BuddyPress activated, bbp_is_single_topic() is becoming true too late :(
 	so we need to check for bp_is_group_forum_topic(), if this function exists ;)
 	*/
 	$bbpress_load_scripts = false;
-	
+
 	if( bbp_is_single_topic() )
 		$bbpress_load_scripts = true;
 	elseif( function_exists( 'bp_is_group_forum_topic' ) && bp_is_group_forum_topic() )
 		$bbpress_load_scripts = true;
-	
+
 	if( $bbpress_load_scripts ) {
 		wp_enqueue_script( 'bpbbpst-topic-js', bpbbpst_get_plugin_url( 'js' ) . 'bpbbpst-topic.js', array( 'jquery' ), bpbbpst_get_plugin_version() );
 		wp_localize_script( 'bpbbpst-topic-js', 'bpbbpstbbp_vars', array(
@@ -332,7 +332,7 @@ function bpbbpst_enqueue_scripts(){
  * @uses   die() to make sure the script is exited
  */
 function bpbbpst_change_support_status() {
-	
+
 	if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) )
 		return;
 
@@ -342,7 +342,7 @@ function bpbbpst_change_support_status() {
 	}
 
 	if( !empty( $_POST['topic_id'] ) ){
-		
+
 		if( empty( $_POST['support_status'] ) ) {
 			delete_post_meta( $_POST['topic_id'], '_bpbbpst_support_topic' );
 		} else {
@@ -351,7 +351,7 @@ function bpbbpst_change_support_status() {
 		echo 1;
 	} else {
 		echo 0;
-	}	
+	}
 	die();
 }
 
@@ -374,10 +374,10 @@ function bpbbpst_change_support_status() {
  * @return string $input or the input with the selectbox
  */
 function bpbbpst_support_admin_links( $input = '', $args = array() ) {
-	
+
 	if ( !bbp_is_single_topic() )
 		return $input;
-		
+
 	$defaults = array (
 		'id'     => bbp_get_topic_id(),
 		'before' => '<span class="bbp-admin-links">',
@@ -395,18 +395,18 @@ function bpbbpst_support_admin_links( $input = '', $args = array() ) {
 
 	if( 3 == bpbbpst_get_forum_support_setting( $forum_id ) )
 		return $input;
-	
+
 	// now let's check the post meta !
 	$support_status = get_post_meta( $r['id'], '_bpbbpst_support_topic', true );
-	
+
 	if ( current_user_can( 'edit_topic', $r['id'] ) && !empty( $support_status ) ) {
-		
+
 		$support_selectbox = bpbbpst_get_selectbox( $support_status, $r['id'] ) . $r['sep'] ;
 
 		$new_span = str_replace( $r['before'], $r['before'] . $support_selectbox, $input );
 
 		return apply_filters( 'bpbbpst_support_admin_links', $new_span, $args );
-		
+
 	} else {
 		return $input;
 	}
@@ -417,7 +417,7 @@ function bpbbpst_support_admin_links( $input = '', $args = array() ) {
  * Gets the selected status from the list of available ones
  *
  * @since  2.0
- * 
+ *
  * @param  integer $selected the value of the support status
  * @uses   bpbbpst_get_support_status() to get the registered statuses
  * @return array            the selected status with arguments
@@ -443,7 +443,7 @@ function bpbbpst_get_selected_support_status( $selected = 0 ) {
  * Hooks bbp_theme_before_topic_title to add the support mention before the topic title
  *
  * @since  2.0
- * 
+ *
  * @param  integer $topic_id the topic id
  * @param  boolean $echo true to display, false to return
  * @uses   bbp_get_topic_id() to get the topic id if not set
@@ -455,37 +455,65 @@ function bpbbpst_get_selected_support_status( $selected = 0 ) {
  * @return string the html output containing the support status
  */
 function bpbbpst_add_support_mention( $topic_id = 0, $echo = true ) {
-	$class = false;
-	
-	if( empty( $topic_id ) )
+	$class  = false;
+	$output = '';
+
+	if ( empty( $topic_id ) ) {
 		$topic_id = bbp_get_topic_id();
+	}
 
 	// Since 2.0, we first need to check parent forum has support for support :)
 	$forum_id = bbp_get_topic_forum_id( $topic_id );
 
-	if( empty( $forum_id ) )
+	if ( empty( $forum_id ) ) {
 		return;
+	}
 
-	if( 3 == bpbbpst_get_forum_support_setting( $forum_id ) )
+	/**
+	 * See bpbbpst_display_forum_setting_options() for a description
+	 * of the different forum types
+	 */
+	$forum_status = bpbbpst_get_forum_support_setting( $forum_id );
+
+	if ( 3 == $forum_status ) {
 		return;
+	}
 
 	$support_status = get_post_meta( $topic_id, '_bpbbpst_support_topic', true );
 	$status = '';
-	
-	if( empty( $support_status ) )
-		return;
+
+	if ( empty( $support_status ) ) {
+
+		if ( ! empty( $echo ) ) {
+			do_action( 'bpbbpst_add_support_mention_action', $forum_id, $forum_status, $topic_id );
+		} else {
+			$output = apply_filters( 'bpbbpst_add_support_mention_filter', '', $forum_id, $forum_status, $topic_id );
+		}
+
+		return $output;
+	}
 
 	/* new since 2.0 */
 	$status = bpbbpst_get_selected_support_status( $support_status );
 
-	if( empty( $status ) || !is_array( $status ) )
+	if ( empty( $status ) || ! is_array( $status ) ) {
 		return;
+	}
 
-	if( !empty( $echo ) ) :?>
-		<span class="bbp-st-topic-support <?php echo sanitize_html_class( $status['class'] );?>"><?php echo $status['prefix-title'];?></span>
-	<?php else:
-		return '<span class="bbp-st-topic-support '. sanitize_html_class( $status['class'] ).'">'. $status['prefix-title'] .'</span>';
-	endif;	
+	// Build the output
+	$output = apply_filters(
+		'bpbbpst_add_support_mention',
+		'<span class="bbp-st-topic-support '. sanitize_html_class( $status['class'] ).'">'. $status['prefix-title'] .'</span>',
+		$forum_id,
+		$forum_status,
+		$topic_id
+	);
+
+	if ( ! empty( $echo ) ) {
+		echo $output;
+	} else {
+		return $output;
+	}
 }
 
 /**
@@ -499,10 +527,10 @@ function bpbbpst_add_support_mention( $topic_id = 0, $echo = true ) {
  * @return array $templates unchanged
  */
 function bpbbpst_topic_is_single( $templates = array(), $slug = '', $name = '' ){
-	
+
 	if( in_array( $name, array( 'single-topic', 'topic' ) ) )
 		remove_filter( 'the_title', 'bpbbpst_change_topic_title', 99 );
-	
+
 	return $templates;
 }
 
@@ -520,10 +548,10 @@ function bpbbpst_topic_is_single( $templates = array(), $slug = '', $name = '' )
  * @return string $title the title with the eventual support mention
  */
 function bpbbpst_change_topic_title( $title = '', $id = 0 ) {
-	
+
 	if( !bbp_is_topic( $id ) )
 			return $title;
-	
+
 	if( bbp_is_topic_edit() || bbp_is_single_topic() ) {
 		return bpbbpst_add_support_mention( false ) . $title;
 	} else {
@@ -560,7 +588,7 @@ function bpbbpst_filter_topic_title() {
  * @return $output
  */
 function bpbbpst_get_selectbox( $support_status = 1, $topic_id = 0 ) {
-	
+
 	if( empty( $topic_id ) )
 		return;
 
@@ -568,10 +596,10 @@ function bpbbpst_get_selectbox( $support_status = 1, $topic_id = 0 ) {
 
 	if( empty( $all_status ) || !is_array( $all_status ) )
 		return;
-	
+
 	$output = '<span class="support-select-box">';
 	$output .= '<select class="support-select-status" name="_support_status" data-topicsupport="'.$topic_id.'">';
-	
+
 	if( $topic_id == 'adminlist' )
 		$output .= '<option value="-1">' . __('All support status') .'</option>';
 
@@ -584,15 +612,15 @@ function bpbbpst_get_selectbox( $support_status = 1, $topic_id = 0 ) {
 		$output .= selected( $support_status, $status['value'], false );
 		$output .= '>'. $status['sb-caption'] .'</option>';
 	}
-	
+
 	$output .= '</select>';
-	
+
 	// nonce field
 	if( $topic_id != 'adminlist' )
 		$output .= wp_nonce_field( 'bpbbpst_support_status', '_wpnonce_bpbbpst_support_status', true, false );
-	
+
 	$output .= '</span>';
-	
+
 	return apply_filters( 'bpbbpst_get_selectbox', $output, $support_status, $topic_id );
 
 }
@@ -601,7 +629,7 @@ function bpbbpst_get_selectbox( $support_status = 1, $topic_id = 0 ) {
  * Eventually unsets the not a support questions for support only forums
  *
  * @since  2.0
- * 
+ *
  * @param  array  $all_status the registered support statuses
  * @uses   is_admin() to check for WordPress Backend
  * @uses   get_current_screen() to check for the topic admin area
@@ -635,7 +663,7 @@ function bpbbpst_neutralize_not_support( $all_status = array() ) {
  * Check for a selected value in an array
  *
  * @since  2.0
- * 
+ *
  * @param  array   $current the complete array
  * @param  mixed   $tocheck the value to check in the array
  * @param  boolean $echo    wether to display or return
@@ -667,7 +695,7 @@ function bpbbpst_array_checked( $current = array(), $tocheck = false , $echo = t
  * Maps buddypress group mods to add their role in array
  *
  * @since 2.0
- * 
+ *
  * @param  array  $users the group users (mods or admins)
  * @return array        the users with their group "role"
  */
@@ -689,7 +717,7 @@ function bpbbpst_role_group_forum_map( $users = array() ) {
  * List all bbPress moderators that are subscribed to new support topics
  *
  * @since  2.0
- * 
+ *
  * @param  integer $forum_id the forum id
  * @param  string  $context  are we using form admin or inside our notify function ?
  * @uses   get_post_meta() to get array of subscribed moderators
@@ -712,7 +740,7 @@ function bpbbpst_list_recipients( $forum_id = 0, $context = 'admin' ) {
  * Displays the available 3 options for forum support settings
  *
  * @since  2.0
- * 
+ *
  * @param  integer $support_feature the previously saved option if any
  * @uses   checked() to eventually add a checked attribute to field
  * @return string                  html list of options
@@ -729,12 +757,12 @@ function bpbbpst_display_forum_setting_options( $support_feature = 1 ) {
 
 /**
  * Displays a list of checkbox for moderators notifications
- * 
+ *
  * Admin can choose the moderators that will receive a notification
  * in case a new support topic has been posted.
- * 
+ *
  * @since  2.0
- * 
+ *
  * @param  integer $forum_id the forum id
  * @uses   get_users() to list all moderators
  * @uses   bpbbpst_list_recipients() to get the support recipients for the specified forum
@@ -755,7 +783,7 @@ function bpbbpst_checklist_moderators( $forum_id = false ) {
 	<ul class="bbp-moderators-list">
 	<?php foreach( $user_query as $user ) :?>
 		<li>
-			<input type="checkbox" value="<?php echo $user->data->ID;?>" name="_bpbbpst_support_recipients[]" <?php bpbbpst_array_checked( $recipients, $user->data->ID );?>> 
+			<input type="checkbox" value="<?php echo $user->data->ID;?>" name="_bpbbpst_support_recipients[]" <?php bpbbpst_array_checked( $recipients, $user->data->ID );?>>
 			<?php echo $user->data->display_name ;?> (<?php echo bbp_get_dynamic_role_name( bbp_get_user_role( $user->data->ID ) );?>)
 		</li>
 	<?php endforeach;?>
@@ -767,7 +795,7 @@ function bpbbpst_checklist_moderators( $forum_id = false ) {
  * Returns an array of statistics element about support topics
  *
  * @since  2.0
- * 
+ *
  * @param  array $args  user can customize the query
  * @uses   bbp_get_topic_post_type() to get the topic post type identifier
  * @uses   bbp_parse_args() to merge args with defaults
@@ -780,15 +808,15 @@ function bpbbpst_checklist_moderators( $forum_id = false ) {
  * @return array $support_stats the different statistics element
  */
 function bpbbpst_support_statistics( $args = '' ) {
-	
-	$defaults = array( 
+
+	$defaults = array(
 			'post_type'      => bbp_get_topic_post_type(),
 			'posts_per_page' => -1,
-			'meta_query'     => array( array( 
+			'meta_query'     => array( array(
 											'key' => '_bpbbpst_support_topic',
 											'value' => 1,
 											'type' => 'numeric',
-											'compare' => '>=' 
+											'compare' => '>='
 								) )
 				);
 	$r = bbp_parse_args( $args, $defaults, 'support_statistics' );
@@ -802,9 +830,9 @@ function bpbbpst_support_statistics( $args = '' ) {
 	$support_stat = array();
 
 	foreach( $all_status as $key => $status ) {
-		$support_stat[$status['value']] = array( 
-			'stat'        => 0, 
-			'label'       => $status['sb-caption'], 
+		$support_stat[$status['value']] = array(
+			'stat'        => 0,
+			'label'       => $status['sb-caption'],
 			'admin_class' => $status['admin_class'],
 			'front_class' => sanitize_html_class( $key )
 		);
@@ -832,7 +860,7 @@ function bpbbpst_support_statistics( $args = '' ) {
 	}
 
 	if( !empty( $goon ) ) {
-		
+
 		$percent_support  = number_format( ( $support_stat[2]['stat'] / $total_support ) * 100, 2 ) . '%';
 
 		$support_stats['allstatus']     = $support_stat;
@@ -851,9 +879,9 @@ function bpbbpst_support_statistics( $args = '' ) {
 
 /**
  * Hooks bbp_new_topic to eventually send a notification to moderators
- * 
+ *
  * @since 2.0
- * 
+ *
  * @param  integer $topic_id       the topic id just created
  * @param  integer $forum_id       the forum id the topic is attached to
  * @param  array $anonymous_data
@@ -880,12 +908,12 @@ function bpbbpst_new_support_topic_notify( $topic_id = 0, $forum_id = 0, $anonym
  * Sends a notification to bbPress moderators and eventually BP Groups one
  *
  * Inpired by : bbPress bbp_notify_subscribers() function
- * 
+ *
  * @since  2.0
- * 
+ *
  * @param  integer $topic_id       the topic id
  * @param  integer $forum_id       the forum id
- * @param  boolean $anonymous_data 
+ * @param  boolean $anonymous_data
  * @param  integer $topic_author
  * @uses   bbp_get_topic_id() to validate the topic id
  * @uses   bbp_get_forum_id() to validate the forum id
@@ -992,7 +1020,7 @@ Please ask the admin to unsubscribe from these emails.', 'buddy-bbpress-support-
  * Builds a selectbox with forum set as support only ones
  *
  * @since  2.0
- * 
+ *
  * @param  integer $selected   the forum id previously selected
  * @param  string  $field_id   id of the selectbox
  * @param  string  $field_name name of the selectbox
@@ -1002,19 +1030,19 @@ Please ask the admin to unsubscribe from these emails.', 'buddy-bbpress-support-
  * @uses   bbp_get_forum_id() to validate forum id
  * @uses   selected() to add a selected attribute to option if needed
  * @uses   bbp_forum_title() to get the forum title
- * @uses   wp_reset_postdata() to reset the post datas 
+ * @uses   wp_reset_postdata() to reset the post datas
  * @return string html output
  */
 function bpbbpst_get_support_only_forums( $selected = 0, $field_id = '_support_only_forum', $field_name = '_support_only_forums' ) {
 
-	$query_args = array( 
+	$query_args = array(
 			'post_type'      => bbp_get_forum_post_type(),
 			'posts_per_page' => -1,
-			'meta_query'     => array( array( 
+			'meta_query'     => array( array(
 											'key' => '_bpbbpst_forum_settings',
 											'value' => 2,
 											'type' => 'numeric',
-											'compare' => '=' 
+											'compare' => '='
 								) )
 				);
 
@@ -1044,7 +1072,7 @@ function bpbbpst_get_support_only_forums( $selected = 0, $field_id = '_support_o
  * Outputs an hidden field with the referer url
  *
  * @since  2.0
- * 
+ *
  * @param  integer $support_type the forum support setting
  * @uses   esc_url_raw() to sanitize url
  * @uses   wp_get_referer() to get the referer url
