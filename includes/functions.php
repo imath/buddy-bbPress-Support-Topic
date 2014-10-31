@@ -331,7 +331,7 @@ function bpbbpst_enqueue_scripts() {
 	}
 
 	if ( $bbpress_load_scripts ) {
-		wp_enqueue_script( 'bpbbpst-topic-js', bpbbpst_get_plugin_url( 'js' ) . 'bpbbpst-topic.js', array( 'jquery' ), bpbbpst_get_plugin_version() );
+		wp_enqueue_script( 'bpbbpst-topic-js', bpbbpst_get_plugin_url( 'js' ) . 'bpbbpst-topic.js', array( 'jquery' ), bpbbpst_get_plugin_version(), true );
 		wp_localize_script( 'bpbbpst-topic-js', 'bpbbpstbbp_vars', array(
 			'securitycheck' => __( 'Security check failed', 'buddy-bbpress-support-topic' ),
 			'loading'       => __( 'loading', 'buddy-bbpress-support-topic' )
