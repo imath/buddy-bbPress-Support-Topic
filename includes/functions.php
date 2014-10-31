@@ -79,6 +79,30 @@ function bpbbpst_get_support_status() {
 }
 
 /**
+ * Returns bbPress required version.
+ *
+ * @since  2.0
+ *
+ * @uses   bbpress() the main bbPress instance
+ * @return bool true if required version is ok, false otherwise
+ */
+function bpbbpst_bbp_required_version() {
+	return bbpress()->extend->bpbbpst->globals->required_bbp_version;
+}
+
+/**
+ * Informs if required version of bbPress is ok.
+ *
+ * @since  2.0
+ *
+ * @uses   bbpress() the main bbPress instance
+ * @return bool true if required version is ok, false otherwise
+ */
+function bpbbpst_is_bbp_required_version_ok() {
+	return (bool) bbpress()->extend->bpbbpst->globals->site_bbp_version_ok;
+}
+
+/**
  * Gets the forum setting for support feature
  *
  * @since  2.0
@@ -151,7 +175,7 @@ function bpbbpst_maybe_output_support_field() {
 				}
 			}
 
-			$output = '<input type="checkbox" value="support" name="_bp_bbp_st_is_support" id="bp_bbp_st_is_support" '. checked( true, $checked, false ).'> <label for="bp_bbp_st_is_support">'. __('This is a support topic','buddy-bbpress-support-topic') . '</label>' ;
+			$output = '<label for="bp_bbp_st_is_support"><input type="checkbox" value="support" name="_bp_bbp_st_is_support" id="bp_bbp_st_is_support" '. checked( true, $checked, false ).'> '. __('This is a support topic','buddy-bbpress-support-topic') . '</label>' ;
 			break;
 	}
 
@@ -597,7 +621,7 @@ function bpbbpst_change_topic_title( $title = '', $id = 0 ) {
  * @uses   add_filter() to modify the_title
  */
 function bpbbpst_filter_topic_title() {
-	add_filter('the_title', 'bpbbpst_change_topic_title', 99, 2 );
+	add_filter( 'the_title', 'bpbbpst_change_topic_title', 99, 2 );
 }
 
 /**

@@ -3,9 +3,9 @@
 Plugin Name: Buddy-bbPress Support Topic
 Plugin URI: http://imathi.eu/tag/buddy-bbpress-support-topic/
 Description: Adds a support feature to your bbPress powered forums
-Version: 2.0-beta3
-Requires at least: 3.5
-Tested up to: 3.7.1
+Version: 2.0-beta4
+Requires at least: 4.0
+Tested up to: 4.0
 License: GNU/GPL 2
 Author: imath
 Author URI: http://imathi.eu/
@@ -20,7 +20,7 @@ if ( ! class_exists( 'BP_bbP_Support_Topic' ) ) :
 /**
  * Main Buddy-bbPress Support Topic Class
  *
- * Extends bbPress 2.5.4 and up with a support feature
+ * Extends bbPress 2.5 and up with a support feature
  *
  * @since 2.0
  */
@@ -28,8 +28,6 @@ class BP_bbP_Support_Topic {
 
 	// plugin's global vars
 	public $globals;
-
-	public $required_bbp_version = '2.5.4';
 
 	/**
 	 * The constructor
@@ -63,19 +61,23 @@ class BP_bbP_Support_Topic {
 	private function setup_globals() {
 		$this->globals = new stdClass();
 
-		$this->globals->version = '2.0-beta3';
+		$this->globals->version = '2.0-beta4';
 
 		$this->globals->file       = __FILE__ ;
-		$this->globals->basename   = apply_filters( 'bbp_plugin_basenname', plugin_basename( $this->globals->file ) );
-		$this->globals->plugin_dir = apply_filters( 'bbp_plugin_dir_path',  plugin_dir_path( $this->globals->file ) );
-		$this->globals->plugin_url = apply_filters( 'bbp_plugin_dir_url',   plugin_dir_url ( $this->globals->file ) );
+		$this->globals->basename   = apply_filters( 'bpbbpst_plugin_basenname', plugin_basename( $this->globals->file ) );
+		$this->globals->plugin_dir = apply_filters( 'bpbbpst_plugin_dir_path',  plugin_dir_path( $this->globals->file ) );
+		$this->globals->plugin_url = apply_filters( 'bpbbpst_plugin_dir_url',   plugin_dir_url ( $this->globals->file ) );
 
 		// Includes
-		$this->globals->includes_dir = apply_filters( 'bbp_includes_dir', trailingslashit( $this->globals->plugin_dir . 'includes'  ) );
-		$this->globals->includes_url = apply_filters( 'bbp_includes_url', trailingslashit( $this->globals->plugin_url . 'includes'  ) );
+		$this->globals->includes_dir = apply_filters( 'bpbbpst_includes_dir', trailingslashit( $this->globals->plugin_dir . 'includes'  ) );
+		$this->globals->includes_url = apply_filters( 'bpbbpst_includes_url', trailingslashit( $this->globals->plugin_url . 'includes'  ) );
 
 		$this->support_status  = array();
 		$this->globals->domain = 'buddy-bbpress-support-topic';
+
+		// bbPress required version
+		$this->globals->required_bbp_version = '2.5';
+		$this->globals->site_bbp_version_ok  = version_compare( bbp_get_version(), $this->globals->required_bbp_version, '>=' );
 	}
 
 	/**
@@ -121,46 +123,54 @@ class BP_bbP_Support_Topic {
 		}
 
 		// Loads the translation
-		add_action( 'bbp_init',                                   array( $this, 'load_textdomain'),        7    );
-
-		// Defines support status, doing so in globals avoids strings in it to be translated
-		add_action( 'bbp_init',                                   array( $this,  'setup_status'),          9    );
-
-		// Adding the support control to the topic new/edit form
-		add_action( 'bbp_theme_before_topic_form_submit_wrapper', 'bpbbpst_maybe_output_support_field'          );
-
-		// setting the support type on front end new topic form submission
-		add_action( 'bbp_new_topic_post_extras',                  'bpbbpst_save_support_type',            10, 1 );
-
-		// sends a notification in case of new support topic for the forum that enabled support feature
-		add_action( 'bbp_new_topic',                              'bpbbpst_new_support_topic_notify',     10, 4 );
-
-		// updating the support type on front end edit topic form submission
-		add_action( 'bbp_edit_topic_post_extras',                 'bpbbpst_edit_support_type',            10, 1 );
-
-		// moving a topic needs to adapt with the support settings of the new forum
-		add_action( 'bbp_edit_topic',                             'bpbbpst_handle_moving_topic',           9, 2 );
-
-		//enqueueing scripts
-		add_action( 'bbp_enqueue_scripts',                        'bpbbpst_enqueue_scripts'                     );
-
-		// catching ajax status changes
-		add_action( 'wp_ajax_bbp_change_support_status',          'bpbbpst_change_support_status'               );
-
-		// adding support mention before topic titles in loops
-		add_action( 'bbp_theme_before_topic_title',               'bpbbpst_add_support_mention'                 );
-
-		// Waits a bit to filter the topic title to let plugin play with get_the_title()
-		add_action( 'bbp_head',                                   'bpbbpst_filter_topic_title',             999 );
-
-		// For Bpbbpst_Support_New_Support widget usage (adds a referer field)
-		add_action( 'bpbbpst_output_support_extra_field',         'bpbbpst_referer_extra_field',          10, 1 );
-		add_action( 'bbp_theme_before_reply_content',             'bpbbpst_display_referer_to_moderators'       );
+		add_action( 'bbp_init', array( $this, 'load_textdomain' ), 7 );
 
 		// Loads the admin
 		if( is_admin() ) {
 			add_action( 'init', 'bpbbpst_admin' );
 		}
+
+		if ( ! $this->globals->site_bbp_version_ok ) {
+			return;
+		}
+
+		// Defines support status, doing so in globals avoids strings in it to be translated
+		add_action( 'bbp_init',                                   array( $this,  'setup_status' ),          9    );
+
+		// Adding the support control to the topic new/edit form
+		add_action( 'bbp_theme_before_topic_form_submit_wrapper', 'bpbbpst_maybe_output_support_field'           );
+
+		// setting the support type on front end new topic form submission
+		add_action( 'bbp_new_topic_post_extras',                  'bpbbpst_save_support_type',             10, 1 );
+
+		// sends a notification in case of new support topic for the forum that enabled support feature
+		add_action( 'bbp_new_topic',                              'bpbbpst_new_support_topic_notify',      10, 4 );
+
+		// updating the support type on front end edit topic form submission
+		add_action( 'bbp_edit_topic_post_extras',                 'bpbbpst_edit_support_type',             10, 1 );
+
+		// moving a topic needs to adapt with the support settings of the new forum
+		add_action( 'bbp_edit_topic',                             'bpbbpst_handle_moving_topic',            9, 2 );
+
+		//enqueueing scripts
+		add_action( 'bbp_enqueue_scripts',                        'bpbbpst_enqueue_scripts'                      );
+
+		// catching ajax status changes
+		add_action( 'wp_ajax_bbp_change_support_status',          'bpbbpst_change_support_status'                );
+
+		// adding support mention before topic titles in loops
+		add_action( 'bbp_theme_before_topic_title',               'bpbbpst_add_support_mention'                  );
+
+		// Waits a bit to filter the topic title to let plugin play with get_the_title()
+		add_action( 'bbp_head',                                   'bpbbpst_filter_topic_title',              999 );
+
+		// For Bpbbpst_Support_New_Support widget usage (adds a referer field)
+		add_action( 'bpbbpst_output_support_extra_field',         'bpbbpst_referer_extra_field',           10, 1 );
+		add_action( 'bbp_theme_before_reply_content',             'bpbbpst_display_referer_to_moderators'        );
+
+		// Register the widgets
+		add_action( 'bbp_widgets_init', array( 'Bpbbpst_Support_Stats', 'register_widget' ),       10 );
+		add_action( 'bbp_widgets_init', array( 'Bpbbpst_Support_New_Support', 'register_widget' ), 10 );
 
 		do_action_ref_array( 'bpbbpst_after_setup_actions', array( &$this ) );
 	}
@@ -207,6 +217,10 @@ class BP_bbP_Support_Topic {
 	 * @uses   add_filter() to filter bbPress at key points
 	 */
 	private function setup_filters() {
+		if ( ! $this->globals->site_bbp_version_ok ) {
+			return;
+		}
+
 		// removes the title filter
 		add_filter( 'bbp_get_template_part', 'bpbbpst_topic_is_single', 99, 3 );
 

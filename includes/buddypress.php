@@ -471,6 +471,10 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
  * @uses  bp_register_group_extension() to finally load the plugin's group extension
  */
 function bpbbpst_buddypress() {
+	// Bail if bbPress required version doesn't match our need
+	if ( ! bpbbpst_is_bbp_required_version_ok() ) {
+		return;
+	}
 
 	if ( bbp_is_group_forums_active() && bp_is_active( 'groups' ) ) {
 

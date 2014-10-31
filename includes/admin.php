@@ -43,6 +43,17 @@ class BP_bbP_ST_Admin {
 			return;
 		}
 
+		// Welcome Screen
+		add_action( 'bbp_admin_menu',                           array( $this, 'welcome_screen_register' )             );
+		add_action( 'bbp_admin_head',                           array( $this, 'welcome_screen_css' )                  );
+		add_filter( 'plugin_action_links',                      array( $this, 'modify_plugin_action_links' ),   10, 2 );
+
+		// Bail if bbPress required version doesn't match our need
+		if ( ! bpbbpst_is_bbp_required_version_ok() ) {
+			add_action( 'bbp_admin_notices', array( $this, 'admin_notices' ) );
+			return;
+		}
+
 		// forums metabox
 		add_action( 'bbp_forum_attributes_metabox',             array( $this, 'forum_meta_box_register' ),      10    );
 		add_action( 'bbp_forum_attributes_metabox_save',        array( $this, 'forum_meta_box_save' ),          10, 1 );
@@ -76,12 +87,23 @@ class BP_bbP_ST_Admin {
 
 		// At a glance Dashboard widget
 		add_action( 'bbp_dashboard_at_a_glance',                array( $this, 'dashboard_at_a_glance' ),        10, 2 );
+	}
 
-		// Welcome Screen
-		add_action( 'bbp_admin_menu',                           array( $this, 'welcome_screen_register' )             );
-		add_action( 'bbp_admin_head',                           array( $this, 'welcome_screen_css' )                  );
-		add_filter( 'plugin_action_links',                      array( $this, 'modify_plugin_action_links' ),   10, 2 );
-
+	/**
+	 * Display a notice to give the admin some feedback
+	 *
+	 * @since 2.0
+	 *
+	 * @uses   bbp_is_forum_category() to check if the forum is a category
+	 * @uses   add_meta_box() to add the metabox to forum edit screen
+	 * @uses   bbp_get_forum_post_type() to get forum post type
+	 */
+	public function admin_notices() {
+		?>
+		<div id="message" class="error fade">
+			<p><?php printf( esc_html__( 'Version %s of Buddy-bbPress Support Topic requires version %s of bbPress to be activated. Please upgrade bbPress.', 'buddy-bbpress-support-topic' ), bpbbpst_get_plugin_version(), bpbbpst_bbp_required_version() ); ?></p>
+		</div>
+		<?php
 	}
 
 	/**
@@ -717,7 +739,6 @@ class BP_bbP_ST_Admin {
 	 *
 	 * @since  2.0
 	 *
-	 * @global string $bpbbpst_about_page the about page identifier
 	 * @uses   add_dashboard_page() to build the dashboard submenu
 	 * @uses   get_option() to get db version
 	 * @uses   bpbbpst_get_plugin_version() to get plugin's version
@@ -725,15 +746,19 @@ class BP_bbP_ST_Admin {
 	 * @uses   do_action() to allow plugins or themes add action from this point
 	 */
 	public function welcome_screen_register() {
-		global $bpbbpst_about_page;
 
-		$bpbbpst_about_page = add_dashboard_page(
+		$this->about_page = add_dashboard_page(
 			__( 'Welcome to Buddy-bbPress Support Topic',  'buddy-bbpress-support-topic' ),
 			__( 'Welcome to Buddy-bbPress Support Topic',  'buddy-bbpress-support-topic' ),
 			'manage_options',
 			'bpbbst-about',
 			array( &$this, 'welcome_screen_display' )
 		);
+
+		// do not upgrade version if required is not ok
+		if ( ! bpbbpst_is_bbp_required_version_ok() ) {
+			return;
+		}
 
 		$db_version = get_option( 'bp-bbp-st-version' );
 		$plugin_version = bpbbpst_get_plugin_version();
@@ -760,133 +785,132 @@ class BP_bbP_ST_Admin {
 	public function welcome_screen_display() {
 		$display_version = bpbbpst_get_plugin_version();
 		$plugin_url = bpbbpst_get_plugin_url();
+		$bbpress_required = sprintf( '<strong>bbPress %s</strong>', bpbbpst_bbp_required_version() );
 		?>
 		<div class="wrap about-wrap">
 			<h1><?php printf( __( 'Buddy-bbPress Support Topic %s', 'buddy-bbpress-support-topic' ), $display_version ); ?></h1>
-			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Buddy-bbPress Support Topic %s is ready to manage your support requests!', 'buddy-bbpress-support-topic' ), $display_version ); ?></div>
-			<div class="bpbbpst-badge"><?php printf( __( 'Version %s', 'buddy-bbpress-support-topic' ), $display_version ); ?></div>
+
+			<?php if ( ! bpbbpst_is_bbp_required_version_ok() ) :?>
+				<div class="about-text"><?php printf( esc_html__( 'Ouch! Buddy-bbPress Support Topic %s requires at least %s, see below why it might be a great idea to upgrade bbPress ;)', 'buddy-bbpress-support-topic' ), $display_version, $bbpress_required ); ?></div>
+			<?php else : ?>
+				<div class="about-text"><?php printf( esc_html__( 'Thank you for updating to the latest version! Buddy-bbPress Support Topic %s is ready to manage your support requests!', 'buddy-bbpress-support-topic' ), $display_version ); ?></div>
+			<?php endif; ?>
+
+			<div class="bpbbpst-badge">
+				<div class="badge"></div>
+				<div class="badge-text"><?php esc_html_e( 'Support', 'buddy-bbpress-support-topic' ); ?></div>
+			</div>
 
 			<h2 class="nav-tab-wrapper">
 				<a class="nav-tab nav-tab-active" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'bpbbst-about' ), 'index.php' ) ) ); ?>">
-					<?php _e( 'What&#8217;s New', 'buddy-bbpress-support-topic' ); ?>
+					<?php esc_html_e( 'What&#39;s New', 'buddy-bbpress-support-topic' ); ?>
 				</a>
 			</h2>
 
 			<div class="changelog">
-				<h3><?php _e( 'New features for the bbPress (2.3.2 and up) powered forums !', 'buddy-bbpress-support-topic' ); ?></h3>
-
-				<div class="feature-section">
-					<p><?php printf( __( 'Discover below the new features introduced in version %s.', 'buddy-bbpress-support-topic' ), $display_version ); ?></p>
-				</div>
+				<h2 class="about-headline-callout"><?php printf( esc_html__( 'New features for the %s (and up) powered forums !', 'buddy-bbpress-support-topic' ), $bbpress_required ); ?></h2>
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'More control on Support feature', 'buddy-bbpress-support-topic' ); ?></h3>
-
-				<div class="feature-section images-stagger-right">
-					<img alt="" src="<?php echo $plugin_url;?>screenshot-1.png" class="image-30" />
-					<h4><?php _e( 'Control the support feature by Forum', 'buddy-bbpress-support-topic' ); ?></h4>
-					<p><?php _e( 'Before, the support feature was set by default and it was not possible to control it by forum.', 'buddy-bbpress-support-topic' ); ?></p>
-					<p><?php _e( 'Now, from the forum administration, you can manage the support feature by forum, by choosing to leave default behavior, disallow the support feature or dedicate a forum to support.', 'buddy-bbpress-support-topic' ); ?></p>
-					<p><?php _e( 'This new feature made possible another one, so jump to next chapter !!', 'buddy-bbpress-support-topic' ); ?></p>
-				</div>
-			</div>
-
-			<div class="changelog">
-				<h3><?php _e( 'Email notices to moderators', 'buddy-bbpress-support-topic' ); ?></h3>
-
-				<div class="feature-section images-stagger-right">
-					<img alt="" src="<?php echo $plugin_url;?>screenshot-2.png" class="image-30" />
-					<h4><?php _e( 'Moderators can be notified of new support topics', 'buddy-bbpress-support-topic' ); ?></h4>
-					<p><?php _e( 'If you choosed to enable the support feature for your forum, the Keymaster can activate email notices for moderators when a new support topic is posted.', 'buddy-bbpress-support-topic' ); ?></p>
-					<p><?php _e( 'In Forum administration, you will find a checkbox list of bbPress moderators.', 'buddy-bbpress-support-topic' ); ?></p>
-					<p><?php _e( 'Simply select the ones to receive notification and you will be able ro reply faster to your support requests !', 'buddy-bbpress-support-topic' ); ?></p>
-				</div>
-			</div>
-
-			<div class="changelog">
-				<h3><?php _e( 'BuddyPress : a new Group admin tab', 'buddy-bbpress-support-topic' ); ?></h3>
-
-				<div class="feature-section images-stagger-right">
-					<img alt="" src="<?php echo $plugin_url;?>screenshot-3.png" class="image-30" />
-					<h4><?php _e( 'Group Admins can customize their support settings', 'buddy-bbpress-support-topic' ); ?></h4>
-					<p><?php _e( 'If BuddyPress 1.8+ is activated, a new admin tab will show to allow group Admins to set the support behavior for their forum.', 'buddy-bbpress-support-topic' ); ?></p>
-					<p><?php _e( 'They can choose to disallow the support feature or use it just as explained in first feature description', 'buddy-bbpress-support-topic' ); ?></p>
-					<p><?php _e( 'If they allowed support for their forum, they can subscribe to an email notification when a new support topic is posted, they can also add group mods to the subscribe list to help them', 'buddy-bbpress-support-topic' ); ?></p>
-				</div>
-			</div>
-
-			<div class="changelog">
-				<h3><?php _e( 'Bulk edit support topics !', 'buddy-bbpress-support-topic' ); ?></h3>
-
-				<div class="feature-section images-stagger-right">
-					<img alt="" src="<?php echo $plugin_url;?>screenshot-4.png" class="image-50" />
-					<h4><?php _e( 'Keymaster can change the support status of several topics at once', 'buddy-bbpress-support-topic' ); ?></h4>
-					<p><?php _e( 'From the Topics list in WordPress Administration, Keymaster can use the bulk actions to edit the support status of several topics.', 'buddy-bbpress-support-topic' ); ?></p>
-					<p><?php _e( 'After activating the topics checkboxes, choose Edit option in the bulk action, then click on the apply button.', 'buddy-bbpress-support-topic' ); ?></p>
-					<p><?php _e( 'You can use the support selectbox to update these topics support status', 'buddy-bbpress-support-topic' ); ?></p>
-				</div>
-			</div>
-
-			<div class="changelog">
-				<h3><?php _e( 'A new widget', 'buddy-bbpress-support-topic' ); ?></h3>
-
-				<div class="feature-section images-stagger-right">
-					<img alt="" src="<?php echo $plugin_url;?>screenshot-6.png" class="image-50" />
-					<h4><?php _e( 'A widget to help users ask for support.', 'buddy-bbpress-support-topic' ); ?></h4>
-					<p><?php _e( 'Administrator can use this new widget to create a button that will activate the new topic form in the support only forum', 'buddy-bbpress-support-topic' ); ?></p>
-					<p><?php _e( 'If your WordPress is an application, it can be interesting to get the referer url the user went from before hitting the new support topic widget link', 'buddy-bbpress-support-topic' ); ?></p>
-					<p><?php _e( 'Once posted, Keymasters and moderators will be able to see the referer above the content of the topic.', 'buddy-bbpress-support-topic' ); ?></p>
-				</div>
-			</div>
-
-			<div class="changelog">
-				<h3><?php _e( 'Advanced users : need new support status ?', 'buddy-bbpress-support-topic' ); ?></h3>
-
-				<div class="feature-section images-stagger-right">
-					<img alt="" src="<?php echo $plugin_url;?>screenshot-5.png" class="image-30" />
-					<h4><?php _e( 'A filter to add custom support statuses', 'buddy-bbpress-support-topic' ); ?></h4>
-					<p><?php _e( 'The new status will be fully integrated in the different features of the plugin (Dashboard stats, Stats Widget...)', 'buddy-bbpress-support-topic' ); ?></p>
-					<p><?php _e( 'An example of use is displayed below, use it in your plugin or in the functions.php file of your theme.', 'buddy-bbpress-support-topic' ); ?></p>
-					<div class="bpbbpst-code">
-						function functionprefix_custom_status( $allstatus = array() ) {<br/>
-						&nbsp;&nbsp;$allstatus&#91;&#39;topic-working-on-it&#39;&#93; = array(<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;&#39;sb-caption&#39;   =&gt; __( &#39;Working on it&#39;, &#39;buddy-bbpress-support-topic&#39; ),<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;&#39;value&#39;        =&gt; 3,<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;&#39;prefix-title&#39; =&gt; __( &#39;&#91;Working on it&#93; &#39;, &#39;buddy-bbpress-support-topic&#39; ),<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;&#39;admin_class&#39;  =&gt; &#39;waiting&#39;<br/>
-						&nbsp;&nbsp;);<br/>
-						<br/>
-						&nbsp;&nbsp;return $allstatus;<br/>
-						}<br/>
-						<br/>
-						add_filter( &#39;bpbbpst_get_support_status&#39;, &#39;functionprefix_custom_status&#39;, 10, 1 );
+				<h2 class="about-headline-callout"><?php esc_html_e( 'More control on Support feature', 'buddy-bbpress-support-topic' ); ?></h2>
+				<div class="feature-section col two-col">
+					<div class="col-1">
+						<h4><?php esc_html_e( 'Control the support feature by Forum', 'buddy-bbpress-support-topic' ); ?></h4>
+						<p><?php esc_html_e( 'Before, the support feature was set by default and it was not possible to control it by forum.', 'buddy-bbpress-support-topic' ); ?></p>
+						<p><?php esc_html_e( 'Now, from the forum administration, you can manage the support feature by forum, by choosing to leave default behavior, disallow the support feature or dedicate a forum to support.', 'buddy-bbpress-support-topic' ); ?></p>
+						<p><?php esc_html_e( 'This new feature made possible another one, so jump to next chapter !!', 'buddy-bbpress-support-topic' ); ?></p>
+					</div>
+					<div class="col-2 last-feature">
+						<img alt="" src="<?php echo $plugin_url;?>screenshot-1.png"/>
 					</div>
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Many thanks !', 'buddy-bbpress-support-topic' ); ?></h3>
+				<h2 class="about-headline-callout"><?php esc_html_e( 'Email notices to moderators', 'buddy-bbpress-support-topic' ); ?></h2>
+				<div class="feature-section col two-col">
+					<div class="col-1">
+						<img alt="" src="<?php echo $plugin_url;?>screenshot-2.png"/>
+					</div>
+					<div class="col-2 last-feature">
+						<h4><?php esc_html_e( 'Moderators can be notified of new support topics', 'buddy-bbpress-support-topic' ); ?></h4>
+						<p><?php esc_html_e( 'If you choosed to enable the support feature for your forum, the Keymaster can activate email notices for moderators when a new support topic is posted.', 'buddy-bbpress-support-topic' ); ?></p>
+						<p><?php esc_html_e( 'In Forum administration, you will find a checkbox list of bbPress moderators.', 'buddy-bbpress-support-topic' ); ?></p>
+						<p><?php esc_html_e( 'Simply select the ones to receive notification and you will be able ro reply faster to your support requests !', 'buddy-bbpress-support-topic' ); ?></p>
+					</div>
+				</div>
+			</div>
 
-				<div class="feature-section">
-					<h4 class="wp-people-group"><?php _e( 'I thank these &quot;buddies&quot; for their help and support', 'buddy-bbpress-support-topic' ); ?></h4>
-					<ul class="wp-people-group">
-						<li class="wp-person" id="wp-person-chouf1" style="list-style:none">
-							<a href="http://profiles.wordpress.org/chouf1"><img src="http://0.gravatar.com/avatar/124800ff8edcebba80fd043e088e30b6?s=60" class="gravatar" alt="Chouf1" /></a>
-							<a class="web" href="http://profiles.wordpress.org/chouf1">Chouf1</a>
-							<span class="title"></span>
-						</li>
-						<li class="wp-person" id="wp-person-djpaul" style="list-style:none">
-							<a href="http://profiles.wordpress.org/djpaul"><img src="http://0.gravatar.com/avatar/3bc9ab796299d67ce83dceb9554f75df?s=60" class="gravatar" alt="Paul Gibbs" /></a>
-							<a class="web" href="http://profiles.wordpress.org/djpaul">Paul Gibbs</a>
-							<span class="title"></span>
-						</li>
-						<li class="wp-person" id="wp-person-mercime" style="list-style:none">
-							<a href="http://profiles.wordpress.org/mercime"><img src="http://0.gravatar.com/avatar/fae451be6708241627983570a1a1817a?s=60" class="gravatar" alt="Mercime" /></a>
-							<a class="web" href="http://profiles.wordpress.org/mercime">Mercime</a>
-							<span class="title"></span>
-						</li>
-					</ul>
+			<div class="changelog">
+				<h2 class="about-headline-callout"><?php esc_html_e( 'BuddyPress : a new Group admin tab', 'buddy-bbpress-support-topic' ); ?></h2>
+				<div class="feature-section col two-col">
+					<div class="col-1">
+						<h4><?php esc_html_e( 'Group Admins can customize their support settings', 'buddy-bbpress-support-topic' ); ?></h4>
+						<p><?php esc_html_e( 'If BuddyPress 2.0+ is activated, a new admin tab will show to allow group Admins to set the support behavior for their forum.', 'buddy-bbpress-support-topic' ); ?></p>
+						<p><?php esc_html_e( 'They can choose to disallow the support feature or use it just as explained in first feature description', 'buddy-bbpress-support-topic' ); ?></p>
+						<p><?php esc_html_e( 'If they allowed support for their forum, they can subscribe to an email notification when a new support topic is posted, they can also add group mods to the subscribe list to help them', 'buddy-bbpress-support-topic' ); ?></p>
+					</div>
+					<div class="col-2 last-feature">
+						<img alt="" src="<?php echo $plugin_url;?>screenshot-3.png"/>
+					</div>
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h2 class="about-headline-callout"><?php esc_html_e( 'Bulk edit support topics !', 'buddy-bbpress-support-topic' ); ?></h2>
+				<div class="feature-section col two-col">
+					<div class="col-1">
+						<img alt="" src="<?php echo $plugin_url;?>screenshot-4.png"/>
+					</div>
+					<div class="col-2 last-feature">
+						<h4><?php esc_html_e( 'Keymaster can change the support status of several topics at once', 'buddy-bbpress-support-topic' ); ?></h4>
+						<p><?php esc_html_e( 'From the Topics list in WordPress Administration, Keymaster can use the bulk actions to edit the support status of several topics.', 'buddy-bbpress-support-topic' ); ?></p>
+						<p><?php esc_html_e( 'After activating the topics checkboxes, choose Edit option in the bulk action, then click on the apply button.', 'buddy-bbpress-support-topic' ); ?></p>
+						<p><?php esc_html_e( 'You can use the support selectbox to update these topics support status', 'buddy-bbpress-support-topic' ); ?></p>
+					</div>
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h2 class="about-headline-callout"><?php esc_html_e( 'A new widget', 'buddy-bbpress-support-topic' ); ?></h2>
+				<div class="feature-section col two-col">
+					<div class="col-1">
+						<h4><?php esc_html_e( 'A widget to help users ask for support.', 'buddy-bbpress-support-topic' ); ?></h4>
+						<p><?php esc_html_e( 'Administrator can use this new widget to create a button that will activate the new topic form in the support only forum', 'buddy-bbpress-support-topic' ); ?></p>
+						<p><?php esc_html_e( 'If your WordPress is an application, it can be interesting to get the referer url the user went from before hitting the new support topic widget link', 'buddy-bbpress-support-topic' ); ?></p>
+						<p><?php esc_html_e( 'Once posted, Keymasters and moderators will be able to see the referer above the content of the topic.', 'buddy-bbpress-support-topic' ); ?></p>
+					</div>
+					<div class="col-2 last-feature">
+						<img alt="" src="<?php echo $plugin_url;?>screenshot-6.png"/>
+					</div>
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h2 class="about-headline-callout"><?php esc_html_e( 'Advanced users : need new support status ?', 'buddy-bbpress-support-topic' ); ?></h2>
+				<div class="feature-section col two-col">
+					<div class="col-1">
+						<img alt="" src="<?php echo $plugin_url;?>screenshot-5.png"/>
+					</div>
+					<div class="col-2 last-feature">
+						<h4><?php esc_html_e( 'A filter to add custom support statuses', 'buddy-bbpress-support-topic' ); ?></h4>
+						<p><?php esc_html_e( 'The new status will be fully integrated in the different features of the plugin (Dashboard stats, Stats Widget...)', 'buddy-bbpress-support-topic' ); ?></p>
+						<p><?php esc_html_e( 'To organize your customizations, you can use the functions file of your theme or create a specific file: call it &#34;wp-idea-stream-custom.php&#34; and place it into your plugins directory.', 'wp-idea-stream' ); ?></p>
+						<p><?php esc_html_e( 'An example of use is displayed below, use it in your plugin or in the functions.php file of your theme.', 'buddy-bbpress-support-topic' ); ?></p>
+						<code class="bpbbpst-code">
+							function your_custom_status( $allstatus = array() ) {<br/>
+							&nbsp;&nbsp;$allstatus&#91;&#39;topic-working-on-it&#39;&#93; = array(<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&#39;sb-caption&#39;   =&gt; __( &#39;Working on it&#39;, &#39;buddy-bbpress-support-topic&#39; ),<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&#39;value&#39;        =&gt; 3,<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&#39;prefix-title&#39; =&gt; __( &#39;&#91;Working on it&#93; &#39;, &#39;buddy-bbpress-support-topic&#39; ),<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&#39;admin_class&#39;  =&gt; &#39;waiting&#39;<br/>
+							&nbsp;&nbsp;);<br/>
+							<br/>
+							&nbsp;&nbsp;return $allstatus;<br/>
+							}<br/>
+							add_filter( &#39;bpbbpst_get_support_status&#39;, &#39;your_custom_status&#39;, 10, 1 );
+						</code>
+					</div>
 				</div>
 			</div>
 
@@ -899,41 +923,49 @@ class BP_bbP_ST_Admin {
 	 *
 	 * @since  2.0
 	 *
-	 * @global string the welcome screen page identifier
 	 * @uses   remove_submenu_page() to remove the page from dashoboard menu
 	 * @uses   bpbbpst_get_plugin_url() to get the plugin url
 	 * @uses   get_current_screen() to check current page is the welcome screen
 	 * @return string css rules
 	 */
 	public function welcome_screen_css() {
-		global $bpbbpst_about_page;
-
 		remove_submenu_page( 'index.php', 'bpbbst-about');
 
-		$badge_url = bpbbpst_get_plugin_url( 'images' ) .'bpbbst-badge.png';
-
-		if (  $bpbbpst_about_page == get_current_screen()->id ) {
+		if (  $this->about_page == get_current_screen()->id ) {
 			?>
 			<style type="text/css" media="screen">
 				/*<![CDATA[*/
 
-				.bpbbpst-code {
-					font-family:Monaco,"Lucida Console";
-					font-size:80%;
-					background:#f1f1f1;
-					width:60%;
+				.about-wrap .bpbbpst-badge .badge {
+					font: normal 150px/1 'dashicons' !important;
+					/* Better Font Rendering =========== */
+					-webkit-font-smoothing: antialiased;
+					-moz-osx-font-smoothing: grayscale;
+
+					color: #333;
+					display: inline-block;
+					content:'';
+				}
+
+				.about-wrap .bpbbpst-badge .badge:before{
+					content: "\f488";
 				}
 
 				.bpbbpst-badge {
-					padding-top: 142px;
-					height: 50px;
-					width: 173px;
-					color: #555;
-					font-weight: bold;
+					background-color: #FFF;
+					width: 150px;
+					-webkit-box-shadow: 0 1px 3px rgba(0,0,0,.2);
+					box-shadow: 0 1px 3px rgba(0,0,0,.2);
+				}
+
+				.bpbbpst-badge .badge-text {
+					color:#333;
 					font-size: 14px;
 					text-align: center;
-					margin: 0 -5px;
-					background: url('<?php echo $badge_url; ?>') no-repeat;
+					font-weight: 600;
+					margin: 5px 0 0;
+					height: 30px;
+					text-rendering: optimizeLegibility;
 				}
 
 				.about-wrap .bpbbpst-badge {
@@ -946,8 +978,13 @@ class BP_bbP_ST_Admin {
 						left: 0;
 					}
 
-				.wp-person{
-					list-style:none;
+				body.dashboard_page_bpbbst-about .about-wrap .bpbbpst-code {
+					display:block;
+					background-color: #FFF;
+					font-size: 70%;
+					color:#000;
+					-webkit-box-shadow: 0 1px 3px rgba(0,0,0,.2);
+					box-shadow: 0 1px 3px rgba(0,0,0,.2);
 				}
 
 				/*]]>*/

@@ -358,8 +358,6 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 
 }
 
-add_action( 'bbp_widgets_init', array( 'Bpbbpst_Support_Stats', 'register_widget' ), 10 );
-
 
 /**
  * Buddy-bbPress Support Topic new Support Topic widget
@@ -564,5 +562,3 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 	}
 
 }
-
-add_action( 'bbp_widgets_init', array( 'Bpbbpst_Support_New_Support', 'register_widget' ), 10 );
