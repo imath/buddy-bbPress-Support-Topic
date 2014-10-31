@@ -75,6 +75,8 @@ class BP_bbP_Support_Topic {
 		$this->support_status  = array();
 		$this->globals->domain = 'buddy-bbpress-support-topic';
 
+		$this->globals->is_sidebar = false;
+
 		// bbPress required version
 		$this->globals->required_bbp_version = '2.5';
 		$this->globals->site_bbp_version_ok  = version_compare( bbp_get_version(), $this->globals->required_bbp_version, '>=' );
@@ -171,6 +173,10 @@ class BP_bbP_Support_Topic {
 		// Register the widgets
 		add_action( 'bbp_widgets_init', array( 'Bpbbpst_Support_Stats', 'register_widget' ),       10 );
 		add_action( 'bbp_widgets_init', array( 'Bpbbpst_Support_New_Support', 'register_widget' ), 10 );
+
+		// Neutralize title filter in Sidebar
+		add_action( 'dynamic_sidebar_before', 'bpbbpst_set_sidebar_true'  );
+		add_action( 'dynamic_sidebar_after',  'bpbbpst_set_sidebar_false' );
 
 		do_action_ref_array( 'bpbbpst_after_setup_actions', array( &$this ) );
 	}

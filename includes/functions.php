@@ -103,6 +103,40 @@ function bpbbpst_is_bbp_required_version_ok() {
 }
 
 /**
+ * We're in a dynamic sidebar
+ *
+ * @since  2.0
+ *
+ * @uses   bbpress() the main bbPress instance
+ */
+function bpbbpst_set_sidebar_true() {
+	bbpress()->extend->bpbbpst->globals->is_sidebar = true;
+}
+
+/**
+ * We're no more in a dynamic sidebar
+ *
+ * @since  2.0
+ *
+ * @uses   bbpress() the main bbPress instance
+ */
+function bpbbpst_set_sidebar_false() {
+	bbpress()->extend->bpbbpst->globals->is_sidebar = false;
+}
+
+/**
+ * Are we in a dynamic sidebar ?
+ *
+ * @since  2.0
+ *
+ * @uses   bbpress() the main bbPress instance
+ * @return bool true if inside a dynamic sidebar, false otherwise
+ */
+function bpbbpst_is_sidebar() {
+	return (bool) bbpress()->extend->bpbbpst->globals->is_sidebar;
+}
+
+/**
  * Gets the forum setting for support feature
  *
  * @since  2.0
@@ -590,6 +624,7 @@ function bpbbpst_topic_is_single( $templates = array(), $slug = '', $name = '' )
  *
  * @param  string $title the title of the topic
  * @param  integer $id the id of the topic
+ * @uses   bpbbpst_is_sidebar() to be sure we're not in the sidebar
  * @uses   bbp_is_topic() to check for topic post type
  * @uses   bbp_is_topic_edit() to check if topic is being edited
  * @uses   bbp_is_single_topic() to check if topic is on single template
@@ -597,13 +632,16 @@ function bpbbpst_topic_is_single( $templates = array(), $slug = '', $name = '' )
  * @return string $title the title with the eventual support mention
  */
 function bpbbpst_change_topic_title( $title = '', $id = 0 ) {
+	if ( bpbbpst_is_sidebar() ) {
+		return $title;
+	}
 
 	if ( ! bbp_is_topic( $id ) ) {
 		return $title;
 	}
 
 	if ( bbp_is_topic_edit() || bbp_is_single_topic() ) {
-		return bpbbpst_add_support_mention( false ) . $title;
+		return bpbbpst_add_support_mention( $id, false ) . $title;
 	} else {
 		return $title;
 	}

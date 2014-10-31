@@ -91,7 +91,7 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 		// Enqueues a js script to hide/show the recipients
 		add_action( 'bp_enqueue_scripts',             array( $this, 'enqueue_forum_js' )                  );
 		// Topic title in a BuddyPress group
-		add_filter( 'bbp_get_topic_title',            array( $this, 'filter_topic_title' ),         10, 1 );
+		add_filter( 'bbp_get_topic_title',            array( $this, 'filter_topic_title' ),         10, 2 );
 		// removes above filter as soon as we can !
 		add_filter( 'bbp_get_template_part',          array( $this, 'remove_topic_title_filer' ),  100, 3 );
 		// adds the list of 'BuddyPress group mods' recipients to forum admin ui
@@ -128,10 +128,10 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	 * @uses   bpbbpst_add_support_mention() to build the right support status
 	 * @return string the topic title
 	 */
-	public function filter_topic_title( $topic_title = '' ) {
+	public function filter_topic_title( $topic_title = '', $topic_id = 0 ) {
 
 		if ( bp_is_group_forum_topic() ) {
-			return bpbbpst_add_support_mention( false ) . $topic_title ;
+			return bpbbpst_add_support_mention( $topic_id, false ) . $topic_title ;
 		} else {
 			return $topic_title;
 		}
@@ -153,7 +153,7 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	public function remove_topic_title_filer( $templates = array(), $slug = '', $name = '' ) {
 
 		if ( in_array( $name, array( 'single-topic', 'topic' ) ) ) {
-			remove_filter( 'bbp_get_topic_title', array( $this, 'filter_topic_title' ), 10 );
+			remove_filter( 'bbp_get_topic_title', array( $this, 'filter_topic_title' ), 10, 2 );
 		}
 
 		return $templates;
