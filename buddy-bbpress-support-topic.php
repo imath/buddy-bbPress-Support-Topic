@@ -51,7 +51,7 @@ class BP_bbP_Support_Topic {
 	 *
 	 * @since  2.0
 	 * @access private
-	 * 
+	 *
 	 * @uses   plugin_basename() to get the plugin's basename
 	 * @uses   plugin_dir_path() to build plugin's path
 	 * @uses   plugin_dir_url() to build plugin's url
@@ -81,7 +81,7 @@ class BP_bbP_Support_Topic {
 	 *
 	 * @since  2.0
 	 * @access private
-	 * 
+	 *
 	 * @uses   is_admin() to check for WordPress backend
 	 */
 	private function includes() {
@@ -129,11 +129,11 @@ class BP_bbP_Support_Topic {
 
 		// sends a notification in case of new support topic for the forum that enabled support feature
 		add_action( 'bbp_new_topic',                              'bpbbpst_new_support_topic_notify',     10, 4 );
-		
+
 		// updating the support type on front end edit topic form submission
 		add_action( 'bbp_edit_topic_post_extras',                 'bpbbpst_edit_support_type',            10, 1 );
 
-		// moving a topic needs to adapt with the support settings of the new forum 
+		// moving a topic needs to adapt with the support settings of the new forum
 		add_action( 'bbp_edit_topic',                             'bpbbpst_handle_moving_topic',           9, 2 );
 
 		//enqueueing scripts
@@ -163,29 +163,31 @@ class BP_bbP_Support_Topic {
 	 * Registers the available support status
 	 *
 	 * @since 2.0
-	 * 
+	 *
 	 * @uses  apply_filters() to let other plugins or themes override globals
 	 */
 	public function setup_status() {
 		// Available support status
-		$this->support_status = apply_filters( 'bpbbpst_available_support_status', array( 
-			'topic-not-resolved' => array( 
+		$this->support_status = apply_filters( 'bpbbpst_available_support_status', array(
+			'topic-not-resolved' => array(
 				'sb-caption'   => __( 'Not resolved', 'buddy-bbpress-support-topic' ),
 				'value'        => 1,
 				'prefix-title' => __( '[Support request] ', 'buddy-bbpress-support-topic' ),
-				'admin_class'  => 'waiting'
+				'admin_class'  => 'waiting',
+				'dashicon'     => array( 'class' => 'bpbbpst-dashicon-no', 'content' => '"\f158"' ),
 			),
-			'topic-resolved' => array( 
+			'topic-resolved' => array(
 				'sb-caption'   => __( 'Resolved', 'buddy-bbpress-support-topic' ),
 				'value'        => 2,
 				'prefix-title' => __( '[Resolved] ', 'buddy-bbpress-support-topic' ),
-				'admin_class'  => 'approved'
+				'admin_class'  => 'approved',
+				'dashicon'     => array( 'class' => 'bpbbpst-dashicon-yes', 'content' => '"\f147"' ),
 			),
-			'topic-not-support' => array( 
+			'topic-not-support' => array(
 				'sb-caption'   => __( 'Not a support topic', 'buddy-bbpress-support-topic' ),
 				'value'        => 0,
 				'prefix-title' => '',
-				'admin_class'  => 'waiting'
+				'admin_class'  => 'waiting',
 			),
 		));
 	}
@@ -195,7 +197,7 @@ class BP_bbP_Support_Topic {
 	 *
 	 * @since  2.0
 	 * @access private
-	 * 
+	 *
 	 * @uses   add_filter() to filter bbPress at key points
 	 */
 	private function setup_filters() {
@@ -240,9 +242,9 @@ class BP_bbP_Support_Topic {
  * Adds the main class of the plugin to bbPress main instance
  *
  * Waits for bbPress to be ready before doing so.
- * 
+ *
  * @since 2.0
- * 
+ *
  * @uses  bbpress() the main instance of bbPress
  * @uses  BP_bbP_Support_Topic() to start the plugin
  */
@@ -258,9 +260,9 @@ add_action( 'bbp_ready', 'bpbbpst', 9 );
  *
  * Once the plugin is activated, Admin will be redirected
  * to plugin's welcome screen.
- * 
+ *
  * @since 2.0
- * 
+ *
  * @uses  set_transient() to put a transient
  */
 function bpbbst_activate() {

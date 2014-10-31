@@ -73,6 +73,9 @@ class BP_bbP_ST_Admin {
 		// Dashboard right now bbPress widget
 		add_action( 'bbp_dashboard_widget_right_now_table_end', array( $this, 'dashboard_widget' )                    );
 
+		// At a glance Dashboard widget
+		add_action( 'bbp_dashboard_at_a_glance',                array( $this, 'dashboard_at_a_glance' ),          10, 2 );
+
 		// Welcome Screen
 		add_action( 'bbp_admin_menu',                           array( $this, 'welcome_screen_register' )             );
 		add_action( 'bbp_admin_head',                           array( $this, 'welcome_screen_css' )                  );
@@ -597,6 +600,38 @@ class BP_bbP_ST_Admin {
 		<?php
 	}
 
+	public function dashboard_at_a_glance( $elements = array(), $stats = array() ) {
+		if ( empty( $elements ) || empty( $stats['topic_count'] ) ) {
+			return $elements;
+		}
+
+		$support_statistics = bpbbpst_support_statistics();
+
+		if ( empty( $support_statistics['total_support'] ) ) {
+			return $elements;
+		}
+
+		$status_stats = $support_statistics['allstatus'];
+
+		if ( ! is_array( $status_stats ) || count( $status_stats ) < 1 ) {
+			return $elements;
+		}
+
+		foreach ( (array) $status_stats as $key => $stat ) {
+			$link       = add_query_arg( array( 'post_type' => bbp_get_topic_post_type(), '_support_status' => $key ), get_admin_url( null, 'edit.php' ) );
+			$text       = sprintf( '%d %s', $stat['stat'], $stat['label'] );
+			$class      = array( $stat['admin_class'] );
+
+			if ( ! empty( $stat['dashicon']['class'] ) ) {
+				$class[] = $stat['dashicon']['class'];
+			}
+
+			$elements[] = '<a href="' . esc_url( $link ) . '" class="' . join( ' ', $class ) . '">' . esc_html( $text ) . '</a>';
+		}
+
+		return $elements;
+	}
+
 	/**
 	 * Check for welcome screen transient to eventually redirect admin to welcome screen
 	 *
@@ -827,7 +862,7 @@ class BP_bbP_ST_Admin {
 
 		$badge_url = bpbbpst_get_plugin_url( 'images' ) .'bpbbst-badge.png';
 
-		if( get_current_screen()->id == $bpbbpst_about_page ) {
+		if (  $bpbbpst_about_page == get_current_screen()->id ) {
 			?>
 			<style type="text/css" media="screen">
 				/*<![CDATA[*/
@@ -864,6 +899,26 @@ class BP_bbP_ST_Admin {
 				.wp-person{
 					list-style:none;
 				}
+
+				/*]]>*/
+			</style>
+			<?php
+		} else if ( 'dashboard' == get_current_screen()->id ) {
+			?>
+			<style type="text/css" media="screen">
+				/*<![CDATA[*/
+
+				<?php foreach ( (array) bpbbpst_get_support_status() as $status ) : ?>
+
+					<?php if ( empty( $status['dashicon']['class'] ) || empty( $status['dashicon']['content'] ) ) : continue ; endif ;?>
+
+					#dashboard_right_now a.<?php echo sanitize_html_class( $status['dashicon']['class'] ) ;?>:before {
+						content: <?php echo sanitize_text_field( $status['dashicon']['content'] ) ;?>;
+					}
+
+				<?php endforeach ;?>
+
+				/*]]>*/
 			</style>
 			<?php
 		}

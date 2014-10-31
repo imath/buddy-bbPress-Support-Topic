@@ -830,12 +830,16 @@ function bpbbpst_support_statistics( $args = '' ) {
 	$support_stat = array();
 
 	foreach( $all_status as $key => $status ) {
-		$support_stat[$status['value']] = array(
+		$support_stat[ $status['value'] ] = array(
 			'stat'        => 0,
 			'label'       => $status['sb-caption'],
 			'admin_class' => $status['admin_class'],
 			'front_class' => sanitize_html_class( $key )
 		);
+
+		if ( ! empty( $status['dashicon'] ) ) {
+			$support_stat[ $status['value'] ]['dashicon'] = $status['dashicon'];
+		}
 	}
 
 	if ( $support_query->have_posts() ) :
