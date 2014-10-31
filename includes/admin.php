@@ -89,10 +89,17 @@ class BP_bbP_ST_Admin {
 	 *
 	 * @since 2.0
 	 *
-	 * @uses  add_meta_box() to add the metabox to forum edit screen
-	 * @uses  bbp_get_forum_post_type() to get forum post type
+	 * @global $post_ID
+	 * @uses   bbp_is_forum_category() to check if the forum is a category
+	 * @uses   add_meta_box() to add the metabox to forum edit screen
+	 * @uses   bbp_get_forum_post_type() to get forum post type
 	 */
 	public function forum_meta_box_register() {
+		global $post_ID;
+
+		if ( bbp_is_forum_category( $post_ID ) ) {
+			return;
+		}
 
 		add_meta_box (
 			'bpbbpst_forum_settings',
@@ -149,10 +156,15 @@ class BP_bbP_ST_Admin {
 	 * @return integer           the forum id
 	 */
 	public function forum_meta_box_save( $forum_id = 0 ) {
+		$support_feature   = false;
+		$is_forum_category =  bbp_is_forum_category( $forum_id );
 
-		$support_feature = intval( $_POST['_bpbbpst_forum_settings'] );
+		if ( ! empty( $_POST['_bpbbpst_forum_settings'] ) ) {
+			$support_feature = absint( $_POST['_bpbbpst_forum_settings'] );
+		}
 
-		if ( ! empty( $support_feature ) ) {
+		// Forum is not a category, save the support metas
+		if ( ! empty( $support_feature ) && ! $is_forum_category ) {
 			update_post_meta( $forum_id, '_bpbbpst_forum_settings', $support_feature );
 
 			if ( $support_feature == 3 ) {
@@ -169,6 +181,15 @@ class BP_bbP_ST_Admin {
 			}
 
 			do_action( 'bpbbpst_forum_settings_updated', $forum_id, $support_feature );
+
+		// Check for support metas to eventually remove them
+		} else if ( $is_forum_category ) {
+			$support_feature = get_post_meta( $forum_id, '_bpbbpst_forum_settings', true );
+
+			if ( ! empty( $support_feature ) ) {
+				delete_post_meta( $forum_id, '_bpbbpst_forum_settings' );
+				delete_post_meta( $forum_id, '_bpbbpst_support_recipients' );
+			}
 		}
 
 		return $forum_id;
@@ -191,7 +212,7 @@ class BP_bbP_ST_Admin {
 			return;
 		}
 
-		wp_enqueue_script( 'bpbbpst-forum-js', bpbbpst_get_plugin_url( 'js' ) . 'bpbbpst-forum.js', array( 'jquery' ), bpbbpst_get_plugin_version() );
+		wp_enqueue_script( 'bpbbpst-forum-js', bpbbpst_get_plugin_url( 'js' ) . 'bpbbpst-forum.js', array( 'jquery' ), bpbbpst_get_plugin_version(), true );
 	}
 
 	/**
