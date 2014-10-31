@@ -892,6 +892,20 @@ function bpbbpst_support_statistics( $args = '' ) {
 
 			$db_status = get_post_meta( $support_query->post->ID, '_bpbbpst_support_topic', true );
 
+			// We need to check parent forum support setting to avoid inconsistent stats
+			$forum_id             = $support_query->post->post_parent;
+			$forum_support_status = false;
+
+			if ( ! empty( $forum_id ) ) {
+				$forum_support_status = get_post_meta( $forum_id, '_bpbbpst_forum_settings', true );
+
+				if ( ! in_array( $forum_support_status, array( 1, 2 ) ) ) {
+					// Let's avoid the display of the topic in the WP_List_Table
+					delete_post_meta( $support_query->post->ID, '_bpbbpst_support_topic' );
+					continue;
+				}
+			}
+
 			$support_stat[$db_status]['stat'] += 1;
 
 		endwhile;
