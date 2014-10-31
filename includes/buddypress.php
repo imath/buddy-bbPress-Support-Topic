@@ -1,9 +1,9 @@
 <?php
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( !class_exists( 'BuddyPress_Support_Topic' ) && class_exists( 'BP_Group_Extension' ) ) :
+if ( ! class_exists( 'BuddyPress_Support_Topic' ) && class_exists( 'BP_Group_Extension' ) ) :
 /**
  * Loads BuddyPress Specific parts
  *
@@ -14,7 +14,7 @@ if ( !class_exists( 'BuddyPress_Support_Topic' ) && class_exists( 'BP_Group_Exte
  *
  * @package    Buddy-bbPress Support Topic
  * @subpackage BuddyPress
- * 
+ *
  * @since      2.0
  *
  * @uses   BP_Group_Extension
@@ -36,13 +36,13 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
         	'slug'              => 'forum-support',
        		'name'              => 'Forum Support',
        		'enable_nav_item'   => false,
-       		'screens'           => array( 
-       								'create' => array( 'enabled' => false ),
-       								'edit'   => array( 'enabled' => $this->enable_edit_item() ),
-       								'admin'  => array( 'enabled' => false ),
+       		'screens'           => array(
+       			'create' => array( 'enabled' => false ),
+       			'edit'   => array( 'enabled' => $this->enable_edit_item() ),
+       			'admin'  => array( 'enabled' => false ),
        		)
     	);
-    
+
     	parent::init( $args );
 
 		$this->setup_actions();
@@ -63,13 +63,15 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	 */
 	public function enable_edit_item() {
 		// Bail if not viewing a single group
-		if ( ! bp_is_group() )
+		if ( ! bp_is_group() ) {
 			return;
+		}
 
 		$group_id = bp_get_new_group_id();
 
-		if( empty( $group_id ) )
+		if ( empty( $group_id ) ) {
 			$group_id = bp_get_current_group_id();
+		}
 
 		// Are forums enabled for this group?
 		$checked = bp_get_new_group_enable_forum() || groups_get_groupmeta( $group_id, 'forum_id' );
@@ -81,7 +83,7 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	 * Sets some key actions and filters
 	 *
 	 * @since 2.0
-	 * 
+	 *
 	 * @uses  add_action() to hook our action to specific points
 	 * @uses  add_filter() to eventually modify some key parts
 	 */
@@ -104,22 +106,23 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	 * Adds a javascript to WordPress scripts queue
 	 *
 	 * @since 2.0
-	 * 
+	 *
 	 * @uses  bp_is_group_admin_screen() to make sure we're in plugin's group admin tab
 	 * @uses  wp_enqueue_script() to add the script to WordPress queue
 	 * @uses  bpbbpst_get_plugin_url() to get the plugin's url
 	 * @uses  bpbbpst_get_plugin_version() to get plugin's version
 	 */
 	public function enqueue_forum_js() {
-		if( bp_is_group_admin_screen( 'forum-support' ) )
+		if ( bp_is_group_admin_screen( 'forum-support' ) ) {
 			wp_enqueue_script( 'bpbbpst-forum-js', bpbbpst_get_plugin_url( 'js' ) . 'bpbbpst-forum.js', array( 'jquery' ), bpbbpst_get_plugin_version() );
+		}
 	}
 
 	/**
 	 * Adds the support status to topic title when on single topic
 	 *
 	 * @since  2.0
-	 * 
+	 *
 	 * @param  string $topic_title the topic title
 	 * @uses   bp_is_group_forum_topic() to check we're viewing a topic
 	 * @uses   bpbbpst_add_support_mention() to build the right support status
@@ -127,30 +130,32 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	 */
 	public function filter_topic_title( $topic_title = '' ) {
 
-		if( bp_is_group_forum_topic() )
+		if ( bp_is_group_forum_topic() ) {
 			return bpbbpst_add_support_mention( false ) . $topic_title ;
-		else
+		} else {
 			return $topic_title;
+		}
 	}
 
 	/**
 	 * Removes the above filter as soon as we can
 	 *
 	 * This prevents the filter to spread in places we don't want to.
-	 * 
+	 *
 	 * @since  2.0
-	 * 
+	 *
 	 * @param  array  $templates the list of templates
-	 * @param  string $slug      
-	 * @param  string $name      
+	 * @param  string $slug
+	 * @param  string $name
 	 * @uses   remove_filter() to remove our filter on the topic title
 	 * @return array             the list of templates
 	 */
 	public function remove_topic_title_filer( $templates = array(), $slug = '', $name = '' ) {
 
-		if( in_array( $name, array( 'single-topic', 'topic' ) ) )
+		if ( in_array( $name, array( 'single-topic', 'topic' ) ) ) {
 			remove_filter( 'bbp_get_topic_title', array( $this, 'filter_topic_title' ), 10 );
-		
+		}
+
 		return $templates;
 	}
 
@@ -158,7 +163,7 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	 * Displays the content of plugin's group admin tab
 	 *
 	 * @since  2.0
-	 * 
+	 *
 	 * @param  integer $group_id the group id
 	 * @uses   bbp_get_group_forum_ids() to get the forum id attached to this group
 	 * @uses   bpbbpst_get_forum_support_setting() to get the forum support setting
@@ -171,16 +176,18 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	 */
 	public function edit_screen( $group_id = 0 ) {
 
-		if( empty( $group_id ) )
+		if ( empty( $group_id ) ) {
 			return false;
+		}
 
 		$forum_ids = bbp_get_group_forum_ids( $group_id );
 
 		// Get the first forum ID
-		if ( !empty( $forum_ids ) ) {
+		if ( ! empty( $forum_ids ) ) {
 			$forum_id = (int) is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids;
-		} else
+		} else {
 			return false;
+		}
 
 		$support_feature = bpbbpst_get_forum_support_setting( $forum_id );
 
@@ -190,22 +197,22 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 
 		$recipients = groups_get_groupmeta( $group_id, '_bpbbpst_support_bp_recipients' );
 
-		if( empty( $recipients ) )
+		if ( empty( $recipients ) ) {
 			$recipients = array();
+		}
 
 		$group_forum_moderators = $this->group_list_moderators( $group_id, $style );
-
 		?>
 		<div class="bpbbpst-mailing-list" <?php echo $style;?>>
 			<h4><?php _e( 'Who should receive an email notification when a new support topic is posted ?', 'buddy-bbpress-support-topic' );?></h4>
 			<input type="hidden" name="_bpbbpst_support_groups[]" value="<?php echo $group_id;?>"/>
 			<ul class="bp-moderators-list">
-				<?php foreach( $group_forum_moderators as $moderator ) :?>
+				<?php foreach ( $group_forum_moderators as $moderator ) : ?>
 					<li>
-						<input type="checkbox" value="<?php echo $moderator->user_id;?>" name="_bpbbpst_support_bp_recipients[<?php echo $group_id;?>][]" <?php bpbbpst_array_checked( $recipients, $moderator->user_id );?>> 
+						<input type="checkbox" value="<?php echo $moderator->user_id;?>" name="_bpbbpst_support_bp_recipients[<?php echo $group_id;?>][]" <?php bpbbpst_array_checked( $recipients, $moderator->user_id );?>>
 						<?php echo bp_core_get_user_displayname( $moderator->user_id ) ;?> (<?php echo $moderator->role ;?>)
 					</li>
-				<?php endforeach;?> 
+				<?php endforeach;?>
 			</ul>
 		</div>
 		<?php
@@ -215,7 +222,7 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	 * Saves the group settings
 	 *
 	 * @since 2.0
-	 * 
+	 *
 	 * @param integer $group_id the group id
 	 * @uses  bbp_get_group_forum_ids() to get group's forum ids
 	 * @uses  delete_post_meta() to eventually remove a forum setting
@@ -232,24 +239,26 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 		$forum_ids = bbp_get_group_forum_ids( $group_id );
 
 		// Get the first forum ID
-		if ( !empty( $forum_ids ) ) {
+		if ( ! empty( $forum_ids ) ) {
 			$forum_id = (int) is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids;
 		}
 
-		$support_feature = !empty( $_POST['_bpbbpst_forum_settings'] ) ? intval( $_POST['_bpbbpst_forum_settings'] ) : 1;
+		$support_feature = ! empty( $_POST['_bpbbpst_forum_settings'] ) ? intval( $_POST['_bpbbpst_forum_settings'] ) : 1;
 
-		if( 3 == $support_feature )
+		if ( 3 == $support_feature ) {
 			delete_post_meta( $forum_id, '_bpbbpst_support_recipients' );
+		}
 
 		$success = update_post_meta( $forum_id, '_bpbbpst_forum_settings', $support_feature );
-		
+
 		// let's use admin function for recipients
 		$this->admin_group_mods_list_save( $forum_id , $support_feature );
 
-		if ( !$success )
+		if ( ! $success ) {
 			bp_core_add_message( __( 'There was an error saving, please try again', 'buddy-bbpress-support-topic' ), 'error' );
-		else
+		} else {
 			bp_core_add_message( __( 'Settings saved successfully', 'buddy-bbpress-support-topic' ) );
+		}
 
 		bp_core_redirect( bp_get_group_permalink( buddypress()->groups->current_group ) . 'admin/' . $this->slug );
 	}
@@ -258,7 +267,7 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	 * Builds a list of Moderators for the forum of the group (Admin + Mods)
 	 *
 	 * @since  2.0
-	 * 
+	 *
 	 * @param  integer $forum_id the forum id
 	 * @param  string  $style    hide or show the recipients
 	 * @uses   bbp_get_group_forum_ids() to get group's forum ids
@@ -275,20 +284,22 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	public function admin_group_mods_list( $forum_id = 0, $style = '' ) {
 
 		$group_ids = bbp_get_forum_group_ids( $forum_id );
-		
-		if ( empty( $group_ids ) || !is_array( $group_ids ) )
+
+		if ( empty( $group_ids ) || ! is_array( $group_ids ) ) {
 			return false;
+		}
 
 		/* a forum can be in several groups... But strangely the forum meta seems to only keep the latest group..
 		it might evolved so let's keep the following this way, we'll be ready */
 		$groups = groups_get_groups( array( 'include' => implode( ',', $group_ids ) ) );
 
-		if( empty( $groups ) )
-			return false;?>
-
+		if ( empty( $groups ) ) {
+			return false;
+		}
+		?>
 		<ul class="bpbbpst-mailing-list" <?php echo $style;?>>
 
-		<?php foreach( $groups['groups'] as $group ) : ?>
+		<?php foreach ( $groups['groups'] as $group ) : ?>
 
 			<li>
 				<h4><?php printf( __( 'In Group: %s', 'buddy-bbpress-support-topic' ), '<a href="'. esc_url( bp_get_group_permalink( $group ) ) .'">'. esc_html( $group->name ) .'</a>' );?></h4>
@@ -297,18 +308,16 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 
 				<?php
 
-				$recipients = $group_moderators = array();
-
-				$recipients = groups_get_groupmeta( $group->id, '_bpbbpst_support_bp_recipients' );
+				$recipients       = $group_moderators = array();
+				$recipients       = groups_get_groupmeta( $group->id, '_bpbbpst_support_bp_recipients' );
 				$group_moderators = $this->group_list_moderators( $group->id, $style );
 
-				foreach( $group_moderators as $moderator ) :?>
-
+				foreach ( $group_moderators as $moderator ) : ?>
 					<li>
-						<input type="checkbox" value="<?php echo $moderator->user_id;?>" name="_bpbbpst_support_bp_recipients[<?php echo $group->id;?>][]" <?php bpbbpst_array_checked( $recipients, $moderator->user_id );?>> 
+						<input type="checkbox" value="<?php echo $moderator->user_id;?>" name="_bpbbpst_support_bp_recipients[<?php echo $group->id;?>][]" <?php bpbbpst_array_checked( $recipients, $moderator->user_id );?>>
 						<?php echo bp_core_get_user_displayname( $moderator->user_id ) ;?> (<?php echo $moderator->role ;?>)
 					</li>
-				<?php endforeach;?> 
+				<?php endforeach ; ?>
 				</ul>
 
 			</li>
@@ -323,7 +332,7 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	 * Saves the recipients list for the forum of the group
 	 *
 	 * @since 2.0
-	 * 
+	 *
 	 * @param integer $forum_id        the forum id
 	 * @param integer $support_feature the forum support setting
 	 * @uses  groups_delete_groupmeta() to eventually remove a group setting
@@ -331,30 +340,34 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	 */
 	public function admin_group_mods_list_save( $forum_id = 0, $support_feature = 0 ) {
 
-		if( empty( $_POST['_bpbbpst_support_groups'] ) || !is_array( $_POST['_bpbbpst_support_groups'] ) || empty( $forum_id ) )
+		if ( empty( $_POST['_bpbbpst_support_groups'] ) || ! is_array( $_POST['_bpbbpst_support_groups'] ) || empty( $forum_id ) ) {
 			return;
+		}
 
 		$group_ids = array_map( 'intval', $_POST['_bpbbpst_support_groups'] );
 
-		if( $support_feature == 3 ) {
-			foreach( $group_ids as $group_id )
+		if ( $support_feature == 3 ) {
+			foreach ( $group_ids as $group_id ) {
 				groups_delete_groupmeta( $group_id, '_bpbbpst_support_bp_recipients' );
+			}
 
 		} else {
-			$bp_recipients = !empty( $_POST['_bpbbpst_support_bp_recipients'] ) ? $_POST['_bpbbpst_support_bp_recipients'] : false ;
+			$bp_recipients = ! empty( $_POST['_bpbbpst_support_bp_recipients'] ) ? $_POST['_bpbbpst_support_bp_recipients'] : false ;
 
-			if( !empty( $bp_recipients ) && is_array( $bp_recipients ) && count( $bp_recipients ) > 0 ) {
-				foreach( $group_ids as $group_id ) {
-					if( !empty( $bp_recipients[$group_id] ) && is_array( $bp_recipients[$group_id] ) && count( $bp_recipients[$group_id] ) > 0 )
+			if ( ! empty( $bp_recipients ) && is_array( $bp_recipients ) && count( $bp_recipients ) > 0 ) {
+				foreach ( $group_ids as $group_id ) {
+					if ( ! empty( $bp_recipients[$group_id] ) && is_array( $bp_recipients[$group_id] ) && count( $bp_recipients[$group_id] ) > 0 ) {
 						groups_update_groupmeta( $group_id, '_bpbbpst_support_bp_recipients', array_map( 'intval', $bp_recipients[$group_id] ) );
-					else
+					} else {
 						groups_delete_groupmeta( $group_id, '_bpbbpst_support_bp_recipients' );
+					}
 				}
-					
+
 			} else {
-				foreach( $group_ids as $group_id )
+				foreach ( $group_ids as $group_id ) {
 					groups_delete_groupmeta( $group_id, '_bpbbpst_support_bp_recipients' );
-			}	
+				}
+			}
 		}
 	}
 
@@ -362,7 +375,7 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	 * In case of a notification, eventually adds group's forum recipients to bbPress ones
 	 *
 	 * @since  2.0
-	 * 
+	 *
 	 * @param  array   $recipients the list of bbPress moderators
 	 * @param  string  $context    are we notifying users ?
 	 * @param  integer $forum_id   the forum id
@@ -372,23 +385,25 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	 */
 	public function merge_bp_recipients( $recipients = array(), $context = 'admin', $forum_id = 0 ) {
 
-		if( $context == 'notify' && !empty( $forum_id ) ) {
+		if ( $context == 'notify' && ! empty( $forum_id ) ) {
 			$group_ids = bbp_get_forum_group_ids( $forum_id );
-		
-			if ( empty( $group_ids ) || !is_array( $group_ids ) )
+
+			if ( empty( $group_ids ) || ! is_array( $group_ids ) ) {
 				return $recipients;
+			}
 
-			foreach( $group_ids as $group_id ) {
+			foreach ( $group_ids as $group_id ) {
+				$bp_recipients = groups_get_groupmeta( $group_id, '_bpbbpst_support_bp_recipients' );
 
-				if( $bp_recipients = groups_get_groupmeta( $group_id, '_bpbbpst_support_bp_recipients' ) ) {
+				if ( ! empty( $bp_recipients ) ) {
 					// strips common values
 					$bp_recipients = array_diff( $bp_recipients, $recipients );
 					// merge unique
 					$recipients = array_merge( $recipients, $bp_recipients );
 				}
-					
+
 			}
-				
+
 		}
 
 		return $recipients;
@@ -398,7 +413,7 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	 * Builds the list of group mods and admins
 	 *
 	 * @since  2.0
-	 * 
+	 *
 	 * @param  integer $group_id the group id
 	 * @uses   groups_get_group_admins() to get group admins
 	 * @uses   groups_get_group_mods() to get group mods
@@ -406,36 +421,37 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	 */
 	public static function group_list_moderators( $group_id = 0 ) {
 
-		if( empty( $group_id ) )
+		if ( empty( $group_id ) ) {
 			return false;
+		}
 
-		$group_admins = array( 
-			array( 
+		$group_admins = array(
+			array(
 				'users' => groups_get_group_admins( $group_id ),
 				'role'  => __( 'Group Admin', 'buddy-bbpress-support-topic' )
 			)
 		);
+
 		$group_mods = array(
-			array( 
+			array(
 				'users' => groups_get_group_mods( $group_id ),
-				'role'    => __( 'Group Mod', 'buddy-bbpress-support-topic' )
+				'role'  => __( 'Group Mod', 'buddy-bbpress-support-topic' )
 			)
 		);
 
 		$group_admins = array_map( 'bpbbpst_role_group_forum_map', $group_admins );
-		$group_mods = array_map( 'bpbbpst_role_group_forum_map', $group_mods );
+		$group_mods   = array_map( 'bpbbpst_role_group_forum_map', $group_mods );
 
 		$group_forum_moderators = array_merge( $group_admins[0], $group_mods[0] );
 
 		return $group_forum_moderators;
-		
 	}
 
 	/**
 	 * We do not use widgets
 	 *
 	 * @since  2.0
-	 * 
+	 *
 	 * @return boolean false
 	 */
 	public function widget_display() { return false; }
@@ -445,7 +461,7 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 
 /**
  * Registers the Group extension if it needs to
- * 
+ *
  * @since 2.0
  *
  * @uses  bbp_is_group_forums_active() to check group forums are active
@@ -459,12 +475,13 @@ function bpbbpst_buddypress() {
 	if ( bbp_is_group_forums_active() && bp_is_active( 'groups' ) ) {
 
 		// I want 1.8 !!
-		if( version_compare( bp_get_version(), '1.8', '<' ) )
-			bp_core_add_admin_notice( sprintf( __('Buddy bbPress Support Status version %s requires at least BuddyPress 1.8, please upgrade BuddyPress :) or downgrade Buddy bbPress Support Status :(', 'buddy-bbpress-support-topic' ), bpbbpst_get_plugin_version() ) );
-		else
+		if ( version_compare( bp_get_version(), '2.0', '<' ) ) {
+			bp_core_add_admin_notice( sprintf( __('Buddy bbPress Support Status version %s requires at least BuddyPress 2.0, please upgrade BuddyPress :) or downgrade Buddy bbPress Support Status :(', 'buddy-bbpress-support-topic' ), bpbbpst_get_plugin_version() ) );
+		} else {
 			bp_register_group_extension( 'BuddyPress_Support_Topic' );
+		}
 	}
-	
+
 }
 
 add_action( 'bp_init', 'bpbbpst_buddypress' );

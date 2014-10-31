@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Gets the plugin's version
@@ -89,13 +89,15 @@ function bpbbpst_get_support_status() {
  * @return integer the forum support setting
  */
 function bpbbpst_get_forum_support_setting( $forum_id = 0 ) {
-	if( empty( $forum_id ) )
+	if ( empty( $forum_id ) ) {
 		return false;
+	}
 
 	$forum_support_setting = get_post_meta( $forum_id, '_bpbbpst_forum_settings', true );
 
-	if( empty( $forum_support_setting ) )
+	if ( empty( $forum_support_setting ) ) {
 		$forum_support_setting = 1;
+	}
 
 	return apply_filters( 'bpbbpst_get_forum_support_setting', intval( $forum_support_setting ) );
 }
@@ -122,38 +124,40 @@ function bpbbpst_maybe_output_support_field() {
 	$forum_id = bbp_get_forum_id();
 	$topic_id = bbp_get_topic_id();
 
-	if( empty( $forum_id ) )
+	if ( empty( $forum_id ) ) {
 		$forum_id = bbp_get_topic_forum_id( $topic_id );
+	}
 
 	$parent_forum_support_feature = bpbbpst_get_forum_support_setting( $forum_id );
 
 	switch( $parent_forum_support_feature ) {
 
 		case 2:
-				$output = '<input type="hidden" value="support" name="_bp_bbp_st_is_support" id="bp_bbp_st_is_support_hidden">';
+			$output = '<input type="hidden" value="support" name="_bp_bbp_st_is_support" id="bp_bbp_st_is_support_hidden">';
 			break;
 
 		case 3:
-				$output = false;
+			$output = false;
 			break;
 
 		case 1:
 		default:
-				if( bbp_is_topic_edit() ){
+			if ( bbp_is_topic_edit() ) {
 
-					$support_status = get_post_meta( $topic_id, '_bpbbpst_support_topic', true );
+				$support_status = get_post_meta( $topic_id, '_bpbbpst_support_topic', true );
 
-					if( !empty( $support_status ) )
-						$checked = true;
+				if ( ! empty( $support_status ) ) {
+					$checked = true;
 				}
+			}
 
-				$output = '<input type="checkbox" value="support" name="_bp_bbp_st_is_support" id="bp_bbp_st_is_support" '. checked( true, $checked, false ).'> <label for="bp_bbp_st_is_support">'. __('This is a support topic','buddy-bbpress-support-topic') . '</label>' ;
+			$output = '<input type="checkbox" value="support" name="_bp_bbp_st_is_support" id="bp_bbp_st_is_support" '. checked( true, $checked, false ).'> <label for="bp_bbp_st_is_support">'. __('This is a support topic','buddy-bbpress-support-topic') . '</label>' ;
 			break;
 	}
 
-	if( empty( $output ) )
+	if ( empty( $output ) ) {
 		return false;
-
+	}
 	?>
 	<p>
 		<?php echo $output;?>
@@ -178,12 +182,13 @@ function bpbbpst_maybe_output_support_field() {
  */
 function bpbbpst_save_support_type( $topic_id = 0 ) {
 	// if safe then store
-	if ( !empty( $_POST['_bp_bbp_st_is_support'] ) && wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_define'], 'bpbbpst_support_define' ) ) {
+	if ( ! empty( $_POST['_bp_bbp_st_is_support'] ) && wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_define'], 'bpbbpst_support_define' ) ) {
 		// no need to sanitize value as i arbitrary set the support topic option to 1
 		update_post_meta( $topic_id, '_bpbbpst_support_topic', 1 );
 
-		if( !empty( $_POST['_bp_bbp_st_referer'] ) )
+		if ( ! empty( $_POST['_bp_bbp_st_referer'] ) ) {
 			update_post_meta( $topic_id, '_bpbbpst_support_referer', esc_url_raw( $_POST['_bp_bbp_st_referer'] ) );
+		}
 
 		do_action( 'bpbbpst_support_type_saved' );
 	}
@@ -203,18 +208,21 @@ function bpbbpst_save_support_type( $topic_id = 0 ) {
  */
 function bpbbpst_edit_support_type( $topic_id = 0 ) {
 
-	if( empty( $_POST['_wpnonce_bpbbpst_support_define'] ) || !wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_define'], 'bpbbpst_support_define' ) )
+	if ( empty( $_POST['_wpnonce_bpbbpst_support_define'] ) || ! wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_define'], 'bpbbpst_support_define' ) ) {
 		return;
+	}
 
-	if ( !empty( $_POST['_bp_bbp_st_is_support'] ) ) {
+	if ( ! empty( $_POST['_bp_bbp_st_is_support'] ) ) {
 		$support = get_post_meta( $topic_id, '_bpbbpst_support_topic', true );
 
 		$support = empty( $support ) ? 1 : $support;
 		update_post_meta( $topic_id, '_bpbbpst_support_topic', $support );
 	} else {
 		$support = get_post_meta( $topic_id, '_bpbbpst_support_topic', true );
-		if( !empty( $support ) )
+
+		if ( ! empty( $support ) ) {
 			delete_post_meta( $topic_id, '_bpbbpst_support_topic' );
+		}
 	}
 
 	do_action( 'bpbbpst_support_type_edited');
@@ -234,49 +242,60 @@ function bpbbpst_edit_support_type( $topic_id = 0 ) {
  * @uses   update_post_meta() to save a default support status if needed.
  */
 function bpbbpst_handle_moving_topic( $topic_id = 0, $forum_id = 0 ) {
-	if( empty( $topic_id ) || empty( $forum_id ) )
+	if ( empty( $topic_id ) || empty( $forum_id ) ) {
 		return;
+	}
 
 	$old_forum_id = bbp_get_topic_forum_id( $topic_id );
 
 	//if old is new, then do nothing !
-	if( $old_forum_id == $forum_id )
+	if ( $old_forum_id == $forum_id ) {
 		return;
+	}
 
 	$old_forum_support_feature = bpbbpst_get_forum_support_setting( $old_forum_id );
 	$new_forum_support_feature = bpbbpst_get_forum_support_setting( $forum_id );
 
 	//if old has same support feature than new, then do nothing
-	if( $old_forum_support_feature == $new_forum_support_feature )
+	if ( $old_forum_support_feature == $new_forum_support_feature ) {
 		return;
+	}
+
 	// at this point it means old had a support feature and new one no
-	if( $new_forum_support_feature == 3 ) {
+	if ( $new_forum_support_feature == 3 ) {
 		// delete_post_meta will be handled by bpbbpst_bbpress_edit_support_type
-		if( isset( $_POST['_bp_bbp_st_is_support'] ) )
+		if ( isset( $_POST['_bp_bbp_st_is_support'] ) ) {
 			unset( $_POST['_bp_bbp_st_is_support'] );
-		if( isset( $_POST['_support_status'] ) )
+		}
+
+		if ( isset( $_POST['_support_status'] ) ) {
 			unset( $_POST['_support_status'] );
+		}
 
 		delete_post_meta( $topic_id, '_bpbbpst_support_topic' );
 
 	} else {
 		$meta = get_post_meta( $topic_id, '_bpbbpst_support_topic', true );
 
-		if( $old_forum_support_feature == 3 ) {
+		if ( $old_forum_support_feature == 3 ) {
 			// in this case nonce is not set
-			if( $new_forum_support_feature == 2 )
+			if ( $new_forum_support_feature == 2 ) {
 				$meta = 1;
+			}
 
 			update_post_meta( $topic_id, '_bpbbpst_support_topic', $meta );
 		} else {
-			if( empty( $_POST['_bp_bbp_st_is_support'] ) && $new_forum_support_feature == 2 )
+			if ( empty( $_POST['_bp_bbp_st_is_support'] ) && $new_forum_support_feature == 2 ) {
 				$_POST['_bp_bbp_st_is_support'] = 'support';
+			}
 
-			if( !empty( $_POST['_bp_bbp_st_is_support'] ) && empty( $meta ) && $new_forum_support_feature == 1 )
+			if ( ! empty( $_POST['_bp_bbp_st_is_support'] ) && empty( $meta ) && $new_forum_support_feature == 1 ) {
 				unset( $_POST['_bp_bbp_st_is_support'] );
+			}
 
-			if( empty( $_POST['_support_status'] ) && empty( $meta ) && $new_forum_support_feature == 2 )
+			if ( empty( $_POST['_support_status'] ) && empty( $meta ) && $new_forum_support_feature == 2 ) {
 				$_POST['_support_status'] = 1;
+			}
 		}
 
 	}
@@ -297,7 +316,7 @@ function bpbbpst_handle_moving_topic( $topic_id = 0, $forum_id = 0 ) {
  * @uses   bpbbpst_get_plugin_version() to get plugin's version
  * @uses   wp_localize_script() to ensure translation of messages
  */
-function bpbbpst_enqueue_scripts(){
+function bpbbpst_enqueue_scripts() {
 
 	/*
 	With BuddyPress activated, bbp_is_single_topic() is becoming true too late :(
@@ -305,18 +324,18 @@ function bpbbpst_enqueue_scripts(){
 	*/
 	$bbpress_load_scripts = false;
 
-	if( bbp_is_single_topic() )
+	if ( bbp_is_single_topic() ) {
 		$bbpress_load_scripts = true;
-	elseif( function_exists( 'bp_is_group_forum_topic' ) && bp_is_group_forum_topic() )
+	} else if ( function_exists( 'bp_is_group_forum_topic' ) && bp_is_group_forum_topic() ) {
 		$bbpress_load_scripts = true;
+	}
 
-	if( $bbpress_load_scripts ) {
+	if ( $bbpress_load_scripts ) {
 		wp_enqueue_script( 'bpbbpst-topic-js', bpbbpst_get_plugin_url( 'js' ) . 'bpbbpst-topic.js', array( 'jquery' ), bpbbpst_get_plugin_version() );
 		wp_localize_script( 'bpbbpst-topic-js', 'bpbbpstbbp_vars', array(
-					'securitycheck' => __( 'Security check failed', 'buddy-bbpress-support-topic' ),
-					'loading'       => __( 'loading', 'buddy-bbpress-support-topic' )
-				)
-			);
+			'securitycheck' => __( 'Security check failed', 'buddy-bbpress-support-topic' ),
+			'loading'       => __( 'loading', 'buddy-bbpress-support-topic' )
+		) );
 	}
 }
 
@@ -333,17 +352,18 @@ function bpbbpst_enqueue_scripts(){
  */
 function bpbbpst_change_support_status() {
 
-	if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) )
+	if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) ) {
 		return;
+	}
 
-	if( !wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_status'], 'bpbbpst_support_status' ) ) {
+	if ( ! wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_status'], 'bpbbpst_support_status' ) ) {
 		echo -1;
 		die();
 	}
 
-	if( !empty( $_POST['topic_id'] ) ){
+	if ( ! empty( $_POST['topic_id'] ) ) {
 
-		if( empty( $_POST['support_status'] ) ) {
+		if ( empty( $_POST['support_status'] ) ) {
 			delete_post_meta( $_POST['topic_id'], '_bpbbpst_support_topic' );
 		} else {
 			update_post_meta( $_POST['topic_id'], '_bpbbpst_support_topic', intval( $_POST['support_status'] ) );
@@ -375,8 +395,9 @@ function bpbbpst_change_support_status() {
  */
 function bpbbpst_support_admin_links( $input = '', $args = array() ) {
 
-	if ( !bbp_is_single_topic() )
+	if ( ! bbp_is_single_topic() ) {
 		return $input;
+	}
 
 	$defaults = array (
 		'id'     => bbp_get_topic_id(),
@@ -385,21 +406,24 @@ function bpbbpst_support_admin_links( $input = '', $args = array() ) {
 		'sep'    => ' | ',
 		'links'  => array()
 	);
+
 	$r = bbp_parse_args( $args, $defaults, 'get_topic_admin_links' );
 
 	// Since 2.0, we first need to check parent forum has support for support :)
 	$forum_id = bbp_get_topic_forum_id( $r['id'] );
 
-	if( empty( $forum_id ) )
+	if ( empty( $forum_id ) ) {
 		return $input;
+	}
 
-	if( 3 == bpbbpst_get_forum_support_setting( $forum_id ) )
+	if ( 3 == bpbbpst_get_forum_support_setting( $forum_id ) ) {
 		return $input;
+	}
 
 	// now let's check the post meta !
 	$support_status = get_post_meta( $r['id'], '_bpbbpst_support_topic', true );
 
-	if ( current_user_can( 'edit_topic', $r['id'] ) && !empty( $support_status ) ) {
+	if ( current_user_can( 'edit_topic', $r['id'] ) && ! empty( $support_status ) ) {
 
 		$support_selectbox = bpbbpst_get_selectbox( $support_status, $r['id'] ) . $r['sep'] ;
 
@@ -428,9 +452,9 @@ function bpbbpst_get_selected_support_status( $selected = 0 ) {
 
 	$all_status = bpbbpst_get_support_status();
 
-	foreach( $all_status as $key => $status ) {
+	foreach ( $all_status as $key => $status ) {
 
-		if( $status['value'] == $selected ) {
+		if ( $status['value'] == $selected ) {
 			$selected_status = $all_status[$key];
 			$selected_status = array_merge( $selected_status, array( 'class' => $key ) );
 		}
@@ -526,10 +550,11 @@ function bpbbpst_add_support_mention( $topic_id = 0, $echo = true ) {
  * @param  string $name the optionnal template part
  * @return array $templates unchanged
  */
-function bpbbpst_topic_is_single( $templates = array(), $slug = '', $name = '' ){
+function bpbbpst_topic_is_single( $templates = array(), $slug = '', $name = '' ) {
 
-	if( in_array( $name, array( 'single-topic', 'topic' ) ) )
+	if ( in_array( $name, array( 'single-topic', 'topic' ) ) ) {
 		remove_filter( 'the_title', 'bpbbpst_change_topic_title', 99 );
+	}
 
 	return $templates;
 }
@@ -549,10 +574,11 @@ function bpbbpst_topic_is_single( $templates = array(), $slug = '', $name = '' )
  */
 function bpbbpst_change_topic_title( $title = '', $id = 0 ) {
 
-	if( !bbp_is_topic( $id ) )
-			return $title;
+	if ( ! bbp_is_topic( $id ) ) {
+		return $title;
+	}
 
-	if( bbp_is_topic_edit() || bbp_is_single_topic() ) {
+	if ( bbp_is_topic_edit() || bbp_is_single_topic() ) {
 		return bpbbpst_add_support_mention( false ) . $title;
 	} else {
 		return $title;
@@ -589,24 +615,28 @@ function bpbbpst_filter_topic_title() {
  */
 function bpbbpst_get_selectbox( $support_status = 1, $topic_id = 0 ) {
 
-	if( empty( $topic_id ) )
+	if ( empty( $topic_id ) ) {
 		return;
+	}
 
 	$all_status = bpbbpst_get_support_status();
 
-	if( empty( $all_status ) || !is_array( $all_status ) )
+	if ( empty( $all_status ) || ! is_array( $all_status ) ) {
 		return;
+	}
 
 	$output = '<span class="support-select-box">';
 	$output .= '<select class="support-select-status" name="_support_status" data-topicsupport="'.$topic_id.'">';
 
-	if( $topic_id == 'adminlist' )
+	if ( $topic_id == 'adminlist' ) {
 		$output .= '<option value="-1">' . __('All support status') .'</option>';
+	}
 
-	foreach( $all_status as $status ) {
+	foreach ( $all_status as $status ) {
 
-		if( $topic_id == 'adminlist' && $status['value'] == 0 )
+		if ( $topic_id == 'adminlist' && $status['value'] == 0 ) {
 			continue;
+		}
 
 		$output .= '<option value="'. $status['value'] .'" ';
 		$output .= selected( $support_status, $status['value'], false );
@@ -616,8 +646,9 @@ function bpbbpst_get_selectbox( $support_status = 1, $topic_id = 0 ) {
 	$output .= '</select>';
 
 	// nonce field
-	if( $topic_id != 'adminlist' )
+	if ( $topic_id != 'adminlist' ) {
 		$output .= wp_nonce_field( 'bpbbpst_support_status', '_wpnonce_bpbbpst_support_status', true, false );
+	}
 
 	$output .= '</span>';
 
@@ -642,19 +673,23 @@ function bpbbpst_neutralize_not_support( $all_status = array() ) {
 
 	$topic_id = bbp_get_topic_id();
 
-	if( is_admin() && empty( $topic_id ) && isset( get_current_screen()->post_type ) && get_current_screen()->post_type == bbp_get_topic_post_type() && get_current_screen()->base == 'post' )
+	if ( is_admin() && empty( $topic_id ) && isset( get_current_screen()->post_type ) && get_current_screen()->post_type == bbp_get_topic_post_type() && get_current_screen()->base == 'post' ) {
 		$topic_id = get_the_ID();
+	}
 
-	if( empty( $topic_id ) )
+	if ( empty( $topic_id ) ) {
 		return $all_status;
+	}
 
 	$forum_id = bbp_get_topic_forum_id( $topic_id );
 
-	if( empty( $forum_id ) )
+	if ( empty( $forum_id ) ) {
 		return $all_status;
+	}
 
-	if( 2 == bpbbpst_get_forum_support_setting( $forum_id ) && !empty( $all_status['topic-not-support'] ) )
+	if ( 2 == bpbbpst_get_forum_support_setting( $forum_id ) && ! empty( $all_status['topic-not-support'] ) ) {
 		unset( $all_status['topic-not-support'] );
+	}
 
 	return $all_status;
 }
@@ -673,22 +708,25 @@ function bpbbpst_neutralize_not_support( $all_status = array() ) {
 function bpbbpst_array_checked( $current = array(), $tocheck = false , $echo = true ) {
 	$checked = false;
 
-	if( empty( $current ) || empty( $tocheck ) )
+	if ( empty( $current ) || empty( $tocheck ) ) {
 		return false;
+	}
 
-	if( !is_array( $current ) )
+	if ( ! is_array( $current ) ) {
 		$current = explode( ',', $current );
+	}
 
-	if( is_array( $current ) && in_array( $tocheck, $current ) )
+	if ( is_array( $current ) && in_array( $tocheck, $current ) ) {
 		$checked = checked(  $tocheck,  $tocheck, false );
-	else
+	} else {
 		$checked = checked( $current, $tocheck, false );
+	}
 
-	if( empty( $echo ) )
+	if ( empty( $echo ) ) {
 		return $checked;
-
-	else
+	} else {
 		echo $checked;
+	}
 }
 
 /**
@@ -703,8 +741,8 @@ function bpbbpst_role_group_forum_map( $users = array() ) {
 
 	$role = $users['role'];
 
-	foreach( $users['users'] as $key => $user ) {
-		if( !empty( $user->user_id ) ) {
+	foreach ( $users['users'] as $key => $user ) {
+		if ( ! empty( $user->user_id ) ) {
 			$user->role = $role;
 			$users['users'][$key] = $user;
 		}
@@ -725,13 +763,15 @@ function bpbbpst_role_group_forum_map( $users = array() ) {
  */
 function bpbbpst_list_recipients( $forum_id = 0, $context = 'admin' ) {
 
-	if( empty( $forum_id ) )
+	if ( empty( $forum_id ) ) {
 		return false;
+	}
 
 	$recipients = get_post_meta( $forum_id, '_bpbbpst_support_recipients', true );
 
-	if( empty( $recipients ) )
+	if ( empty( $recipients ) ) {
 		$recipients = array();
+	}
 
 	return apply_filters( 'bpbbpst_list_recipients', $recipients, $context, $forum_id );
 }
@@ -775,13 +815,14 @@ function bpbbpst_checklist_moderators( $forum_id = false ) {
 
 	$user_query = get_users( array( 'who' => 'bpbbpst_moderators' ) );
 
-	if( !is_array( $user_query ) || count( $user_query ) < 1 )
+	if ( ! is_array( $user_query ) || count( $user_query ) < 1 ) {
 		return false;
+	}
 
 	$recipients = bpbbpst_list_recipients( $forum_id );
 	?>
 	<ul class="bbp-moderators-list">
-	<?php foreach( $user_query as $user ) :?>
+	<?php foreach ( $user_query as $user ) :?>
 		<li>
 			<input type="checkbox" value="<?php echo $user->data->ID;?>" name="_bpbbpst_support_recipients[]" <?php bpbbpst_array_checked( $recipients, $user->data->ID );?>>
 			<?php echo $user->data->display_name ;?> (<?php echo bbp_get_dynamic_role_name( bbp_get_user_role( $user->data->ID ) );?>)
@@ -810,26 +851,29 @@ function bpbbpst_checklist_moderators( $forum_id = false ) {
 function bpbbpst_support_statistics( $args = '' ) {
 
 	$defaults = array(
-			'post_type'      => bbp_get_topic_post_type(),
-			'posts_per_page' => -1,
-			'meta_query'     => array( array(
-											'key' => '_bpbbpst_support_topic',
-											'value' => 1,
-											'type' => 'numeric',
-											'compare' => '>='
-								) )
-				);
+		'post_type'      => bbp_get_topic_post_type(),
+		'posts_per_page' => -1,
+		'meta_query'     => array(
+			array(
+				'key' => '_bpbbpst_support_topic',
+				'value' => 1,
+				'type' => 'numeric',
+				'compare' => '>='
+			)
+		)
+	);
+
 	$r = bbp_parse_args( $args, $defaults, 'support_statistics' );
 
-	$support_query    = new WP_Query( $r );
-	$total_support    = $support_query->found_posts;
+	$support_query = new WP_Query( $r );
+	$total_support = $support_query->found_posts;
 
 	$all_status = bpbbpst_get_support_status();
 	unset( $all_status['topic-not-support'] );
 
 	$support_stat = array();
 
-	foreach( $all_status as $key => $status ) {
+	foreach ( $all_status as $key => $status ) {
 		$support_stat[ $status['value'] ] = array(
 			'stat'        => 0,
 			'label'       => $status['sb-caption'],
@@ -858,12 +902,13 @@ function bpbbpst_support_statistics( $args = '' ) {
 
 	$goon = false;
 
-	foreach( $support_stat as $notempty ) {
-		if( $notempty['stat'] > 0 )
+	foreach ( $support_stat as $notempty ) {
+		if ( $notempty['stat'] > 0 ) {
 			$goon = true;
+		}
 	}
 
-	if( !empty( $goon ) ) {
+	if ( ! empty( $goon ) ) {
 
 		$percent_support  = number_format( ( $support_stat[2]['stat'] / $total_support ) * 100, 2 ) . '%';
 
@@ -874,9 +919,7 @@ function bpbbpst_support_statistics( $args = '' ) {
 		return apply_filters( 'bpbbpst_support_statistics', $support_stats, $args );
 
 	} else {
-
 		return false;
-
 	}
 
 }
@@ -895,17 +938,19 @@ function bpbbpst_support_statistics( $args = '' ) {
  */
 function bpbbpst_new_support_topic_notify( $topic_id = 0, $forum_id = 0, $anonymous_data = false, $topic_author = 0 ) {
 
-	if( empty( $topic_id ) )
+	if ( empty( $topic_id ) ) {
 		return;
+	}
 
-	if( empty( $forum_id ) )
+	if ( empty( $forum_id ) ) {
 		return;
+	}
 
 	$forum_support_feature = bpbbpst_get_forum_support_setting( $forum_id );
 
-	if( $forum_support_feature != 3 && !empty( $_POST['_bp_bbp_st_is_support'] ) )
+	if ( $forum_support_feature != 3 && ! empty( $_POST['_bp_bbp_st_is_support'] ) ) {
 		bpbbpst_notify_moderators( $topic_id, $forum_id, $anonymous_data, $topic_author );
-
+	}
 }
 
 /**
@@ -945,14 +990,16 @@ function bpbbpst_notify_moderators( $topic_id = 0, $forum_id = 0, $anonymous_dat
 
 	$recipients = bpbbpst_list_recipients( $forum_id, 'notify' );
 
-	if( empty( $recipients ) || !is_array( $recipients ) || count( $recipients ) < 1 )
+	if ( empty( $recipients ) || ! is_array( $recipients ) || count( $recipients ) < 1 ) {
 		return;
+	}
 
 	/** Topic *****************************************************************/
 
 	// Bail if topic is not published
-	if ( !bbp_is_topic_published( $topic_id ) )
+	if ( ! bbp_is_topic_published( $topic_id ) ) {
 		return false;
+	}
 
 	// Poster name
 	$topic_author_name = bbp_get_topic_author_display_name( $topic_id );
@@ -973,8 +1020,9 @@ function bpbbpst_notify_moderators( $topic_id = 0, $forum_id = 0, $anonymous_dat
 	foreach ( (array) $recipients as $user_id ) {
 
 		/* Don't send notifications to the moderator if he is the one who made the post */
-		if ( !empty( $topic_author ) && (int) $user_id == (int) $topic_author )
+		if ( ! empty( $topic_author ) && (int) $user_id == (int) $topic_author ) {
 			continue;
+		}
 
 		// For plugins to filter messages per reply/topic/user
 		$message = sprintf( __( '%1$s wrote a new support topic: %2$s
@@ -997,13 +1045,17 @@ Please ask the admin to unsubscribe from these emails.', 'buddy-bbpress-support-
 		);
 
 		$message = apply_filters( 'bpbbpst_notify_moderators_mail_message', $message, $topic_id, $forum_id, $user_id );
-		if ( empty( $message ) )
+
+		if ( empty( $message ) ) {
 			continue;
+		}
 
 		// For plugins to filter titles per reply/topic/user
 		$subject = apply_filters( 'bpbbpst_notify_moderators_mail_title', '[' . $blog_name . '] New support topic on : ' . $forum_name, $topic_id, $forum_id, $user_id );
-		if ( empty( $subject ) )
+
+		if ( empty( $subject ) ) {
 			continue;
+		}
 
 		// Custom headers
 		$headers = apply_filters( 'bpbbpst_notify_moderators_mail_headers', array() );
@@ -1040,15 +1092,17 @@ Please ask the admin to unsubscribe from these emails.', 'buddy-bbpress-support-
 function bpbbpst_get_support_only_forums( $selected = 0, $field_id = '_support_only_forum', $field_name = '_support_only_forums' ) {
 
 	$query_args = array(
-			'post_type'      => bbp_get_forum_post_type(),
-			'posts_per_page' => -1,
-			'meta_query'     => array( array(
-											'key' => '_bpbbpst_forum_settings',
-											'value' => 2,
-											'type' => 'numeric',
-											'compare' => '='
-								) )
-				);
+		'post_type'      => bbp_get_forum_post_type(),
+		'posts_per_page' => -1,
+		'meta_query'     => array(
+			array(
+				'key' => '_bpbbpst_forum_settings',
+				'value' => 2,
+				'type' => 'numeric',
+				'compare' => '='
+			)
+		)
+	);
 
 	$support_query = new WP_Query( $query_args );
 
@@ -1056,18 +1110,18 @@ function bpbbpst_get_support_only_forums( $selected = 0, $field_id = '_support_o
 
 		<select class="widefat" id="<?php echo $field_id; ?>" name="<?php echo $field_name; ?>">
 
-			<?php while (  $support_query->have_posts() ) :  $support_query->the_post();?>
+			<?php while (  $support_query->have_posts() ) :  $support_query->the_post() ; ?>
 
 				<option value="<?php echo esc_attr( bbp_get_forum_id( $support_query->post->ID ) ) ?>" <?php selected( $support_query->post->ID, $selected ) ?>><?php bbp_forum_title( $support_query->post->ID ) ?></option>
 
-			<?php endwhile;?>
+			<?php endwhile ; ?>
 
 		</select>
 
 	<?php wp_reset_postdata();
 
 	else :
-		_e( 'No support only forums were found', 'buddy-bbpress-support-topic' );
+		esc_html_e( 'No support only forums were found', 'buddy-bbpress-support-topic' );
 
 	endif;
 }
@@ -1083,7 +1137,7 @@ function bpbbpst_get_support_only_forums( $selected = 0, $field_id = '_support_o
  * @return string html output
  */
 function bpbbpst_referer_extra_field( $support_type = 0 ) {
-	if( !empty( $support_type ) && $support_type != 3 && !empty( $_REQUEST['bpbbpst-referer'] ) ) {
+	if ( ! empty( $support_type ) && $support_type != 3 && ! empty( $_REQUEST['bpbbpst-referer'] ) ) {
 		$referer = esc_url_raw( wp_get_referer() );
 		?>
 		<input type="hidden" name="_bp_bbp_st_referer" value="<?php echo $referer;?>"/>
@@ -1106,6 +1160,7 @@ function bpbbpst_referer_extra_field( $support_type = 0 ) {
 function bpbbpst_display_referer_to_moderators() {
 	$meta = get_post_meta( bbp_get_topic_id(), '_bpbbpst_support_referer', true );
 
-	if( !empty( $meta ) && current_user_can( 'moderate' ) && bbp_get_reply_id() == bbp_get_topic_id() )
+	if ( ! empty( $meta ) && current_user_can( 'moderate' ) && bbp_get_reply_id() == bbp_get_topic_id() ) {
 		echo '<pre>' . __( 'Referer', 'buddy-bbpress-support-topic' ) . ' :<br/>'. esc_url( $meta ).'</pre>';
+	}
 }

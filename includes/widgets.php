@@ -10,7 +10,7 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Buddy-bbPress Support Topic statistic Widget
@@ -18,11 +18,11 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Adds a widget which displays the support topic statistics
  *
  * @since  1.1
- * 
+ *
  * @uses   WP_Widget
  */
 class Bpbbpst_Support_Stats extends WP_Widget {
-	
+
 	/**
 	 * Buddy-bbPress Support Topic statistic Widget
 	 *
@@ -51,17 +51,17 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 * Registers the widget
 	 *
 	 * @since  1.1
-	 * 
+	 *
 	 * @uses   register_widget() to register the widget
 	 */
 	public static function register_widget() {
 		register_widget( 'Bpbbpst_Support_Stats' );
 	}
-	
+
 
 	/**
 	 * Displays the output, the statistics
-	 * 
+	 *
 	 * Depending if the widget is displayed on a single forum template
 	 * it displays the current forum stats or the global stats.
 	 * If on a single forum, add links to filter by support status the topics
@@ -86,45 +86,49 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 
 		extract( $args );
 
-	    if ( !$instance['bpbbpst_title'] )
+	    if ( ! $instance['bpbbpst_title'] ) {
 	    	$instance['bpbbpst_title'] = __( 'Support Topics Stats', 'buddy-bbpress-support-topic' );
-	
-		if ( !$instance['show_forum_link'] )
+	    }
+
+		if ( ! $instance['show_forum_link'] ) {
 	    	$instance['show_forum_link'] = false;
+		}
 
 	    $forum_id = bbp_get_forum_id();
 	    $stats_params = "";
 
-	    if( empty( $forum_id ) && bbp_is_topic_edit() )
+	    if ( empty( $forum_id ) && bbp_is_topic_edit() ) {
 	    	$forum_id = bbp_get_topic_forum_id( bbp_get_topic_id() );
+	    }
 
-	    if( !empty( $forum_id ) ) {
+	    if ( ! empty( $forum_id ) ) {
 
-	    	$stats_params = array( 
-			'meta_query'     => array( array( 
-											'key'     => '_bpbbpst_support_topic',
-											'value'   => 1,
-											'type'    => 'numeric',
-											'compare' => '>=' 
-										),
-										array( 
-											'key'     => '_bbp_forum_id',
-											'value'   =>  $forum_id,
-											'compare' => '='
-										)
-								)
-				);
-
-	    }	    
+	    	$stats_params = array(
+				'meta_query'     => array(
+					array(
+						'key'     => '_bpbbpst_support_topic',
+						'value'   => 1,
+						'type'    => 'numeric',
+						'compare' => '>='
+					),
+					array(
+						'key'     => '_bbp_forum_id',
+						'value'   =>  $forum_id,
+						'compare' => '='
+					)
+				)
+			);
+	    }
 
 		$support_statistics = bpbbpst_support_statistics( $stats_params );
 
-	    if ( !empty( $support_statistics['total_support'] ) ){
+	    if ( ! empty( $support_statistics['total_support'] ) ) {
 
 	    	$status_stats = $support_statistics['allstatus'];
 
-			if( !is_array( $status_stats ) || count( $status_stats ) < 1 )
+			if ( ! is_array( $status_stats ) || count( $status_stats ) < 1 ) {
 				return false;
+			}
 
 	    	$num_percent  = $support_statistics['percent'];
 			$text_percent = __( 'Resolved so far', 'buddy-bbpress-support-topic' );
@@ -137,13 +141,13 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 					<span class="bpbbpst-text"><?php echo $text_percent;?></span> <span class="bpbbpst-num"><?php echo $num_percent;?></span>
 				</li>
 
-				<?php foreach( $status_stats as $key => $stat ):
-					
+				<?php foreach ( $status_stats as $key => $stat ) :
+
 					$num  = $stat['stat'];
 					$text = $stat['label'];
 					$class = $stat['front_class'];
 
-					if( !empty( $forum_id ) ) {
+					if ( ! empty( $forum_id ) ) {
 						$link = add_query_arg( array( 'support_status' => $key ), bbp_get_forum_permalink() );
 						$num  = '<a href="'. $link .'" title="'. esc_attr( $text ) .'">'. $num .'</a>' ;
 						$text = '<a href="'. $link .'" title="'. esc_attr( $text ) .'">'. $text .'</a>' ;
@@ -156,13 +160,13 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 					</li>
 
 				<?php endforeach;?>
-				
+
 			</ul>
 
-			<?php if( !is_bbpress() && !empty( $instance['show_forum_link'] ) ) : ?>
+			<?php if ( ! is_bbpress() && ! empty( $instance['show_forum_link'] ) ) : ?>
 				<p><a href="<?php bbp_forums_url();?>" title="<?php _e( 'Go to forums' , 'buddy-bbpress-support-topic' );?>"><?php _e( 'Go to forums' , 'buddy-bbpress-support-topic' );?></a></p>
-			<?php endif ;?>
-			
+			<?php endif ; ?>
+
 			<?php echo $after_widget;
 	    }
 
@@ -180,15 +184,15 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
-		
+
 		$instance['bpbbpst_title'] = strip_tags( $new_instance['bpbbpst_title'] );
-		
-		if( !empty( $new_instance['show_forum_link'] ) )	
+
+		if ( ! empty( $new_instance['show_forum_link'] ) ) {
 			$instance['show_forum_link'] = intval( $new_instance['show_forum_link'] );
-			
-		else
+		} else {
 			$instance['show_forum_link'] = 0;
-		
+		}
+
 		return $instance;
 	}
 
@@ -207,17 +211,15 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 */
 	public function form( $instance ) {
 		$defaults = array(
-	                     'bpbbpst_title'   => __( 'Support Topics Stats', 'buddy-bbpress-support-topic' ),
-						 'show_forum_link' => 0
-	                );
+			'bpbbpst_title'   => __( 'Support Topics Stats', 'buddy-bbpress-support-topic' ),
+			'show_forum_link' => 0
+		);
 
 	    $instance = wp_parse_args( (array) $instance, $defaults );
 
-	    $bpbbpst_title = strip_tags( $instance['bpbbpst_title'] );
+	    $bpbbpst_title   = strip_tags( $instance['bpbbpst_title'] );
 		$show_forum_link = strip_tags( $instance['show_forum_link'] );
-
 	    ?>
-
 	    <p>
 	    	<label for="bpbbpst_title"><?php _e( 'Title:', 'buddy-bbpress-support-topic' ); ?>
 	    		<input class="widefat" id="<?php echo $this->get_field_id( 'bpbbpst_title' ); ?>" name="<?php echo $this->get_field_name( 'bpbbpst_title' ); ?>" type="text" value="<?php echo esc_attr( $bpbbpst_title ); ?>" style="width: 100%" />
@@ -241,22 +243,27 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 * @return mixed $args the new arguments eventually including the meta_query
 	 */
 	public function filter_topics_query_by_status( $args = "" ) {
-		
-		if( !bbp_is_single_forum() )
+
+		if ( ! bbp_is_single_forum() ) {
 			return $args;
-	
-		if( empty( $_GET['support_status'] ) )
+		}
+
+		if ( empty( $_GET['support_status'] ) ) {
 			return $args;
+		}
 
 		/* if meta_query exists, we dont want to break anything */
-		if( !empty( $args['meta_query'] ) )
+		if ( ! empty( $args['meta_query'] ) ) {
 			return $args;
+		}
 
-		$args['meta_query'] = array( array( 
-											'key'     => '_bpbbpst_support_topic',
-											'value'   => intval( $_GET['support_status'] ),
-											'compare' => '=' 
-										) );
+		$args['meta_query'] = array(
+			array(
+				'key'     => '_bpbbpst_support_topic',
+				'value'   => intval( $_GET['support_status'] ),
+				'compare' => '='
+			)
+		);
 
 		$args['show_stickies'] = false;
 
@@ -279,31 +286,35 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 * @return string $trail the new breadcrumb eventually including the support status
 	 */
 	public function breadcrumb_for_status( $trail, $crumbs, $args ) {
-		
-		if( !bbp_is_single_forum() )
+
+		if ( ! bbp_is_single_forum() ) {
 			return $trail;
-	
-		if( empty( $_GET['support_status'] ) )
+		}
+
+		if ( empty( $_GET['support_status'] ) ) {
 			return $trail;
+		}
 
 		$last = $crumbs[ count($crumbs) -1 ];
-
 		$sep = $args['sep'];
-		if ( ! empty( $sep ) )
+
+		if ( ! empty( $sep ) ) {
 			$sep = $args['sep_before'] . $sep . $args['sep_after'];
+		}
 
 
 		$pad_sep = $args['pad_sep'];
+
 		// Pad the separator
-		if ( !empty( $pad_sep ) )
+		if ( ! empty( $pad_sep ) ) {
 			$sep = str_pad( $sep, strlen( $sep ) + ( (int) $pad_sep * 2 ), ' ', STR_PAD_BOTH );
-	
+		}
+
 		$support_status = bpbbpst_get_selected_support_status(  $_GET['support_status'] );
 
 		$trail = str_replace( $last, '<a href="'. bbp_get_forum_permalink() .'" >'. $last .'</a>' . $sep . esc_html( $support_status['sb-caption'] ), $trail );
 
 		return $trail;
-
 	}
 
 
@@ -317,12 +328,14 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 * @return array pagination the new pagination settings including the support status
 	 */
 	public function pagination_for_status( $pagination = array() ) {
-	
-		if( !bbp_is_single_forum() )
+
+		if ( ! bbp_is_single_forum() ) {
 			return $pagination;
-	
-		if( empty( $_GET['support_status'] ) )
+		}
+
+		if ( empty( $_GET['support_status'] ) ) {
 			return $pagination;
+		}
 
 		$pagination['base'] .= '?support_status=' .intval( $_GET['support_status'] )  ;
 
@@ -334,7 +347,7 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 * Enqueue some style for the widget
 	 *
 	 * @since  2.0
-	 * 
+	 *
 	 * @uses   wp_enqueue_style() to load the css file
 	 * @uses   bpbbpst_get_plugin_url() to get plugin's url
 	 * @uses   bpbbpst_get_plugin_version() to get plugin's version
@@ -351,15 +364,15 @@ add_action( 'bbp_widgets_init', array( 'Bpbbpst_Support_Stats', 'register_widget
 /**
  * Buddy-bbPress Support Topic new Support Topic widget
  *
- * Adds a widget to add a link to directly add a new topic to 
+ * Adds a widget to add a link to directly add a new topic to
  * a support only forum
  *
  * @since  2.0
- * 
+ *
  * @uses   WP_Widget
  */
 class Bpbbpst_Support_New_Support extends WP_Widget {
-	
+
 	/**
 	 * Buddy-bbPress Support Topic new support toppic widget
 	 *
@@ -388,7 +401,7 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 	public static function register_widget() {
 		register_widget( 'Bpbbpst_Support_New_Support' );
 	}
-	
+
 
 	/**
 	 * Displays the output, the button to post new support topics
@@ -409,36 +422,42 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 
 		extract( $args );
 
-	    if ( empty( $instance['bpbbpst_title'] ) )
+	    if ( empty( $instance['bpbbpst_title'] ) ) {
 	    	$instance['bpbbpst_title'] = __( 'New Support topic', 'buddy-bbpress-support-topic' );
+	    }
 
-	    if ( empty( $instance['bpbbpst_button'] ) )
+	    if ( empty( $instance['bpbbpst_button'] ) ) {
 	    	$instance['bpbbpst_button'] = __( 'Ask for Support', 'buddy-bbpress-support-topic' );
-	
-		if ( empty( $instance['bpbbpst_forum_id'] ) )
+	    }
+
+		if ( empty( $instance['bpbbpst_forum_id'] ) ) {
 	    	$instance['bpbbpst_forum_id'] = false;
+		}
 
 	    $text = apply_filters( 'widget_text', empty( $instance['bpbbpst_text'] ) ? '' : $instance['bpbbpst_text'], $instance );
 
 	    do_action( 'bpbbpst_new_topic_widget_before_content' );
 
-	    if( empty( $instance['bpbbpst_forum_id'] ) )
+	    if ( empty( $instance['bpbbpst_forum_id'] ) ) {
 	    	return false;
+	    }
 
 	    $widget_display = apply_filters( 'bpbbpst_new_topic_widget_display', true );
 
-	    if( empty( $widget_display ) )
+	    if ( empty( $widget_display ) ) {
 	    	return false;
+	    }
 
 	    $button_caption = esc_html( $instance['bpbbpst_button'] );
 	    $forum_post_form_link = trailingslashit( bbp_get_forum_permalink( $instance['bpbbpst_forum_id'] ) );
 
-	    if( !empty( $instance['bpbbpst_referer'] ) )
+	    if ( ! empty( $instance['bpbbpst_referer'] ) ) {
 	    	$forum_post_form_link .= "?bpbbpst-referer=1";
+	    }
 
 	    $forum_post_form_link .= '#bbp_topic_title';
 
-	     
+
 	    $html_link = '<a href="'. $forum_post_form_link .'" title="'. $button_caption . '" class="button submit bpbbpst-btn">'. $button_caption. '</a>';
 
 	    $a_link = apply_filters( 'bpbbpst_new_support_widget_button', $html_link, $forum_post_form_link, $button_caption );
@@ -448,18 +467,17 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 
 		<div class="textwidget">
 
-			<?php echo !empty( $instance['bpbbpst_filter'] ) ? wpautop( $text ) : $text; ?>
+			<?php echo ! empty( $instance['bpbbpst_filter'] ) ? wpautop( $text ) : $text; ?>
 
 		</div>
 
 		<div class="bpbbpst-action">
 			<?php echo $a_link;?>
 		</div>
-			
-		<?php 
+
+		<?php
 		do_action( 'bpbbpst_new_topic_widget_after_content' );
 		echo $after_widget;
-
 	}
 
 
@@ -467,7 +485,7 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 	 * Update the new support topic widget options (title)
 	 *
 	 * @since  2.0
-	 * 
+	 *
 	 * @param  array $new_instance The new instance options
 	 * @param  array $old_instance The old instance options
 	 * @uses   current_user_can() to check for current user's capabiility
@@ -476,19 +494,20 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
-		
+
 		$instance['bpbbpst_title'] = strip_tags( $new_instance['bpbbpst_title'] );
 		$instance['bpbbpst_button'] = strip_tags( $new_instance['bpbbpst_button'] );
 
-		if ( current_user_can('unfiltered_html') )
+		if ( current_user_can('unfiltered_html') ) {
 			$instance['bpbbpst_text'] =  $new_instance['bpbbpst_text'];
-		else
-			$instance['bpbbpst_text'] = stripslashes( wp_filter_post_kses( addslashes($new_instance['bpbbpst_text']) ) );
-		
+		} else {
+			$instance['bpbbpst_text'] = stripslashes( wp_filter_post_kses( addslashes( $new_instance['bpbbpst_text'] ) ) );
+		}
+
 		$instance['bpbbpst_filter'] = isset( $new_instance['bpbbpst_filter'] );
-		$instance['bpbbpst_forum_id'] = !empty( $new_instance['bpbbpst_forum_id'] ) ? intval( $new_instance['bpbbpst_forum_id'] ) : 0;
+		$instance['bpbbpst_forum_id'] = ! empty( $new_instance['bpbbpst_forum_id'] ) ? intval( $new_instance['bpbbpst_forum_id'] ) : 0;
 		$instance['bpbbpst_referer'] = isset( $new_instance['bpbbpst_referer'] );
-		
+
 		return $instance;
 	}
 
@@ -508,20 +527,19 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 	 */
 	public function form( $instance ) {
 		$defaults = array(
-	                     'bpbbpst_title'   => __( 'New Support topic', 'buddy-bbpress-support-topic' ),
-						 'bpbbpst_button' => __( 'Ask for Support', 'buddy-bbpress-support-topic' ),
-						 'bpbbpst_text' => '',
-						 'bpbbpst_forum_id' => 0
-	                );
+			'bpbbpst_title'    => __( 'New Support topic', 'buddy-bbpress-support-topic' ),
+			'bpbbpst_button'   => __( 'Ask for Support', 'buddy-bbpress-support-topic' ),
+			'bpbbpst_text'     => '',
+			'bpbbpst_forum_id' => 0
+		);
 
 	    $instance = wp_parse_args( (array) $instance, $defaults );
 
-	    $bpbbpst_title = strip_tags( $instance['bpbbpst_title'] );
-	    $bpbbpst_button = strip_tags( $instance['bpbbpst_button'] );
-		$bpbbpst_text = esc_textarea( $instance['bpbbpst_text'] );
+	    $bpbbpst_title    = strip_tags( $instance['bpbbpst_title'] );
+	    $bpbbpst_button   = strip_tags( $instance['bpbbpst_button'] );
+		$bpbbpst_text     = esc_textarea( $instance['bpbbpst_text'] );
 		$bpbbpst_forum_id = intval( $instance['bpbbpst_forum_id'] );
 	    ?>
-
 	    <p>
 	    	<label for="bpbbpst_title"><?php _e( 'Title:', 'buddy-bbpress-support-topic' ); ?>
 	    		<input class="widefat" id="<?php echo $this->get_field_id( 'bpbbpst_title' ); ?>" name="<?php echo $this->get_field_name( 'bpbbpst_title' ); ?>" type="text" value="<?php echo esc_attr( $bpbbpst_title ); ?>" style="width: 100%" />
@@ -539,7 +557,7 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 			<label for="<?php echo $this->get_field_id('bpbbpst_forum_id'); ?>"><?php _e('Select the support only forum:', 'buddy-bbpress-support-topic') ?></label>
 
 			<?php bpbbpst_get_support_only_forums( $bpbbpst_forum_id, $this->get_field_id('bpbbpst_forum_id'), $this->get_field_name('bpbbpst_forum_id')  );?>
-			
+
 		</p>
 		<p><input id="<?php echo $this->get_field_id('bpbbpst_referer'); ?>" name="<?php echo $this->get_field_name('bpbbpst_referer'); ?>" type="checkbox" <?php checked(isset($instance['bpbbpst_referer']) ? $instance['bpbbpst_referer'] : 0); ?> />&nbsp;<label for="<?php echo $this->get_field_id('bpbbpst_referer'); ?>"><?php _e( 'Automatically display a link to referer for moderators', 'buddy-bbpress-support-topic' ); ?></label></p>
 	    <?php

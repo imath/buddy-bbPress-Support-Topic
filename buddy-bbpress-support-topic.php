@@ -14,13 +14,13 @@ Domain Path: /languages/
 */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( !class_exists( 'BP_bbP_Support_Topic' ) ) :
+if ( ! class_exists( 'BP_bbP_Support_Topic' ) ) :
 /**
  * Main Buddy-bbPress Support Topic Class
  *
- * Extends bbPress 2.3.2 and up with a support feature
+ * Extends bbPress 2.5.4 and up with a support feature
  *
  * @since 2.0
  */
@@ -28,6 +28,8 @@ class BP_bbP_Support_Topic {
 
 	// plugin's global vars
 	public $globals;
+
+	public $required_bbp_version = '2.5.4';
 
 	/**
 	 * The constructor
@@ -72,7 +74,7 @@ class BP_bbP_Support_Topic {
 		$this->globals->includes_dir = apply_filters( 'bbp_includes_dir', trailingslashit( $this->globals->plugin_dir . 'includes'  ) );
 		$this->globals->includes_url = apply_filters( 'bbp_includes_url', trailingslashit( $this->globals->plugin_url . 'includes'  ) );
 
-		$this->support_status = array();
+		$this->support_status  = array();
 		$this->globals->domain = 'buddy-bbpress-support-topic';
 	}
 
@@ -91,12 +93,14 @@ class BP_bbP_Support_Topic {
 		require( $this->globals->includes_dir . 'widgets.php' );
 
 		// includes the BuddyPress group component
-		if( function_exists( 'buddypress' ) )
+		if( function_exists( 'buddypress' ) ) {
 			require( $this->globals->includes_dir . 'buddypress.php' );
+		}
 
 		// includes plugin admin class
-		if( is_admin() )
+		if( is_admin() ) {
 			require( $this->globals->includes_dir . 'admin.php' );
+		}
 	}
 
 	/**
@@ -112,8 +116,9 @@ class BP_bbP_Support_Topic {
 	 */
 	private function setup_actions() {
 
-		if ( bbp_is_deactivation() )
+		if ( bbp_is_deactivation() ) {
 			return;
+		}
 
 		// Loads the translation
 		add_action( 'bbp_init',                                   array( $this, 'load_textdomain'),        7    );
@@ -153,8 +158,9 @@ class BP_bbP_Support_Topic {
 		add_action( 'bbp_theme_before_reply_content',             'bpbbpst_display_referer_to_moderators'       );
 
 		// Loads the admin
-		if( is_admin() )
+		if( is_admin() ) {
 			add_action( 'init', 'bpbbpst_admin' );
+		}
 
 		do_action_ref_array( 'bpbbpst_after_setup_actions', array( &$this ) );
 	}
