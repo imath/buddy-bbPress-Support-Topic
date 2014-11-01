@@ -877,14 +877,13 @@ class BP_bbP_ST_Admin {
 
 			<div class="changelog">
 				<h2 class="about-headline-callout"><?php esc_html_e( 'Advanced users : need a new support status ?', 'buddy-bbpress-support-topic' ); ?></h2>
-				<div class="feature-section col two-col">
+				<div class="feature-section col one-col">
 					<div class="col-1">
-						<img alt="" src="<?php echo $plugin_url;?>screenshot-6.png"/>
-					</div>
-					<div class="col-2 last-feature">
 						<h4><?php esc_html_e( 'A filter to add custom support statuses', 'buddy-bbpress-support-topic' ); ?></h4>
-						<p><?php _e( 'Filter <code>bpbbpst_get_support_status</code> with your custom function and the new status will be fully integrated in the different features of the plugin (Dashboard stats, Stats Widget...)', 'buddy-bbpress-support-topic' ); ?></p>
-						<p><?php esc_html_e( 'You can add as much as stati you need! An example of function is displayed on the left, use it in your plugin or in the functions.php file of your theme.', 'buddy-bbpress-support-topic' ); ?></p>
+						<p>
+							<?php _e( 'Filter <code>bpbbpst_get_support_status</code> with your custom function and the new status will be fully integrated in the different features of the plugin (Dashboard stats, Stats Widget...)', 'buddy-bbpress-support-topic' ); ?></p>
+							<?php printf( __( 'You can add as much as stati as you need! An example of function is available in this %s, use it in your plugin or in the functions.php file of your theme.', 'buddy-bbpress-support-topic' ), '<a href="https://gist.github.com/imath/9e69b8139ff6f7a4120a">gist</a>' ); ?>
+						</p>
 					</div>
 				</div>
 			</div>
@@ -909,17 +908,20 @@ class BP_bbP_ST_Admin {
 				</div>
 			</div>
 
+			<hr/>
+
+			<div class="about-overview">
+				<img class="about-overview-img" src="<?php echo $plugin_url;?>screenshot-3.png" />
+			</div>
+
 			<div class="changelog">
-				<h2 class="about-headline-callout"><?php esc_html_e( 'BuddyPress : a new Group admin tab', 'buddy-bbpress-support-topic' ); ?></h2>
-				<div class="feature-section col two-col">
+				<h2 class="about-headline-callout"><?php esc_html_e( 'BuddyPress : a new Group manage tab', 'buddy-bbpress-support-topic' ); ?></h2>
+				<div class="feature-section col one-col">
 					<div class="col-1">
 						<h4><?php esc_html_e( 'Group Admins can customize their support settings', 'buddy-bbpress-support-topic' ); ?></h4>
 						<p><?php esc_html_e( 'If BuddyPress 2.0+ is activated, a new admin tab will show to allow group Admins to set the support behavior for their forum.', 'buddy-bbpress-support-topic' ); ?></p>
 						<p><?php esc_html_e( 'They can choose to disallow the support feature or use it just as explained in first feature description', 'buddy-bbpress-support-topic' ); ?></p>
 						<p><?php esc_html_e( 'If they allowed support for their forum, they can subscribe to an email notification when a new support topic is posted, they can also add group mods to the subscribe list to help them', 'buddy-bbpress-support-topic' ); ?></p>
-					</div>
-					<div class="col-2 last-feature">
-						<img alt="" src="<?php echo $plugin_url;?>screenshot-3.png"/>
 					</div>
 				</div>
 			</div>

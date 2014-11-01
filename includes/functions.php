@@ -719,7 +719,7 @@ function bpbbpst_get_selectbox( $support_status = 1, $topic_id = 0 ) {
 	$output .= '<select class="support-select-status" name="_support_status" data-topicsupport="'.$topic_id.'">';
 
 	if ( $topic_id == 'adminlist' ) {
-		$output .= '<option value="-1">' . __('All support status') .'</option>';
+		$output .= '<option value="-1">' . __( 'All support status', 'buddy-bbpress-support-topic' ) .'</option>';
 	}
 
 	foreach ( $all_status as $status ) {
