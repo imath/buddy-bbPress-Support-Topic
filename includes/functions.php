@@ -632,7 +632,35 @@ function bpbbpst_topic_is_single( $templates = array(), $slug = '', $name = '' )
  * @return string $title the title with the eventual support mention
  */
 function bpbbpst_change_topic_title( $title = '', $id = 0 ) {
-	if ( bpbbpst_is_sidebar() ) {
+	/**
+	 * get_the_title() is where is located the filter 'the_title', the one the plugin is
+	 * using to prefix topic title. The problem is that there's no context to this filter
+	 * so that we are sure get_the_title() is called to actually display the topic title just
+	 * just before the topic content.
+	 *
+	 * get_the_title() or the_title() can be used in header, widgets, breadcrumbs, meta tags... So there will
+	 * allways be a place where the plugin shouldn't filter the title. If you're a plugin/theme developer
+	 * and you want to get rid of this prefix, you simply need to add these lines before and after your use of
+	 * get_the_title() :
+	 *
+	 * add_filter( 'bpbbpst_donot_change_topic_title', '__return_true' );
+	 *
+	 * get_the_title()
+	 *
+	 * remove_filter( 'bpbbpst_donot_change_topic_title', '__return_true' );
+	 *
+	 * If you want to completely get rid of it, just use the first line in the above exampe
+	 *
+	 * The prefix is only appended when on the topic single and edit bbPress templates. If on this template,
+	 * a sidebar widget displaying the recent topics for instance could have the prefix appended, but not on
+	 * all other pages of the site. So to be consistent, i chose to disable the prefix filter in dynamic
+	 * sidebars.
+	 *
+	 * @param bool true to avoid the prefix to be appended to the_title, false otherwise
+	 */
+	$do_not_prefix = apply_filters( 'bpbbpst_donot_change_topic_title', bpbbpst_is_sidebar() );
+
+	if ( ! empty( $do_not_prefix ) ) {
 		return $title;
 	}
 
