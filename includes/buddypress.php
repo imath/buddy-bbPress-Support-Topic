@@ -90,14 +90,19 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	public function setup_actions() {
 		// Enqueues a js script to hide/show the recipients
 		add_action( 'bp_enqueue_scripts',             array( $this, 'enqueue_forum_js' )                  );
+
 		// Topic title in a BuddyPress group
 		add_filter( 'bbp_get_topic_title',            array( $this, 'filter_topic_title' ),         10, 2 );
+
 		// removes above filter as soon as we can !
 		add_filter( 'bbp_get_template_part',          array( $this, 'remove_topic_title_filer' ),  100, 3 );
+
 		// adds the list of 'BuddyPress group mods' recipients to forum admin ui
 		add_action( 'bpbbpst_forum_support_options',  array( $this, 'admin_group_mods_list' ),      10, 2 );
+
 		// saves the group recipients from forum admin
 		add_action( 'bpbbpst_forum_settings_updated', array( $this, 'admin_group_mods_list_save' ), 10, 2 );
+
 		// merges bp group specific recipients with bbPress ones
 		add_filter( 'bpbbpst_list_recipients',        array( $this, 'merge_bp_recipients' ),        10, 3 );
 	}
@@ -456,14 +461,16 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	 */
 	public function widget_display() { return false; }
 
-
 }
+
+endif; // class_exists check
 
 /**
  * Registers the Group extension if it needs to
  *
  * @since 2.0
  *
+ * @uses  bpbbpst_is_bbp_required_version_ok() to check bbPress required version is ok
  * @uses  bbp_is_group_forums_active() to check group forums are active
  * @uses  bp_is_active() to check groups component is active
  * @uses  bp_get_version() to get BuddyPress version
@@ -487,7 +494,4 @@ function bpbbpst_buddypress() {
 	}
 
 }
-
 add_action( 'bp_init', 'bpbbpst_buddypress' );
-
-endif; // class_exists check

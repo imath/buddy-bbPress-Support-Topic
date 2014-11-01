@@ -114,13 +114,14 @@ class BP_bbP_Support_Topic {
 	 * @access private
 	 *
 	 * @uses   bbp_is_deactivation() to prevent interfering with bbPress deactivation process
+	 * @uses   bbp_is_activation()  to prevent interfering with bbPress activation process
 	 * @uses   add_action() to hook to key actions
 	 * @uses   is_admin() to check for WordPress backend
 	 * @uses   do_action_ref_array() to let plugins or themes do stuff once all actions are set
 	 */
 	private function setup_actions() {
 
-		if ( bbp_is_deactivation() ) {
+		if ( bbp_is_deactivation() || bbp_is_activation() ) {
 			return;
 		}
 
@@ -186,7 +187,7 @@ class BP_bbP_Support_Topic {
 	 *
 	 * @since 2.0
 	 *
-	 * @uses  apply_filters() to let other plugins or themes override globals
+	 * @uses  apply_filters() call 'bpbbpst_available_support_status' to add/remove/edit support status
 	 */
 	public function setup_status() {
 		// Available support status
@@ -244,25 +245,36 @@ class BP_bbP_Support_Topic {
 	 *
 	 * @uses  apply_filters() to let plugins or themes override values
 	 * @uses  get_locale() to get the language of WordPress config
-	 * @uses  load_texdomain() to load the translation if any is available for the language
+	 * @uses  load_texdomain() to load the translation at specific places
+	 * @uses  load_plugin_textdomain() to load the translation at regular places
 	 */
 	public function load_textdomain() {
-		// try to get locale
-		$locale = apply_filters( 'bpbbpst_load_textdomain_get_locale', get_locale() );
+		// Traditional WordPress plugin locale filter
+		$locale = apply_filters( 'plugin_locale', get_locale(), $this->globals->domain );
 
-		// if we found a locale, try to load .mo file
-		if ( !empty( $locale ) ) {
-			// default .mo file path
-			$mofile_default = sprintf( '%s/languages/%s-%s.mo', $this->globals->plugin_dir, $this->globals->domain, $locale );
-			// final filtered file path
-			$mofile = apply_filters( 'bpbbpst_textdomain_mofile', $mofile_default );
-			// make sure file exists, and load it
-			if ( file_exists( $mofile ) ) {
-				load_textdomain( $this->globals->domain, $mofile );
-			}
+		// Need custom strings for en_US ?
+		if ( empty( $locale ) ) {
+			$mofile = $this->globals->domain . '.mo';
+		} else {
+			$mofile = sprintf( '%1$s-%2$s.mo', $this->globals->domain, $locale );
 		}
+
+		// Setup paths to current locale file
+		$mofile_local  = trailingslashit( $this->globals->plugin_dir . 'languages' ) . $mofile;
+		$mofile_global = WP_LANG_DIR . '/' . $this->globals->domain . '/' . $mofile;
+
+		// Look in global /wp-content/languages/buddy-bbpress-support-topics folder
+		load_textdomain( $this->globals->domain, $mofile_global );
+
+		// Look in local /wp-content/plugins/buddy-bbpress-support-topics/languages/ folder
+		load_textdomain( $this->globals->domain, $mofile_local );
+
+		// Look in global /wp-content/languages/plugins/
+		load_plugin_textdomain( $this->globals->domain );
 	}
 }
+
+endif; // class_exists check
 
 /**
  * Adds the main class of the plugin to bbPress main instance
@@ -278,7 +290,6 @@ function bpbbpst() {
 	// let's park into the extend part of main bbPress instance
 	bbpress()->extend->bpbbpst = new BP_bbP_Support_Topic();
 }
-
 add_action( 'bbp_ready', 'bpbbpst', 9 );
 
 /**
@@ -295,7 +306,4 @@ function bpbbst_activate() {
 	// Let's just put a transcient, the rest belongs to admin class
 	set_transient( '_bpbbst_welcome_screen', true, 30 );
 }
-
 add_action( 'activate_' . plugin_basename( __FILE__ ) , 'bpbbst_activate' );
-
-endif; // class_exists check

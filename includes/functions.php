@@ -844,15 +844,44 @@ function bpbbpst_list_recipients( $forum_id = 0, $context = 'admin' ) {
  * @since  2.0
  *
  * @param  integer $support_feature the previously saved option if any
+ * @uses   apply_filters() call 'bpbbpst_forum_support_settings' to add/edit/remove forum support settings
  * @uses   checked() to eventually add a checked attribute to field
- * @return string                  html list of options
+ * @uses   esc_attr() to santize attributes
+ * @uses   esc_html() to sanitize output
+ * @return string     html list of options
  */
 function bpbbpst_display_forum_setting_options( $support_feature = 1 ) {
+	$forum_support_settings = apply_filters( 'bpbbpst_forum_support_settings', array(
+		'bpbbpst_forum_settings_yes' => array(
+			'value' => 1,
+			'label' => __( 'Leave users mark topics of this forum as support ones', 'buddy-bbpress-support-topic' )
+		),
+		'bpbbpst_forum_settings_only' => array(
+			'value' => 2,
+			'label' => __( 'This forum is dedicated to support, all topics will be marked as support ones.', 'buddy-bbpress-support-topic' )
+		),
+		'bpbbpst_forum_settings_no' => array(
+			'value' => 3,
+			'label' => __( 'This forum does not accept support topics', 'buddy-bbpress-support-topic' )
+		),
+	) );
+
+	if ( empty( $forum_support_settings ) ) {
+		return;
+	}
 	?>
 	<ul class="forum-support-settings">
-		<li><input type="radio" name="_bpbbpst_forum_settings" id="bpbbpst_forum_settings_yes" value="1" <?php checked( 1, $support_feature );?>/> <?php _e( 'Leave users mark topics of this forum as support ones', 'buddy-bbpress-support-topic' ); ?></li>
-		<li><input type="radio" name="_bpbbpst_forum_settings" id="bpbbpst_forum_settings_only" value="2" <?php checked( 2, $support_feature );?>/> <?php _e( 'This forum is dedicated to support, all topics will be marked as support ones.', 'buddy-bbpress-support-topic' ); ?></li>
-		<li><input type="radio" name="_bpbbpst_forum_settings" id="bpbbpst_forum_settings_no" value="3" <?php checked( 3, $support_feature );?>/> <?php _e( 'This forum do not accept support topics', 'buddy-bbpress-support-topic' ); ?></li>
+
+		<?php foreach ( $forum_support_settings as $key_setting => $setting ) : ?>
+
+			<?php if ( empty( $key_setting ) || empty( $setting['value'] ) || empty( $setting['label'] ) ) : continue ; endif ;?>
+
+			<li>
+				<input type="radio" name="_bpbbpst_forum_settings" id="<?php echo esc_attr( $key_setting );?>" value="<?php echo esc_attr( $setting['value'] );?>" <?php checked( intval( $setting['value'] ), $support_feature );?>/>
+				<?php echo esc_html( $setting['label'] ); ?>
+			</li>
+
+		<?php endforeach ;?>
 	</ul>
 	<?php
 }

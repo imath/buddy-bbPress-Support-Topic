@@ -34,12 +34,14 @@ class BP_bbP_ST_Admin {
 	 * @access private
 	 *
 	 * @uses   bbp_is_deactivation() to prevent interfering with bbPress deactivation process
+	 * @uses   bbp_is_activation()  to prevent interfering with bbPress activation process
 	 * @uses   add_action() To add various actions
 	 * @uses   add_filter() To add various filters
+	 * @uses   bpbbpst_is_bbp_required_version_ok() to check if bbPress required version is ok
 	 */
 	private function setup_actions() {
 
-		if ( bbp_is_deactivation() ) {
+		if ( bbp_is_deactivation() || bbp_is_activation() ) {
 			return;
 		}
 
@@ -57,8 +59,10 @@ class BP_bbP_ST_Admin {
 		// forums metabox
 		add_action( 'bbp_forum_attributes_metabox',             array( $this, 'forum_meta_box_register' ),      10    );
 		add_action( 'bbp_forum_attributes_metabox_save',        array( $this, 'forum_meta_box_save' ),          10, 1 );
-		// filters a users query to only get forum moderators ( Keymasters+moderators )
+
+		// Action to edit users query to only get forum moderators ( Keymasters+moderators )
 		add_action( 'pre_get_users',                            array( $this, 'filter_user_query' ),            10, 1 );
+
 		// enqueues a js script to hide show recipients
 		add_action( 'load-post.php',                            array( $this, 'enqueue_forum_js'  )                   );
 		add_action( 'load-post-new.php',                        array( $this, 'enqueue_forum_js'  )                   );
@@ -94,9 +98,9 @@ class BP_bbP_ST_Admin {
 	 *
 	 * @since 2.0
 	 *
-	 * @uses   bbp_is_forum_category() to check if the forum is a category
-	 * @uses   add_meta_box() to add the metabox to forum edit screen
-	 * @uses   bbp_get_forum_post_type() to get forum post type
+	 * @uses    bpbbpst_get_plugin_version() to get plugin's version
+	 * @uses    bpbbpst_bbp_required_version() to get bbPress required version
+	 * @return  string HTML output
 	 */
 	public function admin_notices() {
 		?>
@@ -143,7 +147,7 @@ class BP_bbP_ST_Admin {
 	 * @uses  bpbbpst_get_forum_support_setting() to get forum support setting
 	 * @uses  bpbbpst_display_forum_setting_options() to list the available support settings
 	 * @uses  bpbbpst_checklist_moderators() to list the bbPress keymasters and moderators
-	 * @uses  do_action_ref_array() to let plugins or themes add some actions
+	 * @uses  do_action_ref_array() call 'bpbbpst_forum_support_options' to add your custom forum support settings
 	 */
 	public function forum_meta_box_display( $forum = false ) {
 		if ( empty( $forum->ID ) ) {
@@ -172,9 +176,10 @@ class BP_bbP_ST_Admin {
 	 * @since  2.0
 	 *
 	 * @param  integer $forum_id the forum id
+	 * @uses   bbp_is_forum_category() to check if forum is a category
 	 * @uses   update_post_meta() to save the forum support setting
 	 * @uses   delete_post_meta() to eventually delete a setting if needed
-	 * @uses   do_action() to let plugins or themes do stuff from this point
+	 * @uses   do_action() call 'bpbbpst_forum_settings_updated' to save your custom forum support settings
 	 * @return integer           the forum id
 	 */
 	public function forum_meta_box_save( $forum_id = 0 ) {
@@ -249,7 +254,6 @@ class BP_bbP_ST_Admin {
 	 * @param  object $query the user query arguments
 	 * @uses   bbp_get_keymaster_role() to get keymaster role
 	 * @uses   bbp_get_moderator_role() to get moderator role
-	 * @uses   WP_Meta_Query::get_sql() to rebuild the user meta query
 	 */
 	public function filter_user_query( $query = false ) {
 		global $wpdb, $blog_id;
@@ -335,7 +339,7 @@ class BP_bbP_ST_Admin {
 	 * @uses   wp_verify_nonce() for security reason
 	 * @uses   delete_post_meta() to eventually delete the support status
 	 * @uses   update_post_meta() to save the support status
-	 * @uses   do_action() to let plugins or themes add action from this point
+	 * @uses   do_action() call 'bpbbpst_topic_meta_box_save' to perform custom actions for the topic support
 	 * @return integer           the topic id
 	 */
 	public function topic_meta_box_save( $topic_id = 0, $forum_id = 0 ) {
@@ -610,6 +614,7 @@ class BP_bbP_ST_Admin {
 
 	/**
 	 * Extends bbPress right now Dashboard widget to display support statistics
+	 * bbPress Right now Dashboard widget seems to disappear in 2.6
 	 *
 	 * @since  2.0
 	 *
@@ -673,6 +678,16 @@ class BP_bbP_ST_Admin {
 		<?php
 	}
 
+	/**
+	 * Register custom elements in the at a glance Dashboard Widget
+	 * This is appearing in bbPress 2.6
+	 *
+	 * @since  2.0
+	 *
+	 * @param  array  $elements list of shortcut links
+	 * @param  array  $stats    bbPress stats
+	 * @return array           same elements with plugin's ones if needed
+	 */
 	public function dashboard_at_a_glance( $elements = array(), $stats = array() ) {
 		if ( empty( $elements ) || empty( $stats['topic_count'] ) ) {
 			return $elements;
@@ -743,7 +758,7 @@ class BP_bbP_ST_Admin {
 	 * @uses   get_option() to get db version
 	 * @uses   bpbbpst_get_plugin_version() to get plugin's version
 	 * @uses   update_option() to eventually update db version
-	 * @uses   do_action() to allow plugins or themes add action from this point
+	 * @uses   do_action() call 'bpbbpst_upgrade' to perform custom actions once the plugin has been upgraded
 	 */
 	public function welcome_screen_register() {
 
@@ -777,6 +792,7 @@ class BP_bbP_ST_Admin {
 	 *
 	 * @uses   bpbbpst_get_plugin_version() to get plugin's version
 	 * @uses   bpbbpst_get_plugin_url() to get plugin's url
+	 * @uses   bpbbpst_bbp_required_version() to get bbPress required version
 	 * @uses   esc_url() to sanitize urls
 	 * @uses   admin_url() to build the admin url of welcome screen
 	 * @uses   add_query_arg() to add arguments to the admin url
@@ -913,13 +929,16 @@ class BP_bbP_ST_Admin {
 	}
 
 	/**
-	 * Outputs some css rules if on welcome screen
+	 * Outputs some css rules if on welcome screen or on dashboard (at a glance widget)
 	 *
 	 * @since  2.0
 	 *
 	 * @uses   remove_submenu_page() to remove the page from dashoboard menu
 	 * @uses   bpbbpst_get_plugin_url() to get the plugin url
 	 * @uses   get_current_screen() to check current page is the welcome screen
+	 * @uses   bpbbpst_get_support_status() to get all available support status
+	 * @uses   sanitize_html_class() to sanitize the clases
+	 * @uses   sanitize_text_field() to sanitize the content
 	 * @return string css rules
 	 */
 	public function welcome_screen_css() {
@@ -972,15 +991,6 @@ class BP_bbP_ST_Admin {
 						left: 0;
 					}
 
-				body.dashboard_page_bpbbst-about .about-wrap .bpbbpst-code {
-					display:block;
-					background-color: #FFF;
-					font-size: 70%;
-					color:#000;
-					-webkit-box-shadow: 0 1px 3px rgba(0,0,0,.2);
-					box-shadow: 0 1px 3px rgba(0,0,0,.2);
-				}
-
 				/*]]>*/
 			</style>
 			<?php
@@ -1009,6 +1019,7 @@ class BP_bbP_ST_Admin {
 	 * Adds a custom link to the welcome screen in plugin's list for our row
 	 *
 	 * @since  2.0
+	 *
 	 * @param  array  $links the plugin links
 	 * @param  string $file  the plugin in row
 	 * @uses   plugin_basename() to get plugin's basename
@@ -1034,6 +1045,8 @@ class BP_bbP_ST_Admin {
 
 }
 
+endif; // class_exists check
+
 /**
  * Setup Buddy-bbPress Support Topic Admin
  *
@@ -1045,5 +1058,3 @@ class BP_bbP_ST_Admin {
 function bpbbpst_admin() {
 	bbpress()->extend->bpbbpst->admin = new BP_bbP_ST_Admin();
 }
-
-endif; // class_exists check
