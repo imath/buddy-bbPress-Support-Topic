@@ -944,6 +944,11 @@ class BP_bbP_ST_Admin {
 	 * @return string css rules
 	 */
 	public function welcome_screen_css() {
+		// Avoid a notice in network administration
+		if ( is_network_admin() ) {
+			return;
+		}
+
 		remove_submenu_page( 'index.php', 'bpbbst-about');
 
 		if (  $this->about_page == get_current_screen()->id ) {
