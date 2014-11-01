@@ -78,7 +78,8 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	 * @uses   add_query_arg() to add the querystring to filter the support topics
 	 * @uses   bbp_get_forum_permalink() to get the forum permalink
 	 * @uses   esc_attr() to sanitize attributes
-	 * @uses   bbp_forums_url() to display the link to forums archive
+	 * @uses   get_post_type_archive_link() to build the link to forum archives
+	 * @uses   bbp_get_forum_post_type() to get the forum post type
 	 * @return string html output
 	 */
 	public function widget( $args, $instance ) {
@@ -164,7 +165,7 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 			</ul>
 
 			<?php if ( ! is_bbpress() && ! empty( $instance['show_forum_link'] ) ) : ?>
-				<p><a href="<?php bbp_forums_url();?>" title="<?php _e( 'Go to forums' , 'buddy-bbpress-support-topic' );?>"><?php _e( 'Go to forums' , 'buddy-bbpress-support-topic' );?></a></p>
+				<p><a href="<?php echo get_post_type_archive_link( bbp_get_forum_post_type() );?>" title="<?php _e( 'Go to forums' , 'buddy-bbpress-support-topic' );?>"><?php _e( 'Go to forums' , 'buddy-bbpress-support-topic' );?></a></p>
 			<?php endif ; ?>
 
 			<?php echo $after_widget;
@@ -412,7 +413,7 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 	 * @uses   do_action() to let plugins or themes run some actions from this point
 	 * @uses   esc_html() to sanitize the button caption
 	 * @uses   bbp_get_forum_permalink() to build link to forum
-	 * @uses   trailingslashit() to be sure a slash is finishing the url
+	 * @uses   add_query_arg() to build the new topic url
 	 * @uses   wpautop() to automatically add paragraphs to text
 	 * @return string html output
 	 */
@@ -447,16 +448,16 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 	    }
 
 	    $button_caption = esc_html( $instance['bpbbpst_button'] );
-	    $forum_post_form_link = trailingslashit( bbp_get_forum_permalink( $instance['bpbbpst_forum_id'] ) );
+	    $forum_post_form_link = bbp_get_forum_permalink( $instance['bpbbpst_forum_id'] );
 
 	    if ( ! empty( $instance['bpbbpst_referer'] ) ) {
-	    	$forum_post_form_link .= "?bpbbpst-referer=1";
+	    	$forum_post_form_link = add_query_arg( 'bpbbpst-referer', '1', $forum_post_form_link );
 	    }
 
 	    $forum_post_form_link .= '#bbp_topic_title';
 
 
-	    $html_link = '<a href="'. $forum_post_form_link .'" title="'. $button_caption . '" class="button submit bpbbpst-btn">'. $button_caption. '</a>';
+	    $html_link = '<a href="'. esc_url( $forum_post_form_link ) .'" title="'. $button_caption . '" class="button submit bpbbpst-btn">'. $button_caption. '</a>';
 
 	    $a_link = apply_filters( 'bpbbpst_new_support_widget_button', $html_link, $forum_post_form_link, $button_caption );
 

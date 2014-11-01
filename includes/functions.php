@@ -636,7 +636,7 @@ function bpbbpst_change_topic_title( $title = '', $id = 0 ) {
 	 * get_the_title() is where is located the filter 'the_title', the one the plugin is
 	 * using to prefix topic title. The problem is that there's no context to this filter
 	 * so that we are sure get_the_title() is called to actually display the topic title just
-	 * just before the topic content.
+	 * before the topic content.
 	 *
 	 * get_the_title() or the_title() can be used in header, widgets, breadcrumbs, meta tags... So there will
 	 * allways be a place where the plugin shouldn't filter the title. If you're a plugin/theme developer
@@ -649,7 +649,7 @@ function bpbbpst_change_topic_title( $title = '', $id = 0 ) {
 	 *
 	 * remove_filter( 'bpbbpst_donot_change_topic_title', '__return_true' );
 	 *
-	 * If you want to completely get rid of it, just use the first line in the above exampe
+	 * If you want to completely get rid of it, just use the first line in the above example
 	 *
 	 * The prefix is only appended when on the topic single and edit bbPress templates. If on this template,
 	 * a sidebar widget displaying the recent topics for instance could have the prefix appended, but not on
