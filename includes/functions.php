@@ -806,8 +806,8 @@ function bpbbpst_array_checked( $current = array(), $tocheck = false , $echo = t
 		$current = explode( ',', $current );
 	}
 
-	if ( is_array( $current ) && in_array( $tocheck, $current ) ) {
-		$checked = checked(  $tocheck,  $tocheck, false );
+	if ( is_array( $current ) ) {
+		$checked = checked( true, in_array( $tocheck, $current ), false );
 	} else {
 		$checked = checked( $current, $tocheck, false );
 	}

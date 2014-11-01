@@ -134,6 +134,10 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 	 * @return string the topic title
 	 */
 	public function filter_topic_title( $topic_title = '', $topic_id = 0 ) {
+		// Avoid the prefix to be displayed in <title>
+		if ( ! did_action( 'bp_head' ) ) {
+			return $topic_title;
+		}
 
 		if ( bp_is_group_forum_topic() ) {
 			return bpbbpst_add_support_mention( $topic_id, false ) . $topic_title ;
@@ -206,7 +210,7 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 			$recipients = array();
 		}
 
-		$group_forum_moderators = $this->group_list_moderators( $group_id, $style );
+		$group_forum_moderators = $this->group_list_moderators( $group_id );
 		?>
 		<div class="bpbbpst-mailing-list" <?php echo $style;?>>
 			<h4><?php _e( 'Who should receive an email notification when a new support topic is posted ?', 'buddy-bbpress-support-topic' );?></h4>
@@ -315,7 +319,7 @@ class BuddyPress_Support_Topic extends BP_Group_Extension {
 
 				$recipients       = $group_moderators = array();
 				$recipients       = groups_get_groupmeta( $group->id, '_bpbbpst_support_bp_recipients' );
-				$group_moderators = $this->group_list_moderators( $group->id, $style );
+				$group_moderators = $this->group_list_moderators( $group->id );
 
 				foreach ( $group_moderators as $moderator ) : ?>
 					<li>
