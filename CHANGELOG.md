@@ -8,7 +8,7 @@ Versions
 + No more support for bbPress 1.x
 + More control on the support feature which can now be managed from the parent forum
 + Email notifications for moderators in case of a new support topic
-+ New BuddyPress admin group tab (requires BuddyPress 2.0+) to manage the support feature for the group forum (bbPress 2.5+)
++ New BuddyPress manage group tab (requires BuddyPress 2.0+) to manage the support feature for the group forum (bbPress 2.5+)
 + Topics support status bulk edit
 + a WordPress filter to add new support status
 + Now available for each blog of the network
