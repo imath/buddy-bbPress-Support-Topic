@@ -3,9 +3,9 @@
 Plugin Name: Buddy-bbPress Support Topic
 Plugin URI: http://imathi.eu/tag/buddy-bbpress-support-topic/
 Description: Adds a support feature to your bbPress powered forums
-Version: 2.0
+Version: 2.0.1
 Requires at least: 4.0
-Tested up to: 4.0
+Tested up to: 4.1
 License: GNU/GPL 2
 Author: imath
 Author URI: http://imathi.eu/
@@ -61,7 +61,7 @@ class BP_bbP_Support_Topic {
 	private function setup_globals() {
 		$this->globals = new stdClass();
 
-		$this->globals->version = '2.0';
+		$this->globals->version = '2.0.1';
 
 		$this->globals->file       = __FILE__ ;
 		$this->globals->basename   = apply_filters( 'bpbbpst_plugin_basenname', plugin_basename( $this->globals->file ) );
@@ -236,6 +236,9 @@ class BP_bbP_Support_Topic {
 
 		// in case a forum is set as a support only one strip the not a support question status
 		add_filter( 'bpbbpst_get_support_status', 'bpbbpst_neutralize_not_support', 1, 1 );
+
+		// For Bpbbpst_Support_New_Support widget usage (forces the user to subscribe to replies)
+		add_filter( 'bbp_get_form_topic_subscribed', 'bpbbpst_referer_topic_subscribed', 10, 2 );
 	}
 
 	/**

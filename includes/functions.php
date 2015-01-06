@@ -1297,3 +1297,32 @@ function bpbbpst_display_referer_to_moderators() {
 		echo '<pre>' . __( 'Referer', 'buddy-bbpress-support-topic' ) . ' :<br/>'. esc_url( $meta ).'</pre>';
 	}
 }
+
+/**
+ * Activate the "Subscribe to replies" checkbox if the user asked for support using the new support widget
+ *
+ * @since  2.0.1
+ *
+ * @uses   bbp_get_forum_id() to get the parent forum id
+ * @uses   bpbbpst_get_forum_support_setting() to get the parent forum setting for support feature
+ * @return string html output
+ */
+function bpbbpst_referer_topic_subscribed( $output = '', $checked ) {
+	if ( ! empty( $checked ) ) {
+		return $output;
+	}
+
+	$forum_id = bbp_get_forum_id();
+
+	if ( empty( $forum_id ) ) {
+		return $output;
+	}
+
+	$support_type = bpbbpst_get_forum_support_setting( $forum_id );
+
+	if ( ! empty( $support_type ) && $support_type != 3 && ! empty( $_REQUEST['bpbbpst-referer'] ) ) {
+		$checked = checked( true, true, false );
+	}
+
+	return apply_filters( 'bpbbpst_referer_filter_topic_subscribed', $checked, $forum_id, $support_type );
+}
