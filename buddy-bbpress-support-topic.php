@@ -129,7 +129,7 @@ class BP_bbP_Support_Topic {
 		add_action( 'bbp_init', array( $this, 'load_textdomain' ), 7 );
 
 		// Loads the admin
-		if( is_admin() ) {
+		if( is_admin() && ! is_network_admin() ) {
 			add_action( 'init', 'bpbbpst_admin' );
 		}
 
