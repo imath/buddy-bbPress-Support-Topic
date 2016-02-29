@@ -161,6 +161,58 @@ function bpbbpst_get_forum_support_setting( $forum_id = 0 ) {
 }
 
 /**
+ * Get the New Topic form intro for support only forums
+ * 
+ * @since 2.1.0
+ * 
+ * @param  integer $forum_id the forum id
+ * @return string the support forum intro 
+ */ 
+function bpbbpst_get_forum_support_topic_intro( $forum_id = 0 ) {
+	if ( empty( $forum_id ) ) {
+		$forum_id = bbp_get_forum_id();
+
+		if ( ! $forum_id ) {
+			return '';
+		}
+	}
+
+	$support_intro = get_post_meta( $forum_id, '_bpbbpst_support_topic_intro', true );
+
+	if ( ! empty( $support_intro ) ) {
+		$support_intro = wp_kses( $support_intro, wp_kses_allowed_html( 'forum' ) );
+	}
+
+	return apply_filters( 'bpbbpst_get_forum_support_topic_intro', $support_intro );
+}
+
+/**
+ * Get the New Topic form intro for support only forums
+ * 
+ * @since 2.1.0
+ * 
+ * @param  integer $forum_id the forum id
+ * @return string the support forum intro 
+ */ 
+function bpbbpst_get_forum_support_topic_template( $forum_id = 0 ) {
+	if ( empty( $forum_id ) ) {
+		$forum_id = bbp_get_forum_id();
+
+		if ( ! $forum_id ) {
+			return '';
+		}
+	}
+
+	$support_guide_tpl = get_post_meta( $forum_id, '_bpbbpst_support_topic_tpl', true );
+
+	if ( ! empty( $support_guide_tpl ) ) {
+		$support_guide_tpl = esc_html( $support_guide_tpl );
+	}
+
+	return apply_filters( 'bpbbpst_get_forum_support_topic_template', $support_guide_tpl );
+}
+
+/**
  * Outputs a field to specify the topic is a support one
  *
  * First checks for parent forum support setting
@@ -1301,7 +1353,7 @@ function bpbbpst_display_referer_to_moderators() {
 /**
  * Activate the "Subscribe to replies" checkbox if the user asked for support using the new support widget
  *
- * @since  2.0.1
+ * @since  2.1.0
  *
  * @uses   bbp_get_forum_id() to get the parent forum id
  * @uses   bpbbpst_get_forum_support_setting() to get the parent forum setting for support feature
@@ -1325,4 +1377,56 @@ function bpbbpst_referer_topic_subscribed( $output = '', $checked ) {
 	}
 
 	return apply_filters( 'bpbbpst_referer_filter_topic_subscribed', $checked, $forum_id, $support_type );
+}
+
+/**
+ * Displays template notices when needed
+ *
+ * @since  2.1.0
+ * 
+ * @return string html output
+ */
+function bpbbpst_template_notices() {
+	$notices = array();
+
+	if ( bbp_is_single_forum() && ! bbp_is_topic_edit() ) {
+		$forum_id = bbp_get_forum_id();
+
+		if ( 2 === (int) bpbbpst_get_forum_support_setting( $forum_id ) ) {
+			$intro = bpbbpst_get_forum_support_topic_intro( $forum_id );
+
+			if ( ! empty( $intro ) ) {
+				$notices[] = sprintf( '<div class="bbp-template-notice topic-intro"><p>%s</p></div>', $intro );
+			}
+		}
+	}
+
+	if ( ! empty( $notices ) ) {
+		echo join( "\n", $notices );
+	}
+}
+
+/**
+ * Displays a topic template inside the new topic editor if needed
+ *
+ * @since  2.1.0
+ * 
+ * @return string html output
+ */
+function bpbbpst_support_topic_template( $content = '' ) {
+	if ( ! empty( $content ) || ! bbp_is_single_forum() || bbp_is_topic_edit() ) {
+		return $content;
+	}
+
+	$forum_id = bbp_get_forum_id();
+
+	if ( 2 === (int) bpbbpst_get_forum_support_setting( $forum_id ) ) {
+		$template = bpbbpst_get_forum_support_topic_template( $forum_id );
+
+		if ( ! empty( $template ) ) {
+			$content = $template;
+		}
+	}
+
+	return apply_filters( 'bpbbpst_support_topic_template', $content, $forum_id );
 }

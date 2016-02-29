@@ -156,18 +156,38 @@ class BP_bbP_ST_Admin {
 
 		$support_feature = bpbbpst_get_forum_support_setting( $forum->ID );
 
-		$style = ( $support_feature == 3 ) ? 'style="display:none"' : false;
+		$mailing_list_style = '';
+		if ( 3 === (int) $support_feature ) {
+			$mailing_list_style = 'style="display:none"';
+		}
+
+		$support_only_style = 'style="display:none"';
+
+		if ( 2 === (int) $support_feature ) {
+			$support_only_style = '';
+		}
 
 		bpbbpst_display_forum_setting_options( $support_feature );
 		?>
-		<div class="bpbbpst-mailing-list" <?php echo $style;?>>
+		<div class="bpbbpst-mailing-list" <?php echo $mailing_list_style;?>>
 			<h4><?php _e( 'Who should receive an email notification when a new support topic is posted ?', 'buddy-bbpress-support-topic' );?></h4>
 
 			<?php bpbbpst_checklist_moderators( $forum->ID );?>
 		</div>
+
+		<div class="bpbbpst-support-guides" <?php echo $support_only_style;?>>
+			<h4><?php _e( 'New Topic form extras', 'buddy-bbpress-support-topic' );?></h4>
+			<label class="screen-reader-text" for="support-topic-intro"><?php esc_html_e( 'New Topic Guide', 'buddy-bbpress-support-topic' ); ?></label>
+			<textarea rows="3" cols="40" name="_bpbbpst_support_topic[intro]" id="support-topic-intro" style="width:100%"><?php echo bpbbpst_get_forum_support_topic_intro( $forum->ID );?></textarea>
+			<p class="description"><?php printf( esc_html__( 'Use this field to insert some instructions above the new topic form. Allowed tags are: %s', 'buddy-bbpress-support-topic' ), join( ', ', array_keys( (array) wp_kses_allowed_html( 'forum' ) ) ) ); ?></p>
+
+			<label class="screen-reader-text" for="support-topic-tpl"><?php esc_html_e( 'New Topic Template', 'buddy-bbpress-support-topic' ); ?></label>
+			<textarea rows="3" cols="40" name="_bpbbpst_support_topic[tpl]" id="support-topic-tpl" style="width:100%"><?php echo bpbbpst_get_forum_support_topic_template( $forum->ID );?></textarea>
+			<p class="description"><?php esc_html_e( 'The text added within this field will be used as a template for the content of new topics.', 'buddy-bbpress-support-topic' ); ?></p>
+		</div>
 		<?php
 
-		do_action_ref_array( 'bpbbpst_forum_support_options', array( $forum->ID, $style ) );
+		do_action_ref_array( 'bpbbpst_forum_support_options', array( $forum->ID, $mailing_list_style, $support_only_style ) );
 	}
 
 	/**
@@ -194,8 +214,10 @@ class BP_bbP_ST_Admin {
 		if ( ! empty( $support_feature ) && ! $is_forum_category ) {
 			update_post_meta( $forum_id, '_bpbbpst_forum_settings', $support_feature );
 
-			if ( $support_feature == 3 ) {
+			if ( 3 === (int) $support_feature ) {
 				delete_post_meta( $forum_id, '_bpbbpst_support_recipients' );
+				delete_post_meta( $forum_id, '_bpbbpst_support_topic_intro' );
+				delete_post_meta( $forum_id, '_bpbbpst_support_topic_tpl' );
 			} else {
 				$recipients = ! empty( $_POST['_bpbbpst_support_recipients'] ) ? array_map( 'intval', $_POST['_bpbbpst_support_recipients'] ) : false ;
 
@@ -205,6 +227,22 @@ class BP_bbP_ST_Admin {
 					delete_post_meta( $forum_id, '_bpbbpst_support_recipients' );
 				}
 
+				if ( 2 === (int) $support_feature ) {
+					if ( ! empty( $_POST['_bpbbpst_support_topic']['intro'] ) ) {
+						update_post_meta( $forum_id, '_bpbbpst_support_topic_intro', wp_unslash( $_POST['_bpbbpst_support_topic']['intro'] ) );
+					} else {
+						delete_post_meta( $forum_id, '_bpbbpst_support_topic_intro' );
+					}
+
+					if ( ! empty( $_POST['_bpbbpst_support_topic']['tpl'] ) ) {
+						update_post_meta( $forum_id, '_bpbbpst_support_topic_tpl', wp_unslash( $_POST['_bpbbpst_support_topic']['tpl'] ) );
+					} else {
+						delete_post_meta( $forum_id, '_bpbbpst_support_topic_tpl' );
+					}
+				} else if ( ! empty( $_POST['_bpbbpst_support_topic'] ) ) {
+					delete_post_meta( $forum_id, '_bpbbpst_support_topic_intro' );
+					delete_post_meta( $forum_id, '_bpbbpst_support_topic_tpl' );
+				}
 			}
 
 			do_action( 'bpbbpst_forum_settings_updated', $forum_id, $support_feature );
@@ -216,6 +254,8 @@ class BP_bbP_ST_Admin {
 			if ( ! empty( $support_feature ) ) {
 				delete_post_meta( $forum_id, '_bpbbpst_forum_settings' );
 				delete_post_meta( $forum_id, '_bpbbpst_support_recipients' );
+				delete_post_meta( $forum_id, '_bpbbpst_support_topic_intro' );
+				delete_post_meta( $forum_id, '_bpbbpst_support_topic_tpl' );
 			}
 		}
 
