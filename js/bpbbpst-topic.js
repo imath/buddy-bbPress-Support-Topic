@@ -1,46 +1,50 @@
-(function ($) {
+( function ( $ ) {
 
-	$( '.support-select-status' ).on( 'change', function(){
-		var indiceChose   = $( this )[0].selectedIndex;
-		var bpbbpst_nonce = $( this ).parent().find( '#_wpnonce_bpbbpst_support_status' ).val();
+	$( 'body' ).on( 'change', '.support-select-status', function( event ) {
+		var self = event.target;
+		var data = {
+			'topic_id'                       : $( self ).data( 'topicsupport' ) || 0,
+			'support_status'                 : $( self ).val(),
+			'selectedIndex'                  : self.selectedIndex || 0,
+			'_wpnonce_bpbbpst_support_status': $( self ).parent().find( '#_wpnonce_bpbbpst_support_status' ).val() || '',
+		};
 
-		$( '.support-select-status' ).each( function() {
-			$( this ).prop( 'disabled', true );
+		$( '.support-select-status' ).each( function( i, select ) {
+			$( select ).prop( 'disabled', true );
 		} );
 
-		$( '.support-select-box' ).each( function() {
-			$( this ).append('<a class="loading support-loader"> '+ bpbbpstbbp_vars.loading + '</a>');
+		$( '.support-select-box' ).each( function( i, span ) {
+			$( span ).append( '<a class="loading support-loader">' + bpbbpstbbp_vars.loading + '</a>' );
 		} );
 
-		topic_id = $( this ).attr('data-topicsupport');
-		support_status = $( this ).val();
+		// Trigger an event to let Plugins do something before the Ajax request
+		$( self ).trigger( 'bpbbpstBeforeStatusChange', data );
 
-		$.post( ajaxurl, {
-			action:                            'bbp_change_support_status',
-			'topic_id':                        topic_id,
-			'support_status':                  support_status,
-			'_wpnonce_bpbbpst_support_status': bpbbpst_nonce
-		},
-		function(response) {
-
-			if( response != "-1" ) {
-
-				$( '.support-loader' ).each( function() {
-					$( this ).remove();
+		// Ajax Set the support status
+		$.post( ajaxurl, $.extend( data, { 'action': 'bbp_change_support_status' } ), function( response ) {
+			if ( response !== "-1" ) {
+				$( '.support-loader' ).each( function( i, a ) {
+					$( a ).remove();
 				} );
-				$( '.support-select-status' ).each( function() {
-					$( this ).prop( 'disabled', false );
 
-					if( indiceChose != $(this)[0].selectedIndex ) {
-						$( this )[0].selectedIndex = indiceChose;
+				$( '.support-select-status' ).each( function( i, select ) {
+					$( select ).prop( 'disabled', false );
+
+					if ( data.selectedIndex !== self.selectedIndex ) {
+						self.selectedIndex = data.selectedIndex;
 					}
-				});
+				} );
+
+				// Trigger an event to inform Plugins the Ajax request succeeded
+				$( self ).trigger( 'bpbbpstStatusChangeSuccess', data );
 
 			} else {
+				// Trigger an event to inform Plugins the Ajax request failed
+				$( self ).trigger( 'bpbbpstStatusChangeError', data );
+
 				alert( bpbbpstbbp_vars.securitycheck );
 			}
-
 		} );
 	} );
 
-}(jQuery));
+}( jQuery ) );
