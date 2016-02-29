@@ -22,7 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @uses   WP_Widget
  */
 class Bpbbpst_Support_Stats extends WP_Widget {
-
 	/**
 	 * Buddy-bbPress Support Topic statistic Widget
 	 *
@@ -46,7 +45,6 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_style' ), 10 );
 	}
 
-
 	/**
 	 * Registers the widget
 	 *
@@ -57,7 +55,6 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	public static function register_widget() {
 		register_widget( 'Bpbbpst_Support_Stats' );
 	}
-
 
 	/**
 	 * Displays the output, the statistics
@@ -165,7 +162,7 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 		} else {
 			printf( '<p>%s</p>',
 				esc_html__( 'No statisitcs available.' , 'buddy-bbpress-support-topic' )
-				);
+			);
 		}
 
 		if ( ! is_bbpress() && ! empty( $instance['show_forum_link'] ) ) {
@@ -178,7 +175,6 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 
 		echo $args['after_widget'];
 	}
-
 
 	/**
 	 * Update the statistics widget options (title)
@@ -202,7 +198,6 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 
 		return $instance;
 	}
-
 
 	/**
 	 * Output the statistics widget options form
@@ -238,7 +233,6 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 			<p class="description"><?php _e( 'When not on a forum page, display a link to it', 'buddy-bbpress-support-topic' )?></p>
 		<?php
 	}
-
 
 	/**
 	 * Adds a meta_query to the topics query
@@ -276,7 +270,6 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 		return $args;
 	}
 
-
 	/**
 	 * Adds the support status at the end of the breadcrumb
 	 *
@@ -307,7 +300,6 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 			$sep = $args['sep_before'] . $sep . $args['sep_after'];
 		}
 
-
 		$pad_sep = $args['pad_sep'];
 
 		// Pad the separator
@@ -321,7 +313,6 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 
 		return $trail;
 	}
-
 
 	/**
 	 * Adds the support status at the end of the querystring
@@ -346,7 +337,6 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 		return $pagination;
 	}
 
-
 	/**
 	 * Enqueue some style for the widget
 	 *
@@ -359,9 +349,7 @@ class Bpbbpst_Support_Stats extends WP_Widget {
 	public function enqueue_style() {
 		wp_enqueue_style( 'bpbbpst-bbpress-widget-css', bpbbpst_get_plugin_url( 'css' ). 'bpbbpst-bbpress-widget.css', false, bpbbpst_get_plugin_version() );
 	}
-
 }
-
 
 /**
  * Buddy-bbPress Support Topic new Support Topic widget
@@ -476,7 +464,6 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 		echo $args['after_widget'];
 	}
 
-
 	/**
 	 * Update the new support topic widget options (title)
 	 *
@@ -506,7 +493,6 @@ class Bpbbpst_Support_New_Support extends WP_Widget {
 
 		return $instance;
 	}
-
 
 	/**
 	 * Output the new support topic widget options form
