@@ -162,12 +162,12 @@ function bpbbpst_get_forum_support_setting( $forum_id = 0 ) {
 
 /**
  * Get the New Topic form intro for support only forums
- * 
+ *
  * @since 2.1.0
- * 
+ *
  * @param  integer $forum_id the forum id
- * @return string the support forum intro 
- */ 
+ * @return string the support forum intro
+ */
 function bpbbpst_get_forum_support_topic_intro( $forum_id = 0 ) {
 	if ( empty( $forum_id ) ) {
 		$forum_id = bbp_get_forum_id();
@@ -188,12 +188,12 @@ function bpbbpst_get_forum_support_topic_intro( $forum_id = 0 ) {
 
 /**
  * Get the New Topic form intro for support only forums
- * 
+ *
  * @since 2.1.0
- * 
+ *
  * @param  integer $forum_id the forum id
- * @return string the support forum intro 
- */ 
+ * @return string the support forum intro
+ */
 function bpbbpst_get_forum_support_topic_template( $forum_id = 0 ) {
 	if ( empty( $forum_id ) ) {
 		$forum_id = bbp_get_forum_id();
@@ -1383,7 +1383,7 @@ function bpbbpst_referer_topic_subscribed( $output = '', $checked ) {
  * Displays template notices when needed
  *
  * @since  2.1.0
- * 
+ *
  * @return string html output
  */
 function bpbbpst_template_notices() {
@@ -1396,7 +1396,7 @@ function bpbbpst_template_notices() {
 			$intro = bpbbpst_get_forum_support_topic_intro( $forum_id );
 
 			if ( ! empty( $intro ) ) {
-				$notices[] = sprintf( '<div class="bbp-template-notice topic-intro"><p>%s</p></div>', $intro );
+				$notices[] = sprintf( '<div class="bbp-template-notice topic-intro"><p>%s</p></div>', nl2br( $intro ) );
 			}
 		}
 	}
@@ -1410,7 +1410,7 @@ function bpbbpst_template_notices() {
  * Displays a topic template inside the new topic editor if needed
  *
  * @since  2.1.0
- * 
+ *
  * @return string html output
  */
 function bpbbpst_support_topic_template( $content = '' ) {
@@ -1429,4 +1429,72 @@ function bpbbpst_support_topic_template( $content = '' ) {
 	}
 
 	return apply_filters( 'bpbbpst_support_topic_template', $content, $forum_id );
+}
+
+/**
+ * Displays a checkbox on the Reply form to mark to support topic as resolved
+ *
+ * @since  2.1.0
+ *
+ * @return string html output
+ */
+function bpbbpst_after_reply_form_subscription() {
+	$topic_id = bbp_get_topic_id();
+	if ( empty( $topic_id ) ) {
+		return;
+	}
+
+	$forum_id = bbp_get_forum_id();
+	if ( empty( $forum_id ) ) {
+		$forum_id = get_post_field( 'post_parent', $topic_id );
+	}
+
+	// Not a support only forum, do not output
+	if ( 2 !== (int) bpbbpst_get_forum_support_setting( $forum_id ) ) {
+		return;
+	}
+
+	// Topic resolved, do not output
+	if ( 2 === (int) get_post_meta( $topic_id, '_bpbbpst_support_topic', true ) ) {
+		return;
+	}
+
+	// Output the Checkbox
+	?>
+	<input name="_bpbbpst_support_topic_cb" id="bpbbpst_support_topic_cb" type="checkbox" value="1"/>
+	<label for="bpbbpst_support_topic_cb"><?php esc_html_e( 'Mark this support topic as resolved', 'buddy-bbpress-support-topic' ); ?></label>
+	<?php
+}
+
+/**
+ * Mark the support topic as resolved if a reply did resolve it.
+ *
+ * @since  2.1.0
+ *
+ * @param integer $reply_id The just instered reply ID
+ */
+function bpbbpst_reply_save_support_type( $reply_id = 0 ) {
+	// Check we have required data
+	if ( empty( $_POST['_bpbbpst_support_topic_cb'] ) || empty( $reply_id ) ) {
+		return;
+	}
+
+	$reply = bbp_get_reply( $reply_id );
+
+	// Reply is awaiting moderation, do nothing
+	if ( bbp_get_pending_status_id() === $reply->post_status ) {
+		return;
+	}
+
+	$topic_id = $reply->post_parent;
+
+	// Post parent is not set, try to use post meta as fallback
+	if ( ! $topic_id ) {
+		$topic_id = bbp_get_reply_topic_id( $reply_id );
+	}
+
+	// Finally mark the support topic as resolved
+	if ( ! empty( $topic_id ) ) {
+		update_post_meta( $topic_id, '_bpbbpst_support_topic', 2 );
+	}
 }

@@ -149,6 +149,12 @@ class BP_bbP_Support_Topic {
 		// Eventually display some feedback to the user
 		add_action( 'bbp_template_notices',                       'bpbbpst_template_notices',              10    );
 
+		// Add a checkbox to mark the topic as resolved
+		add_action( 'bbp_theme_after_reply_form_subscription',    'bpbbpst_after_reply_form_subscription', 10    );
+
+		// Maybe save the Support status when a reply to a support topic is posted
+		add_action( 'bbp_new_reply_post_extras',                  'bpbbpst_reply_save_support_type',       10, 1 );
+
 		// sends a notification in case of new support topic for the forum that enabled support feature
 		add_action( 'bbp_new_topic',                              'bpbbpst_new_support_topic_notify',      10, 4 );
 
