@@ -2,9 +2,9 @@
 Contributors: imath
 Donate link: http://imathi.eu/donations/
 Tags: BuddyPress, bbPress, support, topic
-Requires at least: 4.0
-Tested up to: 4.0
-Stable tag: 2.0
+Requires at least: 4.4
+Tested up to: 4.4.2
+Stable tag: 2.1.0
 License: GPLv2
 
 bbPress plugin to manage your support requests.
@@ -65,6 +65,11 @@ Please add a comment <a href="http://imathi.eu/tag/buddy-bbpress-support-topic/"
 
 == Changelog ==
 
+= 2.1 =
+* Guidelines & support topic templates for support only forums
+* A new checkbox to mark topic as resolved directly when replying to a topic of a support only forum
+* minor bug fixes
+
 = 2.0 =
 * No more support for bbPress 1.x
 * More control on the support feature which can now be managed from the parent forum
@@ -91,6 +96,9 @@ Please add a comment <a href="http://imathi.eu/tag/buddy-bbpress-support-topic/"
 * Plugin's first appearance in WordPress repo
 
 == Upgrade Notice ==
+
+= 2.1 =
+Requires bbPress 2.5. Make sure to back up your database before upgrading the plugin.
 
 = 2.0 =
 Requires bbPress 2.5. Make sure to back up your database before upgrading the plugin.

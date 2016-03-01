@@ -3,9 +3,9 @@
 Plugin Name: Buddy-bbPress Support Topic
 Plugin URI: http://imathi.eu/tag/buddy-bbpress-support-topic/
 Description: Adds a support feature to your bbPress powered forums
-Version: 2.0
-Requires at least: 4.0
-Tested up to: 4.0
+Version: 2.1.0
+Requires at least: 4.4
+Tested up to: 4.4.2
 License: GNU/GPL 2
 Author: imath
 Author URI: http://imathi.eu/
@@ -61,7 +61,7 @@ class BP_bbP_Support_Topic {
 	private function setup_globals() {
 		$this->globals = new stdClass();
 
-		$this->globals->version = '2.0';
+		$this->globals->version = '2.1.0';
 
 		$this->globals->file       = __FILE__ ;
 		$this->globals->basename   = apply_filters( 'bpbbpst_plugin_basenname', plugin_basename( $this->globals->file ) );
@@ -145,6 +145,15 @@ class BP_bbP_Support_Topic {
 
 		// setting the support type on front end new topic form submission
 		add_action( 'bbp_new_topic_post_extras',                  'bpbbpst_save_support_type',             10, 1 );
+
+		// Eventually display some feedback to the user
+		add_action( 'bbp_template_notices',                       'bpbbpst_template_notices',              10    );
+
+		// Add a checkbox to mark the topic as resolved
+		add_action( 'bbp_theme_after_reply_form_subscription',    'bpbbpst_after_reply_form_subscription', 10    );
+
+		// Maybe save the Support status when a reply to a support topic is posted
+		add_action( 'bbp_new_reply_post_extras',                  'bpbbpst_reply_save_support_type',       10, 1 );
 
 		// sends a notification in case of new support topic for the forum that enabled support feature
 		add_action( 'bbp_new_topic',                              'bpbbpst_new_support_topic_notify',      10, 4 );
@@ -236,6 +245,12 @@ class BP_bbP_Support_Topic {
 
 		// in case a forum is set as a support only one strip the not a support question status
 		add_filter( 'bpbbpst_get_support_status', 'bpbbpst_neutralize_not_support', 1, 1 );
+
+		// For Bpbbpst_Support_New_Support widget usage (forces the user to subscribe to replies)
+		add_filter( 'bbp_get_form_topic_subscribed', 'bpbbpst_referer_topic_subscribed', 10, 2 );
+
+		// Use a specific topic template for support only forums
+		add_filter( 'bbp_get_form_topic_content', 'bpbbpst_support_topic_template', 100, 1 );
 	}
 
 	/**
