@@ -1,6 +1,12 @@
 Versions
 ========
 
+2.1
+---
+
++ Guidelines & support topic templates for support only forums
++ A new checkbox to mark topic as resolved directly when replying to a topic of a support only forum
++ minor bug fixes
 
 2.0
 ---

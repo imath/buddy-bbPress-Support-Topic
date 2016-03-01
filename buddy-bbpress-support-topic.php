@@ -4,8 +4,8 @@ Plugin Name: Buddy-bbPress Support Topic
 Plugin URI: http://imathi.eu/tag/buddy-bbpress-support-topic/
 Description: Adds a support feature to your bbPress powered forums
 Version: 2.1.0
-Requires at least: 4.0
-Tested up to: 4.4
+Requires at least: 4.4
+Tested up to: 4.4.2
 License: GNU/GPL 2
 Author: imath
 Author URI: http://imathi.eu/
