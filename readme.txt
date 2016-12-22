@@ -4,7 +4,7 @@ Donate link: http://imathi.eu/donations/
 Tags: BuddyPress, bbPress, support, topic
 Requires at least: 4.4
 Tested up to: 4.7
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 License: GPLv2
 
 bbPress plugin to manage your support requests.
@@ -65,7 +65,7 @@ Please add a comment <a href="http://imathi.eu/tag/buddy-bbpress-support-topic/"
 
 == Changelog ==
 
-= 2.1.1 =
+= 2.1.2 =
 * Solves a bug with WP 4.7
 
 = 2.1 =

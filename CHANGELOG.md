@@ -1,7 +1,7 @@
 Versions
 ========
 
-2.1.1
+2.1.2
 ---
 
 + Solves a bug with WP 4.7
