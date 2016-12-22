@@ -1,14 +1,14 @@
 <?php
 /*
 Plugin Name: Buddy-bbPress Support Topic
-Plugin URI: http://imathi.eu/tag/buddy-bbpress-support-topic/
+Plugin URI: https://sadler-jerome.fr/tag/buddy-bbpress-support-topic/
 Description: Adds a support feature to your bbPress powered forums
-Version: 2.1.0
+Version: 2.1.1
 Requires at least: 4.4
-Tested up to: 4.4.2
+Tested up to: 4.7
 License: GNU/GPL 2
-Author: imath
-Author URI: http://imathi.eu/
+Author: G3ronim0
+Author URI: https://sadler-jerome.fr
 Text Domain: buddy-bbpress-support-topic
 Domain Path: /languages/
 */
@@ -61,7 +61,7 @@ class BP_bbP_Support_Topic {
 	private function setup_globals() {
 		$this->globals = new stdClass();
 
-		$this->globals->version = '2.1.0';
+		$this->globals->version = '2.1.1';
 
 		$this->globals->file       = __FILE__ ;
 		$this->globals->basename   = apply_filters( 'bpbbpst_plugin_basenname', plugin_basename( $this->globals->file ) );
@@ -138,7 +138,7 @@ class BP_bbP_Support_Topic {
 		}
 
 		// Defines support status, doing so in globals avoids strings in it to be translated
-		add_action( 'bbp_init',                                   array( $this,  'setup_status' ),          9    );
+		add_action( 'init',                                   array( $this,  'setup_status' )		          	 	   );
 
 		// Adding the support control to the topic new/edit form
 		add_action( 'bbp_theme_before_topic_form_submit_wrapper', 'bpbbpst_maybe_output_support_field'           );
