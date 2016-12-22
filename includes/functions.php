@@ -1459,6 +1459,10 @@ function bpbbpst_after_reply_form_subscription() {
 		return;
 	}
 
+	if ( ! current_user_can( 'edit_topic', $topic_id ) ) {
+		return;
+	}
+
 	// Output the Checkbox
 	?>
 	<input name="_bpbbpst_support_topic_cb" id="bpbbpst_support_topic_cb" type="checkbox" value="1"/>
