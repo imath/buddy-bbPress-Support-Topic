@@ -1,10 +1,10 @@
 === Buddy-bbPress Support Topic ===
-Contributors: imath
+Contributors: G3ronim0, imath
 Donate link: http://imathi.eu/donations/
 Tags: BuddyPress, bbPress, support, topic
 Requires at least: 4.4
-Tested up to: 4.4.2
-Stable tag: 2.1.0
+Tested up to: 4.7
+Stable tag: 2.1.1
 License: GPLv2
 
 bbPress plugin to manage your support requests.
@@ -64,6 +64,9 @@ Please add a comment <a href="http://imathi.eu/tag/buddy-bbpress-support-topic/"
 5. New widget
 
 == Changelog ==
+
+= 2.1.1 =
+* Solves a bug with WP 4.7
 
 = 2.1 =
 * Guidelines & support topic templates for support only forums

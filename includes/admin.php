@@ -791,7 +791,7 @@ class BP_bbP_ST_Admin {
 			return;
 		}
 
-	   wp_safe_redirect( add_query_arg( array( 'page' => 'bpbbst-about' ), admin_url( 'index.php' ) ) );
+		 wp_safe_redirect( add_query_arg( array( 'page' => 'bpbbst-about' ), admin_url( 'index.php' ) ) );
 	}
 
 	/**
@@ -920,7 +920,8 @@ class BP_bbP_ST_Admin {
 
 			<p class="wp-credits-list">
 				<a href="https://profiles.wordpress.org/danieliser">danieliser</a>,
-				<a href="https://profiles.wordpress.org/imath">imath</a>.
+				<a href="https://profiles.wordpress.org/imath">imath</a>,
+				<a href="https://profiles.wordpress.org/g3ronim0/">G3ronim0</a>.
 			</p>
 		<?php
 	}
