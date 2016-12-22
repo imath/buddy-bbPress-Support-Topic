@@ -3,6 +3,10 @@ Versions
 
 2.1.2
 ---
++ Prevent users not having the rights to mark the topic as resolved
+
+2.1.1
+---
 
 + Solves a bug with WP 4.7
 
