@@ -1,10 +1,10 @@
 === Buddy-bbPress Support Topic ===
 Contributors: G3ronim0, imath
-Donate link: http://imathi.eu/donations/
+Donate link: https://www.paypal.me/JeromeSadler
 Tags: BuddyPress, bbPress, support, topic
 Requires at least: 4.4
-Tested up to: 4.7
-Stable tag: 2.1.2
+Tested up to: 4.7.2
+Stable tag: 2.1.3
 License: GPLv2
 
 bbPress plugin to manage your support requests.
