@@ -3,7 +3,7 @@
 Plugin Name: Buddy-bbPress Support Topic
 Plugin URI: https://sadler-jerome.fr/tag/buddy-bbpress-support-topic/
 Description: Adds a support feature to your bbPress powered forums
-Version: 2.1.2
+Version: 2.1.3
 Requires at least: 4.4
 Tested up to: 4.7.2
 License: GNU/GPL 2
