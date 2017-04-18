@@ -353,6 +353,7 @@ class BP_bbP_ST_Admin {
 		$forum_id = bbp_get_topic_forum_id( $topic_id );
 
 		if ( empty( $forum_id ) ) {
+			wp_nonce_field( 'bpbbpst_support_define', '_wpnonce_bpbbpst_support_define' );
 			return false;
 		}
 

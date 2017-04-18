@@ -146,6 +146,9 @@ class BP_bbP_Support_Topic {
 		// setting the support type on front end new topic form submission
 		add_action( 'bbp_new_topic_post_extras',                  'bpbbpst_save_support_type',             10, 1 );
 
+		// setting the support type on back end new topic form submission
+		add_action( 'save_post_'.bbp_get_topic_post_type(),        'bpbbpst_admin_save_support_type',      10, 3 );
+
 		// Eventually display some feedback to the user
 		add_action( 'bbp_template_notices',                       'bpbbpst_template_notices',              10    );
 

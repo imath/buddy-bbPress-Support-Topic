@@ -305,6 +305,21 @@ function bpbbpst_save_support_type( $topic_id = 0 ) {
 }
 
 /**
+ * Insert the support request when topic is create in admin
+ *
+ * @since  2.1.4
+ *
+ * @param  integer $topic_id the id of the topic
+ * @uses   wp_verify_nonce() to check nonce
+ * @uses   update_post_meta() to set the support status to support request
+ */
+function bpbbpst_admin_save_support_type( $topic_id = 0 ) {
+	if ( ! empty( $_POST['parent_id'] ) && 2 == bpbbpst_get_forum_support_setting( $_POST['parent_id'] ) && wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_define'], 'bpbbpst_support_define' ) )  {
+		update_post_meta( $topic_id, '_bpbbpst_support_topic', 1 );
+	}
+}
+
+/**
  * Hooks bbp_edit_topic_post_extras to update the support status when topic is edited
  *
  * @since  2.0
@@ -318,7 +333,7 @@ function bpbbpst_save_support_type( $topic_id = 0 ) {
  */
 function bpbbpst_edit_support_type( $topic_id = 0 ) {
 
-	if ( empty( $_POST['_wpnonce_bpbbpst_support_define'] ) || ! wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_define'], 'bpbbpst_support_define' ) ) {
+	if ( empty( $_POST['_wpnonce_bpbbpst_support_define'] ) && isset( $_POST['_wpnonce_bpbbpst_support_define'] ) && ! wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_define'], 'bpbbpst_support_define' ) ) {
 		return;
 	}
 
