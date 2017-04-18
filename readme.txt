@@ -3,8 +3,8 @@ Contributors: G3ronim0, imath
 Donate link: https://www.paypal.me/JeromeSadler
 Tags: BuddyPress, bbPress, support, topic
 Requires at least: 4.4
-Tested up to: 4.7.2
-Stable tag: 2.1.3
+Tested up to: 4.7.3
+Stable tag: 2.1.4
 License: GPLv2
 
 bbPress plugin to manage your support requests.
@@ -46,14 +46,14 @@ Activate Buddy bbPress Support Topic in the "Plugins" admin panel using the "Net
 == Frequently Asked Questions ==
 
 = How can i add custom support status ? =
-You'll need to use a filter from your plugin or the functions.php file of your active theme. Here's a <a href="https://gist.github.com/imath/9e69b8139ff6f7a4120a">gist</a> to illustrate how to achieve it.
+You'll need to use a filter from your plugin or the functions.php file of your active theme. Here's a <a href="https://gist.github.com/G3ronim0/596e9e7fa6326c9ba592aec165dd08ba">gist</a> to illustrate how to achieve it.
 
 = Does the plugin still work with BuddyPress legacy forums ? =
 No, the plugin requires bbPress 2.5 which also works great to power BuddyPress Groups forums.
 
 = If you have any other questions =
 
-Please add a comment <a href="http://imathi.eu/tag/buddy-bbpress-support-topic/">here</a>
+Please add a comment <a href="https://wordpress.org/support/plugin/buddy-bbpress-support-topic/">here</a>
 
 == Screenshots ==
 
@@ -64,6 +64,17 @@ Please add a comment <a href="http://imathi.eu/tag/buddy-bbpress-support-topic/"
 5. New widget
 
 == Changelog ==
+
+= 2.1.4 =
+* Change the support status in topic, now live update the prefix title.
+* Use wp.a11y.speak in AJAX events.
+* Improvement (back-office):  Add support status "Not resolved" to a new topic when parent forum is a dedicated forum support.
+* Bump Tested Up version to 4.7.3
+* Update readme.txt
+
+= 2.1.3 =
+* Bump Tested Up version to 4.7.2
+* Update donate link
 
 = 2.1.2 =
 * Prevent users not having the rights to mark the topic as resolved

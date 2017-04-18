@@ -1,17 +1,29 @@
 <?php
-/*
-Plugin Name: Buddy-bbPress Support Topic
-Plugin URI: https://sadler-jerome.fr/tag/buddy-bbpress-support-topic/
-Description: Adds a support feature to your bbPress powered forums
-Version: 2.1.3
-Requires at least: 4.4
-Tested up to: 4.7.2
-License: GNU/GPL 2
-Author: G3ronim0
-Author URI: https://sadler-jerome.fr
-Text Domain: buddy-bbpress-support-topic
-Domain Path: /languages/
-*/
+/**
+ *
+ * Buddy bbPress Support Topic
+ *
+ * @package     Buddy_bbPress_Support_Topic
+ * @author      G3ronim0
+ * @link        https://github.com/G3ronim0/buddy-bbPress-Support-Topic
+ * @version     2.1.4
+ *
+ * @copyright   2017 G3ronim0
+ * @license     http://creativecommons.org/licenses/GPL/2.0/ GNU General Public License, version 2 or higher
+ *
+ * @wordpress-plugin
+ * Plugin Name: Buddy-bbPress Support Topic
+ * Plugin URI: https://sadler-jerome.fr/tag/buddy-bbpress-support-topic/
+ * Description: Adds a support feature to your bbPress powered forums
+ * Version: 2.1.4
+ * Requires at least: 4.4
+ * Tested up to: 4.7.3
+ * License: GNU/GPL 2
+ * Author: G3ronim0
+ * Author URI: https://sadler-jerome.fr
+ * Text Domain: buddy-bbpress-support-topic
+ * Domain Path: /languages/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -61,7 +73,7 @@ class BP_bbP_Support_Topic {
 	private function setup_globals() {
 		$this->globals = new stdClass();
 
-		$this->globals->version = '2.1.3';
+		$this->globals->version = '2.1.4';
 
 		$this->globals->file       = __FILE__ ;
 		$this->globals->basename   = apply_filters( 'bpbbpst_plugin_basenname', plugin_basename( $this->globals->file ) );

@@ -1,6 +1,21 @@
 Versions
 ========
 
+2.1.4
+---
+
++ Change the support status in topic, now live update the prefix title.
++ Use wp.a11y.speak in AJAX events.
++ Improvement (back-office):  Add support status "Not resolved" to a new topic when parent forum is a dedicated forum support.
++ Bump Tested Up version to 4.7.3
++ Update readme.txt
+
+2.1.3
+---
+
++ Bump Tested Up version to 4.7.2
++ Update donate link
+
 2.1.2
 ---
 + Prevent users not having the rights to mark the topic as resolved
