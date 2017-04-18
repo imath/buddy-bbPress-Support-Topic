@@ -15,6 +15,7 @@
 
 		$( '.support-select-box' ).each( function( i, span ) {
 			$( span ).append( '<a class="loading support-loader">' + bpbbpstbbp_vars.loading + '</a>' );
+			wp.a11y.speak( bpbbpstbbp_vars.loading );
 		} );
 
 		// Trigger an event to let Plugins do something before the Ajax request
@@ -37,10 +38,14 @@
 
 				// Trigger an event to inform Plugins the Ajax request succeeded
 				$( self ).trigger( 'bpbbpstStatusChangeSuccess', data );
+				wp.a11y.speak( bpbbpstbbp_vars.statusChangeSuccess );
+
+				$( '.bbp-st-topic-support' ).html( bpbbpstbbp_vars.supportStatus[data.support_status] );
 
 			} else {
 				// Trigger an event to inform Plugins the Ajax request failed
 				$( self ).trigger( 'bpbbpstStatusChangeError', data );
+				wp.a11y.speak( bpbbpstbbp_vars.statusChangeError );
 
 				alert( bpbbpstbbp_vars.securitycheck );
 			}

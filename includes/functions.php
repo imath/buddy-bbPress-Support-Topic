@@ -305,6 +305,21 @@ function bpbbpst_save_support_type( $topic_id = 0 ) {
 }
 
 /**
+ * Insert the support request when topic is create in admin
+ *
+ * @since  2.1.4
+ *
+ * @param  integer $topic_id the id of the topic
+ * @uses   wp_verify_nonce() to check nonce
+ * @uses   update_post_meta() to set the support status to support request
+ */
+function bpbbpst_admin_save_support_type( $topic_id = 0 ) {
+	if ( ! empty( $_POST['parent_id'] ) && 2 == bpbbpst_get_forum_support_setting( $_POST['parent_id'] ) && wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_define'], 'bpbbpst_support_define' ) )  {
+		update_post_meta( $topic_id, '_bpbbpst_support_topic', 1 );
+	}
+}
+
+/**
  * Hooks bbp_edit_topic_post_extras to update the support status when topic is edited
  *
  * @since  2.0
@@ -318,7 +333,7 @@ function bpbbpst_save_support_type( $topic_id = 0 ) {
  */
 function bpbbpst_edit_support_type( $topic_id = 0 ) {
 
-	if ( empty( $_POST['_wpnonce_bpbbpst_support_define'] ) || ! wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_define'], 'bpbbpst_support_define' ) ) {
+	if ( empty( $_POST['_wpnonce_bpbbpst_support_define'] ) && isset( $_POST['_wpnonce_bpbbpst_support_define'] ) && ! wp_verify_nonce( $_POST['_wpnonce_bpbbpst_support_define'], 'bpbbpst_support_define' ) ) {
 		return;
 	}
 
@@ -443,8 +458,11 @@ function bpbbpst_enqueue_scripts() {
 	if ( $bbpress_load_scripts ) {
 		wp_enqueue_script( 'bpbbpst-topic-js', bpbbpst_get_plugin_url( 'js' ) . 'bpbbpst-topic.js', array( 'jquery' ), bpbbpst_get_plugin_version(), true );
 		wp_localize_script( 'bpbbpst-topic-js', 'bpbbpstbbp_vars', array(
-			'securitycheck' => __( 'Security check failed', 'buddy-bbpress-support-topic' ),
-			'loading'       => __( 'loading', 'buddy-bbpress-support-topic' )
+			'securitycheck' 			=> __( 'Security check failed', 'buddy-bbpress-support-topic' ),
+			'supportStatus'				=> wp_list_pluck( bpbbpst_get_support_status(), 'prefix-title', 'value' ),
+			'loading'       			=> __( 'loading', 'buddy-bbpress-support-topic' ),
+			'statusChangeSuccess' => __( 'Topic status successfully changed.', 'buddy-bbpress-support-topic' ),
+			'statusChangeError'		=> __( 'An error occurred when changing the status.', 'buddy-bbpress-support-topic' )
 		) );
 	}
 }
@@ -1456,6 +1474,10 @@ function bpbbpst_after_reply_form_subscription() {
 
 	// Topic resolved, do not output
 	if ( 2 === (int) get_post_meta( $topic_id, '_bpbbpst_support_topic', true ) ) {
+		return;
+	}
+
+	if ( ! current_user_can( 'edit_topic', $topic_id ) ) {
 		return;
 	}
 
